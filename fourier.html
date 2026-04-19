@@ -2,446 +2,245 @@
     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-  <title>Fourier Transform</title>
+  <title>傅里叶变换</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta content="text/html; charset=us-ascii" http-equiv="content-type" />
   <link rel="stylesheet" type="text/css" href="stylesheet.css" />
 </head>
 <body style="color: rgb(0, 0, 0); background-color: rgb(255, 255, 255);">
-<h1>Lode's Computer Graphics Tutorial</h1>
-<h1>Fourier Transform</h1>
+<h1>Lode 的计算机图形学教程</h1>
+<h1>傅里叶变换</h1>
 
 
-<h2>Table of Contents</h2>
+<h2>目录</h2>
 <ul>
-  <li><a href="fourier.html#introduction">Introduction</a></li>
-  <li><a href="fourier.html#libraries">Libraries</a></li>
-  <li><a href="fourier.html#signals">Signals and Spectra</a></li>
-  <li><a href="fourier.html#fourier">The Fourier Transform</a></li>
-  <li><a href="fourier.html#properties">Properties of the Fourier Transform</a></li>
-  <li><a href="fourier.html#coding1d">Programming the 1D Fourier Transform</a></li>
-  <li><a href="fourier.html#fft">The Fast Fourier Transform</a></li>
-  <li><a href="fourier.html#filters1d">Filters</a></li>
-  <li><a href="fourier.html#dft2d">The 2D Fourier Transform on Images</a></li>
-  <li><a href="fourier.html#spectra2d">The Spectra of Images</a></li>
-  <li><a href="fourier.html#filters2d">2D Filters</a></li>
-  <li><a href="fourier.html#dc">The DC Component</a></li>
-  <li><a href="fourier.html#lowpass">Low Pass Filters: Blurring</a></li>
-  <li><a href="fourier.html#highpass">High Pass Filters</a></li>
-  <li><a href="fourier.html#bandpass">Band Pass Filters</a></li>
-  <li><a href="fourier.html#real">Keeping it Real</a></li>
+  <li><a href="fourier.html#introduction">简介</a></li>
+  <li><a href="fourier.html#libraries">库</a></li>
+  <li><a href="fourier.html#signals">信号与频谱</a></li>
+  <li><a href="fourier.html#fourier">傅里叶变换</a></li>
+  <li><a href="fourier.html#properties">傅里叶变换的性质</a></li>
+  <li><a href="fourier.html#coding1d">编程实现一维傅里叶变换</a></li>
+  <li><a href="fourier.html#fft">快速傅里叶变换</a></li>
+  <li><a href="fourier.html#filters1d">滤波器</a></li>
+  <li><a href="fourier.html#dft2d">图像的二维傅里叶变换</a></li>
+  <li><a href="fourier.html#spectra2d">图像的频谱</a></li>
+  <li><a href="fourier.html#filters2d">二维滤波器</a></li>
+  <li><a href="fourier.html#dc">直流分量</a></li>
+  <li><a href="fourier.html#lowpass">低通滤波器：模糊</a></li>
+  <li><a href="fourier.html#highpass">高通滤波器</a></li>
+  <li><a href="fourier.html#bandpass">带通滤波器</a></li>
+  <li><a href="fourier.html#real">保持实数性</a></li>
 </ul>
-<a href="index.html">Back to Index</a>
+<a href="index.html">返回索引</a>
 
 
-<h2 style="font-weight: bold;"><a name="introduction" id="introduction"></a>Introduction</h2>
-The Fourier Transform is an important tool in Image Processing, and
-is directly related to filter theory, since a filter, which is a
-convolution in the spatial domain (=the image), is a simple
-multiplication in the spectral domain (= the FT of the
-image)!<br />
+<h2 style="font-weight: bold;"><a name="introduction" id="introduction"></a>简介</h2>
+傅里叶变换是图像处理中的重要工具，与滤波理论直接相关——滤波器在空间域（即图像本身）中是卷积运算，在频谱域（即图像的 FT）中则只是简单的乘法运算！<br />
 <br />
-Most other tutorials about Fourier Transforms of images are in
-boring greyscale. Even, many programs and plugins available that
-can calculate the FT on images only support greyscale. In times
-where 24 and 32 bit color are getting old, we cannot accept this
-any longer! This tutorial is in 24-bit <span style="color: rgb(255, 0, 0);">c</span><span style="color: rgb(51, 255, 51);">o</span><span style="color: rgb(51, 51, 255);">l</span><span style="color: rgb(204, 51, 204);">o</span><span style="color: rgb(153, 102, 51);">r</span>, by doing the FT on each colorchannel separately. Here's an example where the FT of an image is used to make a tillable grass texture look better:<br />
+大多数关于图像傅里叶变换的教程都使用枯燥的灰度图像。甚至许多可用于计算图像 FT 的程序和插件也只支持灰度图像。在 24 位和 32 位彩色已经日渐普及的今天，我们不能再接受这种局限！本教程以 24 位<span style="color: rgb(255, 0, 0);">彩</span><span style="color: rgb(51, 255, 51);">色</span><span style="color: rgb(51, 51, 255);">图</span><span style="color: rgb(204, 51, 204);">像</span><span style="color: rgb(153, 102, 51);">呈现</span>，通过对每个颜色通道分别进行 FT 来实现。以下是一个利用图像 FT 改善可平铺草地纹理效果的示例：<br />
 <br />
 <img alt="" src="images/fixthegrass.jpg" style="width: 198px; height: 281px;" /><br />
 <br />
-There is also another way to calculate the FT of color images however, by using quaternions instead of complex numbers, which can convert an image of 4 channels to another image with 4 channels.<br />
+另外，还有一种计算彩色图像 FT 的方法——使用四元数代替复数，可以将一幅 4 通道图像转换为另一幅 4 通道图像。<br />
 <br />
-Before beginning with the Fourier Transform on images, which is the 2D version of the FT, we'll start with the easier 1D FT, which is often used for audio and electromagnetical signals.<br />
+在开始介绍图像的傅里叶变换（即二维 FT）之前，我们先从更简单的一维 FT 入手，它常用于音频和电磁信号处理。<br />
 <br />
-To fully understand this tutorial, it'd be interesting to know about complex numbers, their magnitude (amplitude), and argument (phase). If you'd like to learn more about these, there's an appendix about complex numbers (one of the other html files), or find a tutorial with google.<br />
+为了充分理解本教程，了解复数、其模（振幅）和辐角（相位）会很有帮助。如果您希望深入了解这些内容，可以参阅关于复数的附录（其他 html 文件之一），或通过搜索引擎查找相关教程。<br />
 <br />
-The following two source files can be downloaded to have all the code described:<br />
+以下两个源文件可供下载，包含本文所描述的所有代码：<br />
 <br />
 <a href="files/fourier2d.cpp">fourier2d.cpp</a><br />
 <a href="files/fourier1d.cpp">fourier1d.cpp</a><br style="font-weight: bold;" />
 
 
-<h2><a name="libraries" id="libraries"></a>Libraries<br /></h2>
+<h2><a name="libraries" id="libraries"></a>库<br /></h2>
 
-This tutorial contains demo code for computing the Fourier Transform, however if you would like
-to use the Fourier Transform for any real application, there are better and faster libraries out
-there so I really recommend using those, and use the code in this tutorial only to follow along.
+本教程包含用于计算傅里叶变换的演示代码，但如果您希望在实际应用中使用傅里叶变换，市面上有更好、更快的库，我强烈建议使用这些库，本教程中的代码仅供学习参考。
 <p>
-Specifically, the Fast Fourier Transform code further down in this tutorial only supports
-power-of-two sized inputs, while good libraries can do FFT on arbitrary sizes.
+特别需要指出的是，本教程后续的快速傅里叶变换代码只支持 2 的幂次大小的输入，而优质的库可以对任意大小执行 FFT。
 <p>
-Here are a few good free libraries (carefully note which license they have to check if you can use it in your project):
+以下是几个优质的免费库（请仔细查看其许可证，以确认是否可用于您的项目）：
 <p>
 <ul>
-<li><a href="http://www.fftw.org/">FFTW</a> "Fastest Fourier Transform in the West", GPL license</li>
-<li><a href="https://sourceforge.net/projects/kissfft/">Kiss FFT</a> "Keep It Simple, Stupid FFT", BSD license, very small so easy to import</li>
-<li><a href="http://www.fftw.org/benchfft/ffts.html">More...</a>: FFTW's website has a very good list of other libraries on its benchmark page</li>
+<li><a href="http://www.fftw.org/">FFTW</a> "西方最快的傅里叶变换"，GPL 许可证</li>
+<li><a href="https://sourceforge.net/projects/kissfft/">Kiss FFT</a> "保持简单愚蠢的 FFT"，BSD 许可证，体积极小，易于引入</li>
+<li><a href="http://www.fftw.org/benchfft/ffts.html">更多...</a>：FFTW 网站的基准测试页面提供了一份非常完整的其他库列表</li>
 </ul>
 
-<h2><a name="signals" id="signals"></a>Signals and Spectra<br /></h2>
+<h2><a name="signals" id="signals"></a>信号与频谱<br /></h2>
 
-Before starting with the Fourier Transform, an introduction about
-Signals and Spectra is in place. As signals, for now consider
-signals in the time, like audio and electromagnetic signals. If you
-plot such a signal in function of time, a simple signal could look
-like this:<br />
+在开始介绍傅里叶变换之前，有必要先了解信号与频谱的基础知识。就目前而言，信号指的是时域信号，例如音频和电磁信号。如果将这样的信号绘制成关于时间的函数图像，一个简单的信号可能如下所示：<br />
 <br />
 <img alt="" src="images/signal1.gif" style="width: 639px; height: 62px;" /><br />
 <br />
-This is a sine wave, so if this'd be an audio signal, you'd hear a
-pure tone with only 1 frequency (like the beep of a PC speaker, or
-a very pure flute). The grey curve behind the red curve represents
-the amplitude of the signal, which is always positive.<br />
+这是一个正弦波，如果它是音频信号，您会听到一个只有 1 个频率的纯音（就像 PC 扬声器的蜂鸣声，或非常纯净的长笛声）。红色曲线背后的灰色曲线表示信号的振幅，始终为正值。<br />
 <br />
-The spectrum of a signal contains for every frequency, how much of
-this frequency is in the signal. Since the signal above is a sine,
-it has only one frequency, so the spectrum would be very simple:
-only one value will be positive (= the frequency of the sine
-curve), and all others are zero. So the spectrum would have a
-single peak. A spectrum has two sides however: the negative side on
-the left, and the positive side on the right. The negative side
-contains negative frequencies. For real signals (with no imaginary
-part), like audio signals are, the negative side of the spectrum is
-always a mirrored version of the positive side. So for the sine
-signal above, the positive side will have a single peak, and this
-peak will be mirrored in the negative side. This is what its
-spectrum looks like:<br />
+信号的频谱描述了每个频率在信号中所占的比重。由于上述信号是正弦波，只有一个频率，因此频谱非常简单：只有一个值为正（即正弦曲线的频率），其余均为零。所以频谱只有一个单峰。但频谱有两侧：左侧为负频率侧，右侧为正频率侧。负侧包含负频率。对于实数信号（没有虚部），例如音频信号，频谱的负侧始终是正侧的镜像。因此，对于上述正弦信号，正侧有一个单峰，该峰会在负侧被镜像。其频谱如下所示：<br />
 <br />
 <img alt="" src="images/spectrum1.gif" style="width: 639px; height: 181px;" /><br />
 <br />
-The white curve represents the amplitude of the signal. The red and
-green curve represent the real and imaginary part of the spectrum,
-respectively, but a spectrum is raraly represented that way.
-Normally, both the amplitude and <span style="font-style: italic;">phase</span> of a spectrum are given, but
-since there's not that much interesting info for us in it now, the
-phase isn't included.<br />
+白色曲线表示信号的振幅。红色和绿色曲线分别表示频谱的实部和虚部，但频谱很少以这种方式表示。通常，频谱同时给出振幅和<span style="font-style: italic;">相位</span>，但由于现在相位对我们来说没有太多有趣的信息，这里不包含相位。<br />
 <br />
-Let's study another example now: the same sine, but with a DC
-component added: sin(x)+C. The name DC component comes from
-electronics, where it stands for Direct Current (as opposed to
-Alternating Current). The DC component in any signal, is the time
-average of it. A sine signal has time average 0, but if however,
-you add a constant to the sine, the signals time average will
-become that constant. This adding of the constant, results in the
-sine signal being raised higher above the horizontal axis:<br />
+现在让我们研究另一个例子：同样的正弦波，但加上了直流分量：sin(x)+C。直流分量这个名称来自电子学，代表直流电（与交流电相对）。任何信号中的直流分量就是其时间平均值。正弦信号的时间平均值为 0，但如果在正弦波上加一个常数，信号的时间平均值就会变成该常数。添加这个常数后，正弦信号会整体上移，高于水平轴：<br />
 <br />
 <img alt="" src="images/signal2.gif" style="width: 638px; height: 83px;" /><br />
 <br />
-Such a constant, or DC component, has frequency 0. So we can expect
-that the spectrum will get an extra peak at the origin, and indeed,
-it has:<br />
+这样的常数（即直流分量）的频率为 0。因此我们可以预期频谱在原点处会出现一个额外的峰值，实际上确实如此：<br />
 <br />
 <img alt="" src="images/spectrum2.gif" style="width: 630px; height: 191px;" /><br />
 <br />
-So, if the spectrum of a signal is non-zero at the origin, you know
-that its time average isn't zero and it has a DC component! The
-further away from the origin to the left or right a peak is, the
-higher the frequency it represents, so a peak far to the right (and
-left) means that the signal contains a high frequency component.
-Note that an audio signal never has a DC component, since nobody
-can produce or hear it. Electrical signals can have it
-however.<br />
+因此，如果信号的频谱在原点处不为零，就说明其时间平均值不为零，存在直流分量！峰值距原点越远（向左或向右），代表的频率越高，因此远在右侧（及左侧）的峰值意味着信号包含高频分量。需要注意的是，音频信号从不含直流分量，因为没有人能产生或听到它。但电气信号可以有直流分量。<br />
 <br />
-Now let's look at a signal which is the sum of two sine functions:
-the second sine function has the double frequency of the first, so
-the curve has the shape sin(x)+sin(2*x):<br />
+现在让我们看一个由两个正弦函数之和构成的信号：第二个正弦函数的频率是第一个的两倍，因此曲线形状为 sin(x)+sin(2*x)：<br />
 <br />
 <img alt="" src="images/signal3.gif" style="width: 634px; height: 71px;" /><br />
 <br />
-Since there are now two sines with two different frequencies, we
-can expect two peaks on the positive side of the spectrum (and two
-more on the negative side since it's the mirrored version):<br />
+由于现在有两个不同频率的正弦波，我们可以预期频谱的正侧有两个峰值（负侧也有两个，因为它是镜像）：<br />
 <br />
 <img alt="" src="images/spectrum3.gif" style="width: 634px; height: 111px;" /><br />
 <br />
-If the two sines both have a different phase (i.e. one of the two
-sines is shifted horizontally), the amplitude of the spectum will
-still be the same, only the phase will be different, but the phase
-isn't shown here.<br />
+如果两个正弦波的相位不同（即其中一个正弦波水平移动了），频谱的振幅仍然相同，只有相位会不同，但这里没有显示相位。<br />
 <br />
-Arbitrary sound signals, such as a spoken word, consist of an
-infinite sum (or integral) of infinitely much sine functions, all
-with a different frequency, and all with their own amplitude and
-phase, and the spectrum is the perfect plot to view how much of
-each frequency is in the signal. Such a spectrum won't just have a
-few peaks, but will be a continuous function.<br />
+任意声音信号，例如一个说话的词语，由无限多个正弦函数的无穷级数（或积分）组成，每个正弦函数频率不同，且各有其振幅和相位，而频谱是观察信号中每个频率成分多少的完美工具。这样的频谱不只有几个峰值，而是一个连续函数。<br />
 <br />
-There are a few special functions with a special spectrum:<br />
+有几种特殊函数具有特殊的频谱：<br />
 <br />
-The Dirac impuls is a signal that is zero everywhere, except at the
-origin, where it's infinite. That is the ideal version for
-continuous functions, for a discrete function on a computer it can
-as well be represented as a single peak with finite height at the
-origin.<br />
+狄拉克冲激是一个除原点处为无穷大外其他地方均为零的信号。这是连续函数的理想版本；对于计算机上的离散函数，它可以表示为原点处具有有限高度的单个峰值。<br />
 <br />
 <img alt="" src="images/signal4.gif" style="width: 636px; height: 89px;" /><br />
 <br />
-Such a peak sounds like a popping sound in an audio signal, and
-contains ALL frequencies. That's why its spectrum looks like this
-(the horizontal black line):<br />
+这样的峰值在音频信号中听起来像爆裂声，并且包含所有频率。这就是为什么它的频谱看起来是这样的（水平黑线）：<br />
 <br />
 <img alt="" src="images/spectrum4.gif" style="width: 636px; height: 72px;" /><br />
 <br />
-The spectrum is positive everywhere, so every frequency is
-contained in the signal. This also means that, to get such a peak
-as a sum of sine functions, you have to add infinitely much
-elementary sine functions all with the same amplitude, and all
-shifted with a certain phase, they'll cancel each other out, except
-at the origin, hence the peak.<br />
+频谱在各处均为正值，因此信号包含所有频率。这也意味着，要将这样的峰值表示为正弦函数之和，需要叠加无穷多个振幅相同、相位各异的基本正弦函数，它们在原点以外相互抵消，从而形成峰值。<br />
 <br />
-Note that it's possible to intepret the spectrum as a time signal
-(a constant DC signal), and that then the red function can be seen
-as its spectrum (a peak at zero, since a DC signal has frequency
-0). This duality is one of the interesting properties of the
-Fourier Transform as we'll see later.<br />
+注意，可以将频谱解释为时域信号（一个恒定的直流信号），此时红色函数可以看作其频谱（在零点处有一个峰值，因为直流信号的频率为 0）。这种对偶性是傅里叶变换有趣性质之一，我们稍后会看到。<br />
 <br />
-Finally, another special signal is the sinc(x) function; sinc(x) =
-sin(x)/x:<br />
+最后，另一个特殊信号是 sinc(x) 函数；sinc(x) =
+sin(x)/x：<br />
 <br />
 <img alt="" src="images/signal5.gif" style="width: 634px; height: 133px;" /><br />
 <br />
-Its spectrum is a rectangular pulse (here only an approximation of
-it because the spectrum was calculated using only 128
-points):<br />
+其频谱是一个矩形脉冲（这里只是近似，因为频谱仅用 128 个点计算）：<br />
 <br />
 <img alt="" src="images/spectrum5.gif" style="width: 636px; height: 95px;" /><br />
 <br />
-Again because of the duality between a signal and its spectrum, a
-rectangular time signal will have a sinc function as its
-spectrum.<br />
+同样由于信号与其频谱之间的对偶性，矩形时域信号的频谱是 sinc 函数。<br />
 <br />
-Spectra are also used to study the color of light. These are
-exactly the same thing, since light too is a 1-dimensional signal
-containing different frequencies, some of which the eye happens to
-be sensitive to. The spectrum shows for every frequency, how much
-of it is in the light, just the same as the audio spectrum does for
-audio signals.<br />
+频谱也用于研究光的颜色。这完全是同一回事，因为光也是一维信号，包含不同频率，其中一些频率恰好是眼睛敏感的。频谱显示每个频率在光中的含量，就像音频频谱对音频信号所做的那样。<br />
 <br />
-An MP3 player like Winamp also shows the spectrum of the audio
-signal it's playing (but it varies with time because they calculate
-the spectrum each time again for the last few milliseconds), and
-spectra of audio signals can be used to detect bass, treble and
-vocals in music, for speach recognition, audio filters, etc...
-Since this is a tutorial about computer graphics, I won't go any
-deeper in this however.<br />
+像 Winamp 这样的 MP3 播放器也会显示正在播放的音频信号的频谱（但它随时间变化，因为每次都对最近几毫秒重新计算频谱），音频信号的频谱可用于检测音乐中的低音、高音和人声，用于语音识别、音频滤波等。由于本教程是关于计算机图形学的，这里就不深入探讨了。<br />
 <br />
-Often, the spectrum is drawn on a logarithmical scale instead of a
-linear one like here, then the amplitude is expressed in decibels
-(dB).<br style="font-weight: bold;" />
+通常，频谱绘制在对数刻度而非线性刻度上，此时振幅以分贝（dB）表示。<br style="font-weight: bold;" />
 
 
-<h2><a name="fourier" id="fourier"></a>The Fourier Transform</h2>
+<h2><a name="fourier" id="fourier"></a>傅里叶变换</h2>
 
-So how do you calculate the spectrum of a given signal? With the
-Fourier Transform!<br />
+那么如何计算给定信号的频谱呢？答案是使用傅里叶变换！<br />
 <br />
-The Continuous Fourier Transform, for use on continuous signals, is
-defined as follows:<br />
+用于连续信号的连续傅里叶变换定义如下：<br />
 <br />
 <img alt="" src="images/CFT.gif" style="width: 233px; height: 77px;" /><br />
 <br />
-And the Inverse Continuous Fourier Transform, which allows you to
-go from the spectrum back to the signal, is defined as:<br />
+逆连续傅里叶变换（可以从频谱还原回信号）定义为：<br />
 <br />
 <img alt="" src="images/ICFT.gif" style="width: 223px; height: 71px;" /><br />
 <br />
-F(w) is the spectrum, where w represents the frequency, and f(x) is
-the signal in the time where x represents the time. i is sqrt(-1),
-see complex number theory.<br />
+F(w) 是频谱，其中 w 表示频率；f(x) 是时域信号，其中 x 表示时间。i 是 sqrt(-1)，参见复数理论。<br />
 <br />
-Note the similarity between both transforms, which explains the
-duality between a signal and its spectrum.<br />
+注意两个变换之间的相似性，这正好解释了信号与其频谱之间的对偶性。<br />
 <br />
-A computer can't work with continuous signals, only with finite
-discrete signals. Those are finite in time, and have only a
-discrete set of points (i.e. the signal is sampled). One of the
-properties of the Fourier Transform and its inverse is, that the
-FT of a discrete signal is periodic. Since for a computer both the
-signal and the specrum must be discrete, both the signal and
-spectrum will be periodic. But by taking only one period of it, we
-get our finite signal. So if you're taking the DFT of a signal or
-an image on the computer, mathematicaly speaking, that signal is
-infinitely repeated, or the image infinitely tiled, and so is the
-spectrum. A nice property is that both the signal and the spectrum
-will have the same number of discrete points, so the DFT of an
-image of 128*128 pixels will also have 128*128 pixels.<br />
+计算机无法处理连续信号，只能处理有限的离散信号。这些信号在时间上是有限的，并且只有一组离散的点（即信号是采样的）。傅里叶变换及其逆变换的一个性质是，离散信号的 FT 是周期性的。由于计算机要求信号和频谱都是离散的，信号和频谱都将是周期性的。但通过只取其中一个周期，我们就得到了有限信号。因此，如果您在计算机上对信号或图像进行 DFT，从数学上讲，该信号是无限重复的，或者图像是无限平铺的，频谱也是如此。一个很好的性质是，信号和频谱的离散点数相同，因此 128×128 像素图像的 DFT 也将有 128×128 个像素。<br />
 <br />
-Since the signal is finite in time, the infinite borders of the
-integrals can be replaced by finite ones, and the integral symbol
-can be replaced by a sum. So the DFT is defined as:<br />
+由于信号在时间上是有限的，积分的无穷边界可以替换为有限边界，积分符号可以替换为求和符号。因此 DFT 定义为：<br />
 <br />
 <img alt="" src="images/DFT.gif" style="width: 169px; height: 73px;" /><br />
 <br />
-And the inverse as:<br />
+逆变换定义为：<br />
 <br />
 <img alt="" src="images/IDFT.gif" style="width: 171px; height: 66px;" /><br />
 <br />
-This looks already much more programmable on a computer, to program
-the FT, you have to do the calculation for every n, so you get a
-double for loop (one for every n, and one for every k, which is the
-sum). The exponential of the imaginary number can be replaced by a
-cos and a sin by using the famous formula e^ix = cosx + isinx. More
-on programming it follows further in this tutorial.<br />
+这在计算机上已经更具可编程性了。要编程实现 FT，需要对每个 n 进行计算，因此需要一个双重 for 循环（一个遍历每个 n，一个遍历每个 k，即求和）。虚数的指数可以用著名公式 e^ix = cosx + isinx 替换为余弦和正弦。本教程后续将进一步介绍编程实现。<br />
 <br />
-There are multiple definitions of the DFT, for example you can also
-do the division through N in the forward DFT instead of the inverse
-one, or divide through sqrt(N) in both. To plot it on a computer,
-the best result is gotten by dividing through N in the forward
-DFT.
+DFT 有多种定义方式，例如可以在正向 DFT 而非逆变换中除以 N，或者在两者中都除以 sqrt(N)。在计算机上绘图时，在正向 DFT 中除以 N 可以得到最佳效果。
 
 
-<h2><a name="properties" id="properties"></a>Properties of The Fourier Transform</h2>
+<h2><a name="properties" id="properties"></a>傅里叶变换的性质</h2>
 
-A signal is often denoted with a small letter, and its fourier
-transform or spectrum with a capital letter. The relatoin between a
-signal and its spectrum is often denoted with <span style="font-family: monospace;">f(x) &lt;--&gt; F(w)</span>, with the
-signal on the left and its spectrum on the right.<br />
+信号通常用小写字母表示，其傅里叶变换或频谱用大写字母表示。信号与其频谱之间的关系通常记为 <span style="font-family: monospace;">f(x) &lt;--&gt; F(w)</span>，左侧为信号，右侧为其频谱。<br />
 <br />
-The Fourier Transform has some interesting properties, some of
-which make it easier to understand why spectra of certain signals
-have a certain shape.<br />
+傅里叶变换有一些有趣的性质，其中一些有助于理解为什么某些信号的频谱具有特定形状。<br />
 <br />
-Don't take this as a proper list however, some scaling factors like
-2*pi are left away, they're not that important and can be left away
-or depending if you use frequency or pulsation. Handbooks of Sigal
-Processing and sites like Wikipedia and Mathworld contain much more
-complete and mathematically correct tables of FT properties. We're
-most interested in the shape of the functions and not the
-scale.<br />
+但请注意，这不是一个完整的列表，一些缩放因子（如 2*pi）被省略了，这些因子并不那么重要，可以省略，也取决于您使用频率还是角频率。信号处理手册以及维基百科和 Mathworld 等网站包含更完整、数学上更严格的 FT 性质表。我们最感兴趣的是函数的形状而非比例。<br />
 <br />
-<b>Linearity</b><br />
+<b>线性性</b><br />
 <br />
 <tt>f(x)+g(x) &lt;--&gt; F(w)+G(w)</tt><br />
 <br />
 <tt>a*f(x) &lt;--&gt; a*F(w)</tt><br />
 <br />
-This means that if you add/substract two signals, their spectra are
-added/substracted as wall, and if you increase/decrease the
-amplitude of the signal, the amplitude of its spectrum will be
-increased/decreased with the same factor.<br />
+这意味着，如果您将两个信号相加/相减，它们的频谱也会相加/相减；如果增大/减小信号的振幅，其频谱的振幅也会以相同的比例增大/减小。<br />
 <br />
-<b>Scaling</b><br />
+<b>尺度性</b><br />
 <br />
 <tt>f(a*x) &lt;--&gt; (1/a) * F(w/a)</tt><br />
 <br />
-This means that if you make the function wider in the x-direction,
-its spectrum will become smaller in the x-direction, and vica
-versa. The amplitude will also be changed.<br />
+这意味着，如果您在 x 方向上拉宽函数，其频谱在 x 方向上会变窄，反之亦然。振幅也会相应改变。<br />
 <br />
-<b>Time Shifting</b><br />
+<b>时移性</b><br />
 <br />
 <tt>f(x-x0) &lt;--&gt; (exp(-i*w*x0)) * F(w)</tt><br />
 <br />
-Since the only thing that happens if you shift the time, is a
-multiplication of the Fourier Transform with the exponential of an
-imaginary number, you won't see the difference of a time shift in
-the amplitude of the spectrum, only in the phase.<br />
+由于时移时唯一发生的变化是傅里叶变换与一个虚数指数的乘法，因此时移不会在频谱的振幅中体现出来，只会影响相位。<br />
 <br />
-<b>Frequency Shifting</b><br />
+<b>频移性</b><br />
 <br />
 <tt>(exp(-i*w0*x))*f(x)&lt;--&gt;F(w-w0)</tt><br />
 <br />
-This is the dual of the time shifting.<br />
+这是时移性的对偶。<br />
 <br />
-<b>Duality or Symmetry</b><br />
+<b>对偶性或对称性</b><br />
 <br />
-<tt>if f(x) &lt;--&gt; F(w)<br />
-then F(x) &lt;--&gt; f(-w)</tt><br />
+<tt>若 f(x) &lt;--&gt; F(w)<br />
+则 F(x) &lt;--&gt; f(-w)</tt><br />
 <br />
-Apart from some scaling factors at least. Because of this property,
-for example, the spectrum of a rectangular pulse is a sinc function
-and at the same time the spectrum of a sinc function is a
-rectangular pulse.<br />
+至少在忽略某些缩放因子的情况下成立。正是由于这个性质，例如，矩形脉冲的频谱是 sinc 函数，同时 sinc 函数的频谱也是矩形脉冲。<br />
 <br />
-<b>Symmetry Rules</b><br />
+<b>对称规则</b><br />
 <br />
-These are only a few of the symmetry rules:<br />
+以下只是部分对称规则：<br />
 <br />
 <ul>
-<li>The Fourier Transform of a real even signal is real and even
-(i.e. it's symmetrical, mirrored around the y-axis)</li>
-<li>The Fourier Transform of a real odd signal is imaginary and odd
-(odd means it's assymetrical, mirrored around the origin
-point)</li>
-<li>Since arbitrary real signals are always a sum of an even and an
-odd function, the Fourier Transform of a real signal has an even
-real part and an odd imaginary part, and the Amplitude is thus
-always symmetrical.</li>
-<li>In the same way, the amplitude of FT's of pure imaginary
-signals are symmetrical, but the FT of complex signals isn't always
-symmetrical.</li>
+<li>实偶信号的傅里叶变换是实数且偶对称的（即关于 y 轴对称镜像）</li>
+<li>实奇信号的傅里叶变换是虚数且奇对称的（奇对称意味着关于原点镜像，即反对称）</li>
+<li>由于任意实信号总可以分解为偶函数和奇函数之和，实信号的傅里叶变换具有偶对称的实部和奇对称的虚部，因此振幅始终是对称的。</li>
+<li>同理，纯虚信号的 FT 振幅也是对称的，但复数信号的 FT 不一定总是对称的。</li>
 </ul>
-<b>Convolution Theorem</b><br />
+<b>卷积定理</b><br />
 <br />
-Convolution is an operation between two functions that is defined
-as an integral, but can also be explained as follows:<br />
+卷积是两个函数之间的一种运算，其定义为积分，但也可以如下解释：<br />
 <br />
-Take 2 functions, for example two rectangle functions f1(x) and
-f2(x). Keep one of the rectangles at a fixed position. Mirror the
-second one around the y axis (this doesn't have a lot of effect on
-a rectangle). Then shift this second function over a value u, where
-u goes from -infinity to +infinity.<br />
+取 2 个函数，例如两个矩形函数 f1(x) 和 f2(x)。将其中一个矩形固定在某个位置。将第二个矩形关于 y 轴镜像（对矩形影响不大）。然后将第二个函数沿 u 值平移，u 从 -∞ 到 +∞。<br />
 <br />
-The resulting function g(u), the convolution of f1(x) and f2(x),
-takes u as a parameter. For a certain u, multiply f1 and the
-shifted and mirrored f2 with each other, and take area under the
-result (by integrating it). This area is the value of g(u) for that
-u! This has to be done for every u to know the complete result. For
-example, for the two rectangle functions, as we start at
-u=-infinity, g(u) is 0 because the two rectangles don't overlap,
-and multiplication of the two functions will thus result in the
-zero function, which has zero area. As u moves to the right, g(u)
-will remain 0 all the time, until finally the two rectangles start
-overlapping. Now the more we go to the right, the larger the area
-will become, until it reaches its maximum, so g(u) is rising.
-Then, the rectangles are overlapping less and less again as the
-second one moves more to the right, and the value of g(u) decreases
-again. Finally g(u) reaches zero again and remains so until
-+infinity. The resulting g(u) is thus a triangle function.<br />
+结果函数 g(u)，即 f1(x) 和 f2(x) 的卷积，以 u 为参数。对于某个特定的 u，将 f1 与平移镜像后的 f2 相乘，然后取结果下方的面积（通过积分）。这个面积就是该 u 处 g(u) 的值！需要对每个 u 执行此操作才能得到完整结果。例如，对于两个矩形函数，当从 u=-∞ 开始时，g(u) 为 0，因为两个矩形不重叠，两个函数相乘的结果为零函数，面积为零。随着 u 向右移动，g(u) 始终保持为 0，直到两个矩形开始重叠。此后越向右，面积越大，直到达到最大值，g(u) 持续上升。然后，随着第二个矩形继续向右移动，重叠越来越少，g(u) 的值再次减小。最终 g(u) 再次变为零并保持到 +∞。因此结果 g(u) 是一个三角函数。<br />
 <br />
-This is what filters of painting programs that don't use the FT do
-in 2D. The image is then the function that remains at fixed
-position, while the filter matrix moves around the whole image, and
-you calculate the value of every pixel by multiplying every element
-of the matrix with every corresponding pixel of the image the
-matrix overlaps. For large filter matrices this is a lot of work.
-You can create your own filter matrices in painting programs like
-Paint Shop Pro and Photoshop by using the "User Defined"
-filter.<br />
+这就是不使用 FT 的绘图程序在二维中对滤波器所做的事情。图像是保持固定位置的函数，而滤波器矩阵在整幅图像上移动，您通过将矩阵的每个元素与矩阵所覆盖的图像中对应像素相乘来计算每个像素的值。对于大型滤波器矩阵，这需要大量计算。您可以在 Paint Shop Pro 和 Photoshop 等绘图程序中使用"用户自定义"滤波器来创建自己的滤波器矩阵。<br />
 <br />
-Correlation is almost the same as convolution, except you don't
-have to mirror the second function.<br />
+相关运算与卷积几乎相同，只是不需要对第二个函数进行镜像。<br />
 <br />
-The convolution theorem sais that, convolving two functions in the
-time domain corresponds to multiplying their spectra in the fourier
-domain, and vica versa. This multiplication is a much easier
-operation than convolution.<br />
+卷积定理指出，在时域中对两个函数进行卷积，等价于在傅里叶域中将它们的频谱相乘，反之亦然。这种乘法运算比卷积简单得多。<br />
 <br />
-Since filters, too, can be described in the time and the fourier
-domain (called the impulse response and transfer function of the
-filter respectively), and linear filters do a convolutoin in the
-time domain, in the frequency domain this corresponds to
-multiplying the transfer function of the filter with the spectrum
-of the signal. The impulse response of the filter in the time
-domain is the response of the filter to a dirac impuls (see
-earlier), and the transfer function of the filter is the Fourier
-Transform of the impulse response.<br />
+由于滤波器也可以在时域和傅里叶域中描述（分别称为滤波器的冲激响应和传递函数），线性滤波器在时域中执行卷积，在频域中对应于将滤波器的传递函数与信号的频谱相乘。时域中滤波器的冲激响应是滤波器对狄拉克冲激（见前文）的响应，而滤波器的传递函数是冲激响应的傅里叶变换。<br />
 <br />
-For us, the Convolution Theorem will come in handy when we
-experiment with the Fourier Transformations of signals and
-images.<br />
+对于我们而言，卷积定理在实验信号和图像的傅里叶变换时将非常有用。<br />
 
 
-<h2 style="font-weight: normal;"><a name="coding1d" id="coding1d"></a>Programming The 1D Fourier Transform</h2>
+<h2 style="font-weight: normal;"><a name="coding1d" id="coding1d"></a>编程实现一维傅里叶变换</h2>
 
-Here's the code of a simple program that'll calculate the FT of a
-given signal, and will plot both the signal and the FT. Put it in
-the main.cpp file.<br />
+以下是一个简单程序的代码，它将计算给定信号的 FT，并绘制信号和 FT。将其放入 main.cpp 文件中。<br />
 <br />
-First the variables and functions are declared. N will be the
-number of discrete points in the signal. For the signal and its
-spectrum, respectively a small f or g and capital F or G are used,
-as it's also done in mathematics.<br />
+首先声明变量和函数。N 将是信号中离散点的数量。对于信号及其频谱，分别使用小写字母 f 或 g 以及大写字母 F 或 G，这与数学中的惯例一致。<br />
 <br />
 <center>
 <table class="codetable">
@@ -466,8 +265,7 @@ void calculateAmp(int n, double *ga, const double *gRe, const double *gIm); //ca
 </table>
 </center>
 <br />
-The main function creates a sine signal, and will then use the
-other functions to calculate the FT and plot it.<br />
+主函数创建一个正弦信号，然后使用其他函数计算 FT 并绘图。<br />
 <br />
 <center>
 <table class="codetable">
@@ -509,7 +307,7 @@ other functions to calculate the FT and plot it.<br />
 </table>
 </center>
 <br />
-Then comes the function that does the actual work (albeit with a very suboptimal algorithm here): the DFT function<br />
+接下来是执行实际计算的函数（尽管这里使用的算法并不是最优的）：DFT 函数<br />
 <br />
 <center>
 <table class="codetable">
@@ -541,38 +339,13 @@ Then comes the function that does the actual work (albeit with a very suboptimal
 </table>
 </center>
 <br />
-It takes 4 arrays as parameters: *gRe and *gIm to read from (these
-are the real and imaginary part of the signal), and *GRe and *GIm
-to write the results to (these are the FT of the signal). Both the
-input and output are complex numbers, which is why two arrays (a
-real and an imaginary one) are needed. n is the size of the signal
-(and the arrays), so it's the number of discrete points in the
-signal.<br />
+该函数接受 4 个数组作为参数：*gRe 和 *gIm 用于读取输入（这是信号的实部和虚部），*GRe 和 *GIm 用于写入结果（这是信号的 FT）。输入和输出都是复数，因此需要两个数组（一个实部，一个虚部）。n 是信号（和数组）的大小，即信号中离散点的数量。<br />
 <br />
-The first for loop with w going from 0 to n-1 means that a
-calculation is needed for every single point of the result. The
-second for loop, with x going from 0 to n, means that every point
-of the input signal needs to be taken in account, it's the sum from
-the mathematical definition of the DFT. The exponential function is
-changed by the formula e^ix = cosx + isinx, and the real and
-imaginary part are calculated seperatly. Afterwards the values are
-divided through n, so that the values are reasonably small enough
-to plot them on the screen.<br />
+第一个 for 循环，w 从 0 到 n-1，表示需要对结果的每个点进行计算。第二个 for 循环，x 从 0 到 n，表示输入信号的每个点都需要被考虑，这就是 DFT 数学定义中的求和。指数函数通过公式 e^ix = cosx + isinx 替换为余弦和正弦，实部和虚部分别计算。之后将值除以 n，使值足够小以便在屏幕上绘图。<br />
 <br />
-By setting "inverse" to true, it can also calculate the IDFT
-(Inverse Discrete Fourier Transform), but this isn't used in this
-example. The only differences are a different sign in the
-exponential function and no division through n.<br />
+将"inverse"设置为 true，还可以计算 IDFT（逆离散傅里叶变换），但本例中未使用。唯一的区别是指数函数的符号不同，以及不除以 n。<br />
 <br />
-Next, the plot function takes a single array as parameter, and will
-draw the signal or spectrum contained in this array on screen with
-a color you want using lines and filled circles. You can also use a
-parameter "shift" to bring the edges to the center and vica versa.
-This is useful for a better representation of the Fourier
-Transform: normally the result of the DFT has the low frequency
-components on the sides, and the highest frequency in the center.
-Since the result is in fact periodic, bringing the sides to the
-center is the same as moving the plot half a period.<br />
+接下来，plot 函数接受一个数组作为参数，使用线段和实心圆将该数组中包含的信号或频谱以您指定的颜色绘制到屏幕上。您还可以使用"shift"参数将边缘移到中心，反之亦然。这对于更好地表示傅里叶变换很有用：通常 DFT 的结果在两侧有低频分量，中心有最高频率。由于结果实际上是周期性的，将两侧移到中心等同于将图移动半个周期。<br />
 <br />
 <center>
 <table class="codetable">
@@ -605,9 +378,7 @@ center is the same as moving the plot half a period.<br />
 </table>
 </center>
 <br />
-And finally, the function calculateAmp calculates the amplitude
-given the real and imaginary part, so you can plot the amplitude
-too.<br />
+最后，calculateAmp 函数根据实部和虚部计算振幅，以便您也可以绘制振幅。<br />
 <br />
 <center>
 <table class="codetable">
@@ -626,48 +397,25 @@ void calculateAmp(int n, double *gAmp, const double *gRe, const double *gIm)
 </table>
 </center>
 <br />
-The output of this program is as follows:<br />
+该程序的输出如下：<br />
 <br />
 <img alt="" src="images/1ddft.gif" style="width: 644px; height: 505px;" /><br />
 <br />
-The red function is the input function, which is a sine, and the
-black funtion at the bottom is the amplitude of its spectrum,
-which is calculated by the DFT function. The green curves are the
-imaginary parts.<br />
+红色函数是输入函数，即正弦波；底部的黑色函数是其频谱的振幅，由 DFT 函数计算得出。绿色曲线是虚部。<br />
 <br />
 
 
-<h2 style="font-weight: normal;"><a name="fft" id="fft"></a>The Fast Fourier Transform</h2>
+<h2 style="font-weight: normal;"><a name="fft" id="fft"></a>快速傅里叶变换</h2>
 
-The above DFT function correctly calculates the Discrete Fourier
-Transform, but uses two for loops of n times, so it takes
-O(n&sup2;) arithmetical operations. A faster algorithm is the Fast
-Fourier Transform or FFT, which uses only O(n*logn) operations.
-This makes a big difference for very large n: if n would be 1024,
-the DFT function would take 1048576 (about 1 million) loops,
-while the FFT would use only 10240.<br />
+上述 DFT 函数可以正确计算离散傅里叶变换，但使用了两个 n 次的 for 循环，因此需要 O(n²) 次算术运算。更快的算法是快速傅里叶变换（FFT），它只需要 O(n*logn) 次运算。这对于非常大的 n 来说差别很大：如果 n 为 1024，DFT 函数需要 1048576（约 100 万）次循环，而 FFT 只需 10240 次。<br />
 <br />
-The FFT works by splitting the signal into two halves: one halve
-contains all the values with even index, the other all the ones
-with odd index. Then, it splits up these two halves again, etc...,
-recursivily. Due to this, a requirement is that the size of the
-signal, n, must be a power of 2. The algorithm described here is the
-Radix-2 Cooley-Tukey FFT algorithm (developed by Cooley and Tukey in 1965).
+FFT 的工作原理是将信号分成两半：一半包含所有偶数索引的值，另一半包含所有奇数索引的值。然后递归地再次分割这两半，依此类推。因此，要求信号的大小 n 必须是 2 的幂。这里描述的算法是 Radix-2 Cooley-Tukey FFT 算法（由 Cooley 和 Tukey 于 1965 年开发）。
 <p>
-There exist other algorithms that can operate fast on signals with other sizes
-than a power of two, even large primes. For example mixed-radix Cooley-Tukey as well as others. However,
-this is beyond the scope of this tutorial. The code linked to in the
-<a href="fourier.html#libraries">Libraries</a> section above supports non-powers of two so I would
-recommend using a library like those for real life applications. But for this tutorial,
-we continue with much simpler code for the demonstration.<br />
+还存在其他算法，可以快速处理非 2 的幂大小的信号，甚至是大质数。例如混合基 Cooley-Tukey 算法以及其他算法。但这超出了本教程的范围。上面<a href="fourier.html#libraries">库</a>部分链接的代码支持非 2 的幂，因此对于实际应用我建议使用类似的库。但在本教程中，我们继续使用更简单的代码进行演示。<br />
 <br />
-Here's a new version of the DFT function, called FFT, which uses
-the radix-2 algorithm described above. You
-can add it to the previous program and change the function call of
-it to FFT to test it out.<br />
+以下是 DFT 函数的新版本，称为 FFT，使用上述 radix-2 算法。您可以将其添加到之前的程序中，并将函数调用改为 FFT 来测试它。<br />
 <br />
-First, this function will calculate the logarithm of n, needed for
-the algorithm.<br />
+首先，该函数将计算 n 的对数，这是算法所需要的。<br />
 <br />
 <center>
 <table class="codetable">
@@ -688,14 +436,7 @@ the algorithm.<br />
 </table>
 </center>
 <br />
-Next, Bit Reversal is performed. Because of the way the FFT works,
-by splitting the signal in its even and odd components every time,
-the algorithm requires that the input signal is already in the form
-where all odd components come first, then the even ones, and so on
-in each of the halves. This is the same as reversing the bits of
-the index of each value (for example the second value, with index
-0001 will now get index 1000 and this go to the center), hence the
-name.<br />
+接下来执行位逆序（Bit Reversal）。由于 FFT 每次将信号分成偶数和奇数分量，算法要求输入信号已经按照奇数分量在前、偶数分量在后的形式排列，每个半部分依此类推。这等同于将每个值的索引的二进制位逆序（例如，索引为 0001 的第二个值现在将获得索引 1000，移至中间位置），因此得名"位逆序"。<br />
 <br />
 <center>
 <table class="codetable">
@@ -722,14 +463,7 @@ name.<br />
 </table>
 </center>
 <br />
-Next the actual FFT is performed. Mathematically speaking it's a
-recursive function, but this is a modified version to work
-non-recursively, it'd be way too hard to pass complete arrays to a
-recursive function every time. ca and sa still represent the cosine
-and sine, but are calculated with the half-angle formulas and
-initual values -1.0 and 0.0 (cos and sin of pi): each loop, ca and
-sa represent the cosine and sine of half the angle as the previous
-loop.<br />
+接下来执行实际的 FFT。从数学上讲，它是一个递归函数，但这是一个修改版本，以非递归方式工作——每次将完整数组传递给递归函数实在太麻烦了。ca 和 sa 仍然表示余弦和正弦，但使用半角公式和初始值 -1.0 和 0.0（pi 的余弦和正弦）计算：每次循环，ca 和 sa 表示前一次循环角度一半的余弦和正弦。<br />
 <br />
 <center>
 <table class="codetable">
@@ -770,7 +504,7 @@ loop.<br />
 </table>
 </center>
 <br />
-Finally, the values are divided through n if it isn't the inverse DFT.<br />
+最后，如果不是逆 DFT，则将值除以 n。<br />
 <br />
 <center>
 <table class="codetable">
@@ -789,48 +523,24 @@ Finally, the values are divided through n if it isn't the inverse DFT.<br />
 </table>
 </center>
 <br />
-The function reads from *gRe and *gIm again and stores the result
-in *GRe and *GIm.<br />
+该函数再次从 *gRe 和 *gIm 读取，并将结果存储在 *GRe 和 *GIm 中。<br />
 <br />
-There are 3 nested loops now in the FFT part, but only the first
-one goes from 0 to n-1, the other two together only loop log_2(n)
-times. For this small signal of only 128 values you probably won't
-notice any increase in speed because both DFT and FFT are
-calculated instantly (unless you're working on some computer from
-the '40s), but on bigger signals, on 2D signals, and in
-applications where the FT has be be calculated over and over in
-real time, it'll make an important difference.<br />
+FFT 部分现在有 3 个嵌套循环，但只有第一个从 0 到 n-1，其他两个合起来只循环 log_2(n) 次。对于这个只有 128 个值的小信号，您可能不会注意到速度的提升，因为 DFT 和 FFT 都是瞬间计算完成的（除非您在 40 年代的计算机上工作），但对于更大的信号、二维信号，以及需要实时反复计算 FT 的应用，这将产生重要差异。<br />
 
 
-<h2 style="font-weight: normal;"><a name="filters1d" id="filters1d"></a>Filters</h2>
+<h2 style="font-weight: normal;"><a name="filters1d" id="filters1d"></a>滤波器</h2>
 
-In the Fourier Domain, it's easy to apply some filters. All you
-have to do is multiply the spectrum with the transfer function of
-the filter.<br />
+在傅里叶域中，应用滤波器非常简单。您只需将频谱与滤波器的传递函数相乘即可。<br />
 <br />
-Low pass filters only let through components with low frequencies
-(for example the bass from music), while High Pass filters let only
-components with high frequencies through. You can also make Band
-Pass and Band Stop filters, which let through or block components
-with a certain frequency. Amplifiers multiply the whole spectrum
-with a constant value, and you can of course make filters that
-amplify certain frequencies, or triangular filters that weaken
-higher frequencies more and more, etc...<br />
+低通滤波器只允许低频分量通过（例如音乐中的低音），而高通滤波器只允许高频分量通过。您还可以制作带通和带阻滤波器，分别允许或阻止特定频率的分量。放大器将整个频谱乘以一个常数，当然您也可以制作放大特定频率的滤波器，或者使高频越来越弱的三角滤波器等。<br />
 <br />
-So to make for example a Low Pass filter, multiply the spectrum
-with a rectangular function with the rectangle around the origin.
-All the low frequency components will then be kept, while the high
-ones are multiplied by zero and are thus filtered away.<br />
+例如，要制作低通滤波器，将频谱与原点附近的矩形函数相乘即可。所有低频分量将被保留，而高频分量则乘以零，从而被滤除。<br />
 <br />
-Here's a part of code for a program that'll first allow you to
-select different signals and watch their FT, and after pressing the
-space key, will allow you to choose different filters on the
-spectrum, and it'll calculate the inverse FT to see how the
-original signal is affected by the filter.<br />
+以下是一个程序的部分代码，该程序首先允许您选择不同的信号并查看其 FT，按下空格键后，可以选择对频谱应用不同的滤波器，并计算逆 FT 以查看原始信号受滤波器影响的效果。<br />
 <br />
-The full code can be downloaded here: <a href="files/fourier1d.cpp">fourier1d.cpp</a>.<br />
+完整代码可在此处下载：<a href="files/fourier1d.cpp">fourier1d.cpp</a>。<br />
 <br />
-First all variables and functions are declared.<br />
+首先声明所有变量和函数。<br />
 <br />
 <center>
 <table class="codetable">
@@ -854,10 +564,7 @@ void calculateAmp(int n, double *ga, const double *gRe, const double *gIm); //ca
 </table>
 </center>
 <br />
-The main function starts here. It enters the first loop, this loop
-will allow you to choose a function. The parameters p1 and p2 can
-be changed to modify the amplitude and/or width of some of the
-functions.<br />
+主函数从这里开始。它进入第一个循环，该循环允许您选择一个函数。参数 p1 和 p2 可以修改以调整某些函数的振幅和/或宽度。<br />
 <br />
 <center>
 <table class="codetable">
@@ -879,17 +586,9 @@ functions.<br />
 </table>
 </center>
 <br />
-This is inside the loop after it has read the keys. Every key has
-another action assiciated to it to create a certain function, for
-example if you press the g key (SDLK_g) it'll put a sum of two
-sines in fRe[x]. The arrow keys also have some actions to set the
-imaginary part to 0, equal to the real part, or a modified version
-of the real part. Finally, the space keys sets "endloop" to true so
-that the first loop will end.<br />
+这是在循环内读取按键后的处理。每个按键都关联一个动作来创建特定函数，例如按下 g 键（SDLK_g）会将两个正弦波之和放入 fRe[x]。方向键也有一些动作，用于将虚部设置为 0、等于实部，或实部的修改版本。最后，空格键将"endloop"设置为 true，从而结束第一个循环。<br />
 <br />
-Not all keys are included here, because it's very messy and big
-code. Only a few are shown as an example, the rest is in the
-downloadable source file.<br />
+这里没有包含所有按键，因为代码非常繁杂冗长。这里只展示几个作为示例，其余的在可下载的源文件中。<br />
 <br />
 <center>
 <table class="codetable">
@@ -909,8 +608,7 @@ downloadable source file.<br />
 </table>
 </center>
 <br />
-This is the last part of the first loop, where it draws the chosen
-function, calculates its FT, and draws that one too.<br />
+这是第一个循环的最后部分，在这里绘制所选函数，计算其 FT，并绘制 FT。<br />
 <br />
 <center>
 <table class="codetable">
@@ -941,10 +639,7 @@ function, calculates its FT, and draws that one too.<br />
 </table>
 </center>
 <br />
-After the first loop has ended, the second part of the main
-function starts. First, an extra spectrum buffer is created, so
-that both the original spectrum and its filtered version can be
-remembered. Then the second loop starts.<br />
+第一个循环结束后，主函数的第二部分开始。首先创建一个额外的频谱缓冲区，以便同时保存原始频谱和其滤波版本。然后开始第二个循环。<br />
 <br />
 <center>
 <table class="codetable">
@@ -970,13 +665,9 @@ remembered. Then the second loop starts.<br />
 </table>
 </center>
 <br />
-Now the keys all change the spectrum in a certain way: they'll
-aplly a filter. Low Pass filters (LP) set the spectrum to 0, except
-around the origin. High Pass filters (HP) do the oposite.<br />
+现在所有按键都以某种方式改变频谱：它们将应用滤波器。低通滤波器（LP）将频谱设置为 0，原点附近除外。高通滤波器（HP）则相反。<br />
 <br />
-Not all keys are shown here, because it's very messy and big code.
-Only a few are shown as an example, the rest is in the downloadable
-source file in a more closely packed form.<br />
+这里没有显示所有按键，因为代码非常繁杂冗长。只展示几个作为示例，其余的以更紧凑的形式包含在可下载的源文件中。<br />
 <br />
 <br />
 <center>
@@ -1012,9 +703,7 @@ source file in a more closely packed form.<br />
 </table>
 </center>
 <br />
-Again, if a key was pressed, the new spectrum is drawn, and the
-inverse FFT is performed to draw the filtered version of the
-original function. If you press escape the program will end.<br />
+同样，如果按下某个键，将绘制新的频谱，并执行逆 FFT 以绘制原始函数的滤波版本。按下 Escape 键程序将退出。<br />
 <br />
 <br />
 <center>
@@ -1050,83 +739,52 @@ original function. If you press escape the program will end.<br />
 </table>
 </center>
 <br />
-The functions FFT, plot and calculateAmp are identical to the ones
-explained earlier and aren't included here anymore.<br />
+FFT、plot 和 calculateAmp 函数与前面解释的相同，这里不再重复。<br />
 <br />
-There's not much new in this code, the functions FFT, plot and
-calculateAmp are still the same, but by playing with this program
-you can see the effects of Low Pass (LP), High Pass (HP) and a few
-other filters. Just follow the instructions on screen.<br />
+这段代码没有太多新内容，FFT、plot 和 calculateAmp 函数仍然相同，但通过运行这个程序，您可以看到低通（LP）、高通（HP）以及其他几种滤波器的效果。只需按照屏幕上的说明操作即可。<br />
 <br />
-For example, here, a signal which is the sum of 5 sines and a DC
-component (gotten by pressing the "p" key) is shown together with
-its spectrum, and then, respectively, a LP and a HP are applied to
-it:<br />
+例如，这里展示了一个由 5 个正弦波和直流分量之和构成的信号（按"p"键获得），以及其频谱，然后分别对其应用 LP 和 HP：<br />
 <br />
-The original signal:<br />
+原始信号：<br />
 <img alt="" src="images/filter1.gif" style="width: 638px; height: 278px;" /><br />
 <br />
-An LP Filter:<br />
+LP 滤波器：<br />
 <img alt="" src="images/filter2.gif" style="width: 639px; height: 238px;" /><br />
 <br />
-A HP Filter<br />
+HP 滤波器<br />
 <img alt="" src="images/filter3.gif" style="width: 637px; height: 145px;" /><br />
-Here, the same is done with a step function (gotten by pressing the "e" key):<br />
+这里对阶跃函数（按"e"键获得）执行相同操作：<br />
 <br />
 <img alt="" src="images/filter4.gif" style="width: 639px; height: 304px;" /><br />
-An LP filter on it:<br />
+对其应用 LP 滤波器：<br />
 <br />
 <img alt="" src="images/filter5.gif" style="width: 638px; height: 323px;" /><br />
 <br />
-A HP filter on it. This filter filters out almost only the DC component, so two almost-flat lines remain in the signal:<br />
+对其应用 HP 滤波器。该滤波器几乎只滤除直流分量，因此信号中只剩下两条几乎平坦的直线：<br />
 <br />
 <img alt="" src="images/filter6.gif" style="width: 639px; height: 119px;" /><br />
 <br />
 
 
-<h2 style="font-weight: normal;"><a name="dft2d" id="dft2d"></a>2D Fourier Transform on Images</h2>
+<h2 style="font-weight: normal;"><a name="dft2d" id="dft2d"></a>图像的二维傅里叶变换</h2>
 
-The extension of the Fourier Transform to 2D is actually pretty
-simple. First you take the 1D FT of every row of the image, and
-then on this result you take the 1D FT of every column.<br />
+将傅里叶变换扩展到二维实际上非常简单。首先对图像的每一行进行一维 FT，然后对结果的每一列再进行一维 FT。<br />
 <br />
-This can be done by doing FT row by row on the image with the 1D FT function, then transpose the image (so what were columns are now rows), then do again the 1D FT on each row,
-and then transpose the image again to have the original direction. This has the advantage the memory you're operating on is closer together for better caching for the CPU (faster),
-but requires a transpose operation in between. Another way is to extend the 1D FT function to take a "stride" parameter, which is the step in memory between successive values
-we're currently working on. The stride is then set to the row size to work on a column, or to 1 to work on rows. In addition, because we have 3 color channels,
-we multiply the stride by 3. This is slightly simpler so we'll use this method in this tutorial.
+实现方法是：使用一维 FT 函数逐行对图像进行 FT，然后转置图像（使列变为行），再对每行进行一维 FT，最后再次转置图像以恢复原始方向。这种方法的优点是操作的内存更加连续，有利于 CPU 缓存（速度更快），但需要中间的转置操作。另一种方法是为一维 FT 函数添加"步幅（stride）"参数，即当前处理的相邻值在内存中的间距。处理列时将步幅设置为行大小，处理行时设置为 1。此外，由于我们有 3 个颜色通道，步幅还要乘以 3。这种方法稍微简单一些，因此本教程将使用此方法。
 <br />
 <br />
 <br />
-Here follows the code of a program that does exactly that, and two
-alternative functions that do the same are given in it: one will
-use the 2D version of the slow DFT, and the other the 2D version of
-the Fast Fourier Transform (FFT). The program will first calculate
-the FT of the image, and then calculate the Inverse FT of the
-result, to check if the formula is working correctly: if it gives
-back the original it works. You can freely change between calls to
-<tt>DFT2D()</tt> and <tt>FFT2D()</tt> in the main function, and
-you'll notice that the <tt>DFT2D()</tt> function is very slow now,
-while the <tt>FFT2D()</tt> function works very fast.<br />
+以下是一个实现上述功能的程序代码，其中提供了两个实现相同功能的替代函数：一个使用慢速 DFT 的二维版本，另一个使用快速傅里叶变换（FFT）的二维版本。程序首先计算图像的 FT，然后计算结果的逆 FT，以验证公式是否正确工作：如果能还原出原始图像则说明正确。您可以在主函数中自由切换 <tt>DFT2D()</tt> 和 <tt>FFT2D()</tt> 的调用，您会注意到 <tt>DFT2D()</tt> 函数非常慢，而 <tt>FFT2D()</tt> 函数运行非常快。<br />
 <br />
-Because an RGB image has 3 color channels, the FT is calculated for
-each color channel separately, so in fact 3 greyscale FT's are
-calculated.<br />
+由于 RGB 图像有 3 个颜色通道，FT 分别对每个颜色通道计算，实际上计算了 3 个灰度 FT。<br />
 <br />
-The program requires that there's a 24-bit color, 128*128 PNG
-image pics/test.png (path relative to the program). There is one in <a href="files/photos.zip">photos.zip</a><br />.
+程序需要一个 24 位彩色的 128×128 PNG 图像 pics/test.png（路径相对于程序）。可在 <a href="files/photos.zip">photos.zip</a> 中找到一张。<br />.
 <br />
-First again all the variables and functions are declared.<br />
-W and H are the width and height of the image in pixels.<br />
-The arrays for the signal and its spectrum are now 3-dimensional:
-2 dimensions for the size, and 1 dimension for the RGB color
-components. The class ColorRGB can't be used here because more
-precision is required for FT, that's why the color components are
-put in a double array instead; index 0 represents red, index 1
-green, and index 2 is blue.<br />
+再次首先声明所有变量和函数。<br />
+W 和 H 是图像的宽度和高度（以像素为单位）。<br />
+信号及其频谱的数组现在是三维的：2 个维度用于大小，1 个维度用于 RGB 颜色分量。这里不能使用 ColorRGB 类，因为 FT 需要更高的精度，因此颜色分量存储在 double 数组中；索引 0 表示红色，索引 1 表示绿色，索引 2 表示蓝色。<br />
 <br />
-There are two versions of the FT functions here, the slow DFT2D and
-the fast FFT2D.<br />
+这里有两个版本的 FT 函数：慢速的 DFT2D 和快速的 FFT2D。<br />
 <br />
 <center>
 <table class="codetable">
@@ -1152,21 +810,13 @@ void calculateAmp(int w, int h, double *ga, const double *gRe, const double *gIm
 </table>
 </center>
 <br />
-The main function first loads an image, and then sets the signal to
-that image.<br />
+主函数首先加载一幅图像，然后将信号设置为该图像。<br />
 <br />
-Next, it draws the image. It draws the real part, the imaginary
-part (which is 0!), and the amplitude, which looks the same as the
-real part.<br />
+接下来绘制图像。绘制实部、虚部（值为 0！）以及振幅（看起来与实部相同）。<br />
 <br />
-Then it calculates the FT of the image, by using the DFT2D
-function, but you can as well change this to FFT2D instead: it'll
-go faster then. Then it draws the just calculated spectrum.<br />
+然后使用 DFT2D 函数计算图像的 FT，您也可以将其改为 FFT2D：速度会更快。然后绘制刚刚计算的频谱。<br />
 <br />
-Finally, it calculates the inverse FT of that spectrum again and
-draws the result, this is only to check if the functions are
-working correctly: if you get the original image back, they
-are.<br />
+最后，再次计算该频谱的逆 FT 并绘制结果，这仅用于验证函数是否正确工作：如果能得到原始图像，则说明正确。<br />
 <br />
 <center>
 <table class="codetable">
@@ -1224,10 +874,7 @@ are.<br />
 </table>
 </center>
 <br />
-Here we have the 1D DFT function again, but this time with a stride and factor parameter added. The stride
-parameter, as explained above, allows a larger step, to allow working on columns and color channels in our
-3D array. The factor is there because we need control over what values (rather than just n) to divide the
-result with.<br />
+这里再次出现一维 DFT 函数，但这次添加了步幅（stride）和因子（factor）参数。如上所述，步幅参数允许更大的步进，以便在我们的三维数组中处理列和颜色通道。因子参数的存在是因为我们需要控制用什么值（而不仅仅是 n）来除结果。<br />
 <br />
 <center>
 <table class="codetable">
@@ -1257,19 +904,7 @@ result with.<br />
 </table>
 </center>
 <br />
-The DFT2D function, then, calls the 2D DFT function for each row, and for
-each column, and this separately for every color component. The function takes
-now two parameters for the dimensions: w and h (sometimes also called n and m), because an image is 2D. The
-parameter inverse can be set to true to do the inverse calculations
-instead. Again *gRe and *gIm are the input arrays, and *GRe and
-*GIm the output arrays. In this 2D version, the values are divided
-through h for the normal DFT and through w for the inverse DFT.
-There are also definitions where you should divide through h*w in
-one direction and through 1 in the other, or though sqrt(h*w) in
-both, but it doesn't really matter which one you pick, as long as
-the forward FT and the inverse together give the original image
-back. Using roughly the square root of h*w in each direction, though, gives
-a similar range of values as the input image so is nicest to draw.<br />
+然后，DFT2D 函数对每一行和每一列分别调用一维 DFT 函数，并对每个颜色分量分别处理。该函数现在有两个维度参数：w 和 h（有时也称为 n 和 m），因为图像是二维的。参数 inverse 可以设置为 true 以执行逆变换。同样，*gRe 和 *gIm 是输入数组，*GRe 和 *GIm 是输出数组。在这个二维版本中，正向 DFT 的值除以 h，逆 DFT 的值除以 w。也有定义要求在一个方向上除以 h*w，另一个方向上除以 1，或者两个方向都除以 sqrt(h*w)，但只要正向 FT 和逆变换合起来能还原原始图像，选哪种都没有太大关系。不过，在每个方向上使用大约 h*w 的平方根，可以给出与输入图像类似的值范围，绘图效果最好。<br />
 <br />
 <center>
 <table class="codetable">
@@ -1297,7 +932,7 @@ a similar range of values as the input image so is nicest to draw.<br />
 </table>
 </center>
 <br />
-And here's the Fast Fourier Transform again, with stride and factor now.<br />
+这里再次给出快速傅里叶变换，现在加入了步幅和因子参数。<br />
 <br />
 <center>
 <table class="codetable">
@@ -1371,7 +1006,7 @@ And here's the Fast Fourier Transform again, with stride and factor now.<br />
 </table>
 </center>
 <br />
-Making it 2D is exactly the same as for DFT2D, but with the FFT function<br />
+扩展到二维与 DFT2D 完全相同，只是使用 FFT 函数<br />
 <br />
 <center>
 <table class="codetable">
@@ -1399,15 +1034,7 @@ Making it 2D is exactly the same as for DFT2D, but with the FFT function<br />
 </table>
 </center>
 <br />
-The draw function does what the plot function did in the 1D
-version: show the signal on screen. Now this function will draw the
-signal or spectrum arrays you feed it as a 24-bit RGB image with
-the upper left corner at xpos,yPos. The shift parameter can be used
-to bring the corners to the center and the center to the corners,
-useful for FT's to bring the DC component to the center. The neg128
-parameter can be used to draw images that can have negative pixel
-values: now gray (RGB color 128, 128, 128) is used as 0, darker
-colors are negative, and brighter ones are positive.<br />
+draw 函数的作用与一维版本中的 plot 函数相同：在屏幕上显示信号。现在该函数将把您传入的信号或频谱数组绘制为 24 位 RGB 图像，左上角位于 xpos,yPos。shift 参数可用于将四角移到中心、将中心移到四角，这对于 FT 将直流分量移到中心非常有用。neg128 参数可用于绘制可能有负像素值的图像：此时灰色（RGB 颜色 128, 128, 128）表示 0，较暗的颜色表示负值，较亮的颜色表示正值。<br />
 <br />
 <center>
 <table class="codetable">
@@ -1445,11 +1072,7 @@ void draw(int xPos, int yPos, int n, int m, const double *g, bool shift, bool ne
 </table>
 </center>
 <br />
-The calculateAmp function is also again the same as the 1D version,
-only with an extra loop for the 2nd dimension, and another one for
-the color components. This function is used to generate the
-amplitudes of the signals and spectra so that you can draw
-those.<br />
+calculateAmp 函数也与一维版本相同，只是增加了一个用于第二维度的循环和一个用于颜色分量的循环。该函数用于生成信号和频谱的振幅，以便绘制它们。<br />
 <br />
 <center>
 <table class="codetable">
@@ -1471,173 +1094,89 @@ void calculateAmp(int n, int m, double *gAmp, const double *gRe, const double *g
 </table>
 </center>
 <br />
-Note that, because of the way C++ works, the arrays are passed to
-the functions in a special way, and inside the functions they have
-to be treated as 1-dimensional.<br />
+注意，由于 C++ 的工作方式，数组以特殊方式传递给函数，在函数内部必须将其视为一维数组。<br />
 <br />
 <br />
-Please note that above code is not at all optimal but kept simple for demonstration. Much faster libraries exist to do this,
-such as FFTW, kissfft and others. These are much faster, more complete, and support non-power-of-two sizes fast as well.
-Using such a well tested fast implementation is recommended for real life problems.
+请注意，上述代码并不是最优的，仅为演示而保持简单。有更快的库可以实现这一功能，例如 FFTW、kissfft 等。这些库速度更快、功能更完整，并且也能快速支持非 2 的幂大小。对于实际问题，建议使用这类经过充分测试的快速实现。
 <br />
 <br />
-The output of the program is as follows:<br />
+程序的输出如下：<br />
 <br />
 <img alt="2D DFT" src="images/DFT2D.jpg" style="width: 388px; height: 406px;" /><br />
 <br />
-On the top row are the real part, imaginary part and amplitude of
-the image. The imaginary part of the image is 0.<br />
+顶行是图像的实部、虚部和振幅。图像的虚部为 0。<br />
 <br />
-On the center row are the real part, imaginary part and amplitude
-of the spectrum from the image. The real and imaginary part can
-have negative values, so they have the "neg128" option enabled to
-draw them and grey represents 0. Since the amplitude is always
-positive, black is 0 there.<br />
+中间行是图像频谱的实部、虚部和振幅。实部和虚部可以有负值，因此启用了"neg128"选项来绘制它们，灰色表示 0。由于振幅始终为正，黑色表示 0。<br />
 <br />
-The bottom row is again the image, calculated by using the Inverse
-DFT of the spectrum. It looks almost the same as the original, a
-few pixels might slightly differ in color due to rounding
-errors.<br />
+底行是图像，通过对频谱进行逆 DFT 计算得到。看起来与原始图像几乎相同，由于舍入误差，少数像素的颜色可能略有不同。<br />
 <br />
-The text "99% done" only appears if you use the DFT2D function,
-since it's so slow (30 seconds on an Athlon 1700+ processor for an
-128x128 image) a progress counter is handy. The FFT2D does the same
-calculation immediatly, so such a counter isn't needed.<br />
+文本"99% done"只在使用 DFT2D 函数时才会出现，因为它非常慢（在 Athlon 1700+ 处理器上处理 128×128 图像需要 30 秒），进度计数器很有用。FFT2D 立即完成相同的计算，因此不需要这样的计数器。<br />
 <br />
-If you study the spectra of the images, you'll see horizontal and
-vertical lines through the center. They're caused by the sides of
-the image: since mathematically speaking, the FT is calculated of
-the image tiled infinite times, there's an abrupt change when going
-from one side of the image to the other, causing the lines in the
-spectrum.<br />
+如果研究图像的频谱，您会看到穿过中心的水平和垂直线。这是由图像的边缘引起的：从数学上讲，FT 是对无限平铺的图像计算的，从图像一侧到另一侧时会有突变，从而在频谱中产生这些线。<br />
 <br />
-<b>Some remarks:</b><br />
+<b>一些说明：</b><br />
 <ul>
-<li>If you'd calculate the forward FT instead of the inverse FT to
-go back from the spectrum to the image, you get the image upside
-down.</li>
-<li>Both the real and imaginary part of the spectrum are needed to
-reconstruct the image out of it, even though the image itself has
-no imaginary part.</li>
-<li>The FT functions also work on images that have an imaginary
-part, for example if a color image would have only 2 color
-channels, one color channel could be used as real part and the
-other as imaginary part.</li>
-<li>Even though the image itself is in 24-bit color, which means
-that each pixel has 8 bit per color channel, or 256 discrete color
-values per channel, the FT of it requires much more precision: both
-the real and imaginary component require floating point numbers
-that can go from -infinity to +infinity. Otherwise you'll lose
-information and the image you get back after doing the inverse FT
-on it again will look very crappy. The spectra displayed on the
-computer screen don't contain all information, since they're
-converted back to integers with 256 discrete values.</li>
-<li>By taking the DFT of the amplitude of the spectrum of an image,
-you will NOT get the original image back at all, since it requires
-a high precision real and an imaginary part of the spectrum, not
-the amplitude.</li>
+<li>如果从频谱还原图像时使用正向 FT 而非逆 FT，得到的图像将是上下颠倒的。</li>
+<li>从频谱重建图像需要频谱的实部和虚部，即使图像本身没有虚部。</li>
+<li>FT 函数也适用于有虚部的图像，例如，如果彩色图像只有 2 个颜色通道，一个颜色通道可以用作实部，另一个用作虚部。</li>
+<li>尽管图像本身是 24 位彩色，即每个像素每个颜色通道有 8 位，或每通道 256 个离散颜色值，但其 FT 需要更高的精度：实部和虚部都需要可以从 -∞ 到 +∞ 的浮点数。否则您会丢失信息，再次对其进行逆 FT 后得到的图像看起来会非常糟糕。显示在计算机屏幕上的频谱不包含所有信息，因为它们被转换回了具有 256 个离散值的整数。</li>
+<li>对图像频谱的振幅进行 DFT，将完全无法还原原始图像，因为这需要高精度的频谱实部和虚部，而不是振幅。</li>
 </ul>
 
 
-<h2 style="font-weight: normal;"><a name="spectra2d" id="spectra2d"></a>The Spectra of Images</h2>
+<h2 style="font-weight: normal;"><a name="spectra2d" id="spectra2d"></a>图像的频谱</h2>
 
-You can replace test.png by any 24-bit 128*128 color PNG you
-want. You can even use another size, but then you'll have to change
-the parameters N and M in the code (on top). Note that the FFT2D
-function only works on images with a size that is a power of two
-(64x64, 128x256, 256x256... all work), otherwise you'll have to use
-the slower DFT2D function (or a good other FFT library that supports non power of two).<br />
+您可以将 test.png 替换为任何 24 位 128×128 彩色 PNG。您甚至可以使用其他尺寸，但需要修改代码顶部的参数 N 和 M。注意，FFT2D 函数只适用于大小为 2 的幂的图像（64×64、128×256、256×256 等均可），否则您将不得不使用较慢的 DFT2D 函数（或支持非 2 的幂的其他优质 FFT 库）。<br />
 <br />
-The spectrum of an image isn't immediatly the most interesting
-thing (applying filters on it and then taking the inverse FT again
-is much more interesting), but you can still learn a bit about an
-image by looking at its spectrum: here are a few examples, each
-picture shows the real part of the image, and the amplitude of the
-spectrum. To see the real and imaginary part of the spectrum, run
-the images through the program yourself.<br />
+图像的频谱本身不是最有趣的（对其应用滤波器然后再次进行逆 FT 更有趣），但通过观察其频谱，您仍然可以了解一些关于图像的信息：以下是几个示例，每张图片显示图像的实部和频谱的振幅。要查看频谱的实部和虚部，请自行将图像通过程序处理。<br />
 <br />
-This image is a sine function with a DC component added (because
-images can only have positive pixel values): the color of each
-pixel is 128 + 128 * sin(pi*y/16.0). If you remember the spectra of
-1D signals, you'll remember that a sine function gave a peak on the
-negative and positive side, and that the DC component gave a peak
-at zero. Here you can see the same in the spectrum: the center dot
-is the DC component, and the two others represent the frequency of
-the sine function, the one dot is just a mirrored version of the
-other one. There are no pixels in the x-direction, because the
-image is the same everywhere in that direction.<br />
+这幅图像是加了直流分量的正弦函数（因为图像只能有正像素值）：每个像素的颜色为 128 + 128 * sin(pi*y/16.0)。如果您还记得一维信号的频谱，您会记得正弦函数在负侧和正侧各有一个峰值，直流分量在零处有一个峰值。在频谱中可以看到同样的情况：中心点是直流分量，另外两个点表示正弦函数的频率，一个点只是另一个点的镜像。在 x 方向上没有像素，因为图像在该方向上处处相同。<br />
 <br />
 <img alt="" src="images/spectrum2d1.jpg" style="width: 256px; height: 128px;" /><br />
 <br />
-Here a sine function with a higher frequency is used to generate
-the image, so the two dots are further away from the origin to
-represent the higher frequency. Remember the scale property of the
-Fourier Transform? Here it's illustrated very well: the image
-contracts, and its spectrum becomes wider.<br />
+这里使用更高频率的正弦函数生成图像，因此两个点离原点更远，表示更高的频率。还记得傅里叶变换的尺度性吗？这里很好地说明了这一点：图像收缩，其频谱变宽。<br />
 <br />
 <img alt="" src="images/spectrum2d2.jpg" style="width: 256px; height: 128px;" /><br />
 <br />
-In the next image, the sine function doesn't tile: if you'd put the
-same image twice on top of each other, you wouldn't see a sine
-anymore in the y-direction (while in the previous two examples you
-would). This isn't considered a real sine anymore by the spectrum
-either, and it doesn't contain just two dots, but a line.<br />
+在下一幅图像中，正弦函数不能平铺：如果将同一图像叠放两次，在 y 方向上将看不到正弦波了（而在前两个例子中可以看到）。频谱也不再将其视为真正的正弦波，它不只包含两个点，而是一条线。<br />
 <br />
 <img alt="" src="images/spectrum2d3.jpg" style="width: 256px; height: 128px;" /><br />
 <br />
-One of the properties of the 2D FT is that if you rotate the image,
-the spectrum will rotate in the same direction:<br />
+二维 FT 的一个性质是，如果旋转图像，频谱也会沿同一方向旋转：<br />
 <br />
 <img alt="" src="images/spectrum2d4.jpg" style="width: 256px; height: 128px;" /><br />
 <br />
-The following image shows the sum of 2 sine functions, each in
-another direction (Plasma effects are often made this way):<br />
+下图显示了 2 个正弦函数之和，每个正弦函数方向不同（等离子体效果通常就是这样制作的）：<br />
 <br />
 <img alt="" src="images/spectrum2d5.jpg" style="width: 256px; height: 128px;" /><br />
 <br />
-The following image shows how lines in an image often generate
-perpendicular lines in the spectrum:<br />
+下图显示了图像中的线条如何在频谱中生成垂直线：<br />
 <br />
 <img alt="" src="images/spectrum2d6.jpg" style="width: 256px; height: 128px;" /><br />
 <br />
-The sloped lines in the spectrum here are obviously due to the
-sharp transition from the sky to the mountain.<br />
+频谱中的斜线显然是由天空到山峰的剧烈过渡引起的。<br />
 <br />
 <img alt="" src="images/spectrum2d7.jpg" style="width: 255px; height: 127px;" /><br />
 <br />
-The FT of a rectangular function is a 2D sinc function:<br />
+矩形函数的 FT 是二维 sinc 函数：<br />
 <br />
 <img alt="" src="images/spectrum2d8.jpg" style="width: 265px; height: 127px;" /><br />
 <br />
-And here's the FT of a tillable texture, since it's tillable there
-are no abrupt changes on the horizontal and vertical sides, so
-there are no horizontal and vertical lines in the spectrum:<br />
+这是一个可平铺纹理的 FT，由于它是可平铺的，水平和垂直边缘没有突变，因此频谱中没有水平和垂直线：<br />
 <br />
 <img alt="" src="images/spectrum2d9.jpg" style="width: 256px; height: 128px;" /><br />
 <br />
 
 
-<h2 style="font-weight: normal;"><a name="filters2d" id="filters2d"></a>2D Filters</h2>
+<h2 style="font-weight: normal;"><a name="filters2d" id="filters2d"></a>二维滤波器</h2>
 
-Now comes the most interesting application of the FT on images: you
-can easily apply all sorts of filters to the spectrum, again by
-multiplying them with a 2D transfer function, or by making some
-parts of the spectrum zero, or just applying some whacko formula to
-the spectrum. After doing that, take the inverse FT of the modified
-spectrum to get the filtered image.<br />
+现在来介绍 FT 在图像上最有趣的应用：您可以轻松地对频谱应用各种滤波器，同样通过将其与二维传递函数相乘，或将频谱的某些部分置零，或对频谱应用某些奇特公式。之后，对修改后的频谱进行逆 FT 即可得到滤波后的图像。<br />
 <br />
-Here's part of the code for a program that'll allow you to select
-different images (a PNG, modified versions of it, and some
-generated functions), and then after pressing space, allows you to
-apply different filters and see their effect. The full code can be
-downloaded <a href="files/fourier2d.cpp">here</a>: <a href="files/fourier2d.cpp">fourier2d.cpp</a>.<br />
+以下是一个程序的部分代码，该程序允许您选择不同的图像（一个 PNG、其修改版本以及一些生成的函数），然后按下空格键后，可以应用不同的滤波器并查看其效果。完整代码可在<a href="files/fourier2d.cpp">此处</a>下载：<a href="files/fourier2d.cpp">fourier2d.cpp</a>。<br />
 <br />
-This code doesn't contain much new, it's much more interesting to
-run it and study the results of the filters.<br />
+这段代码没有太多新内容，运行它并研究滤波器的结果更有趣。<br />
 <br />
-Once again, first come all the declarations of functions and
-variables. f2 and F2 will become the buffers for the filtered
-versions of the original image and spectrum.<br />
+再次，首先是所有函数和变量的声明。f2 和 F2 将成为原始图像和频谱的滤波版本的缓冲区。<br />
 <br />
 <center>
 <table class="codetable">
@@ -1663,9 +1202,7 @@ void calculateAmp(int w, int h, double *ga, const double *gRe, const double *gIm
 </table>
 </center>
 <br />
-The main function loads a PNG image first, and will then start the
-first loop, the loop that lets you try out different modified
-versions of the PNG image and some other generated signals:<br />
+主函数首先加载一幅 PNG 图像，然后开始第一个循环，该循环让您尝试 PNG 图像的不同修改版本以及其他一些生成的信号：<br />
 <br />
 <center>
 <table class="codetable">
@@ -1713,9 +1250,7 @@ versions of the PNG image and some other generated signals:<br />
 </table>
 </center>
 <br />
-Here's a small part of the input part of the first loop, it looks
-pretty messy here, only a few keys are shown here, the code for all
-keys is included in the downloadable file.<br />
+以下是第一个循环输入部分的一小段代码，这里看起来相当杂乱，只显示了几个按键，所有按键的代码都包含在可下载文件中。<br />
 <br />
 <center>
 <table class="codetable">
@@ -1760,9 +1295,7 @@ keys is included in the downloadable file.<br />
 </table>
 </center>
 <br />
-If a key was pressed, the new version of the image and its
-spectrum will be drawn. If the first loop was done (by pressing
-space), the second loop is initialized:<br />
+如果按下某个键，将绘制图像的新版本及其频谱。如果第一个循环完成（通过按空格键），则初始化第二个循环：<br />
 <br />
 <center>
 <table class="codetable">
@@ -1790,9 +1323,7 @@ space), the second loop is initialized:<br />
 </table>
 </center>
 <br />
-Here's a small part of the input code to apply filters: a Low Pass,
-High Pass and Band Pass filter are given. The rest of the keys is
-in the downloadable file.<br />
+以下是应用滤波器的输入代码的一小部分：给出了低通、高通和带通滤波器。其余按键的代码在可下载文件中。<br />
 <br />
 <center>
 <table class="codetable">
@@ -1865,8 +1396,7 @@ in the downloadable file.<br />
 </table>
 </center>
 <br />
-This is the part of the second loop that draws the filtered
-spectrum and signal, and the final part of the main function:<br />
+这是第二个循环中绘制滤波后频谱和信号的部分，也是主函数的最后部分：<br />
 <br />
 <center>
 <table class="codetable">
@@ -1892,110 +1422,53 @@ spectrum and signal, and the final part of the main function:<br />
 </table>
 </center>
 <br />
-The functions FFT2D, draw and calculateAmp are the same as before
-again and not shown here. They're also in the downloadable
-file.<br />
+FFT2D、draw 和 calculateAmp 函数与之前相同，这里不再显示。它们也包含在可下载文件中。<br />
 <br />
-Here's a possible output of the program:<br />
+以下是程序可能的输出：<br />
 <br />
 <img alt="" src="images/2dfilters.jpg" style="width: 387px; height: 543px;" /><br />
 <br />
-The top row shows the original image, below that is its spectrum
-(the amplitude on the right), the third row shows the spectrum with
-a low pass filter applied to it: only the low frequency components
-remain. The bottom row shows the result of the Inverse FT on the
-new spectrum: all high frequency components of the image are
-removed, and the image becomes blurred.<br />
+顶行显示原始图像，下方是其频谱（右侧为振幅），第三行显示应用低通滤波器后的频谱：只保留低频分量。底行显示对新频谱进行逆 FT 的结果：图像的所有高频分量被去除，图像变得模糊。<br />
 <br />
-Here's another example, which shows what happens if you set the
-imaginary part of the spectrum to 0. To get this, first press space
-and then press the b key in the program.<br />
+以下是另一个示例，显示将频谱的虚部设置为 0 时会发生什么。要实现这一效果，先按空格键，然后在程序中按 b 键。<br />
 <br />
 <img alt="" src="images/2dfilters2.jpg" style="width: 390px; height: 545px;" /><br />
 <br />
-More on different types of filters follows in the next
-sections.<span style="font-weight: bold;"><br /></span>
+后续章节将介绍更多不同类型的滤波器。<span style="font-weight: bold;"><br /></span>
 
 
-<h2 style="font-weight: normal;"><a name="dc" id="dc"></a>The DC Component<br /></h2>
+<h2 style="font-weight: normal;"><a name="dc" id="dc"></a>直流分量<br /></h2>
 
-The center of the spectrum is the DC component of the picture, and
-represents the average color of the picture: if you calculate the
-IDFT of a spectrum with only the DC component left, you get a flat
-image with only one color: the average of the original image. In
-the program for which the code was given above, first accept the
-image by pressing space, and then you can add or remove the DC
-component by using the arrow keys, get the full spectrum again by
-pressing the a key (or the q key on azerty keyboards), and make the
-spectrum zero by pressing the m key (the , key on azerty
-keyboards). To get only the DC component, first press m to remove
-the spectrum, then the up arrow to get only the DC component
-back.<br />
+频谱的中心是图像的直流分量，代表图像的平均颜色：如果对只保留直流分量的频谱计算 IDFT，得到的是一幅只有一种颜色的平坦图像，即原始图像的平均颜色。在上面给出代码的程序中，先按空格键接受图像，然后可以使用方向键添加或去除直流分量，按 a 键（或 azerty 键盘上的 q 键）恢复完整频谱，按 m 键（azerty 键盘上的 , 键）将频谱置零。要只获得直流分量，先按 m 键去除频谱，然后按向上方向键只恢复直流分量。<br />
 <br />
-This is the original image (the bright blue line in the spectrum
-probably comes from the sharp edges from the cooling fin):<br />
+这是原始图像（频谱中的亮蓝线可能来自散热片的锐利边缘）：<br />
 <br />
 <img alt="" src="images/theoriginal.jpg" style="width: 256px; height: 128px;" /><br />
 <br />
-Here's the same image with the DC component removed (note the black
-dot in the center of the spectrum). You can't see the whole story
-in fact, all the parts of the image that look black are actually
-negative, since this picture represents the original image with the
-average color substracted from it. On the right is the amplitude of
-the image instead, which reveals the negative parts.<br />
+这是去除直流分量后的同一图像（注意频谱中心的黑点）。实际上您看不到完整情况，图像中看起来是黑色的部分实际上是负值，因为这幅图像表示从原始图像中减去平均颜色后的结果。右侧是图像的振幅，揭示了负值部分。<br />
 <br />
-<img alt="Image with its DC component removed" src=
+<img alt="去除直流分量后的图像" src=
 "images/DCremoved.jpg" style="width: 256px; height: 128px;" /><img alt=
-"The amplitude of the image with its DC component removed" src=
+"去除直流分量后图像的振幅" src=
 "images/DCremovedamplitude.jpg" style="width: 128px; height: 128px;" /><br />
 <br />
-And here below only the DC component is left. Only a single dot
-remains in the spectrum. It looks white on the computer screen, but
-in reality it are 3 large floating point numbers that contain the
-DC color information. The DC component of an image's spectrum is
-usually very large, it contains the most "energy": as you could see
-on the previous image, removing this single dot from the spectrum
-makes the image a whole lot darker. Energy has to be understood in
-terms of Information here.<br />
+下面只保留了直流分量。频谱中只剩一个点。在计算机屏幕上它看起来是白色的，但实际上是 3 个包含直流颜色信息的大浮点数。图像频谱的直流分量通常非常大，包含最多的"能量"：如前面的图像所示，从频谱中去除这个单点会使图像变暗很多。这里的"能量"应理解为信息量。<br />
 <br />
-<img alt="Only the DC component of the image remains" src=
+<img alt="图像中只保留直流分量" src=
 "images/DConly.gif" style="width: 256px; height: 128px;" /><br />
 <br />
-This is the average color of the image, you can call it the
-ultimate blur, what you'd see if you were standing very far away
-from the image, or what you'd get if you took the sum of the color
-of all pixels, and divided the result though the total number of
-pixels.<br />
+这是图像的平均颜色，您可以称之为终极模糊——当您站在离图像很远的地方所看到的，或者将所有像素的颜色求和后除以像素总数所得到的结果。<br />
 
 
-<h2 style="font-weight: normal;"><a name="lowpass" id="lowpass"></a>Low Pass Filters: Blurring<br /></h2>
+<h2 style="font-weight: normal;"><a name="lowpass" id="lowpass"></a>低通滤波器：模糊<br /></h2>
 
-Low frequencies in an audio represent the bass of the music, but in
-pictures, it represents the blurriest parts and gradients. Sharp
-edges and lines have high frequencies.<br />
+音频中的低频代表音乐的低音，而在图像中，低频代表最模糊的部分和渐变。锐利的边缘和线条具有高频。<br />
 <br />
-An image can be blurred by, for each pixel, calculating the weighed
-average of that pixel and its neighbours, using a convolution
-matrix: that's the way Photoshop and Paint Shop Pro do it, for
-example, you can create such a convolution matrix with the "User
-Defined" filter in these programs. But, since the convolution in
-the spatial domain is the same as a multiplication in the frequency
-domain, we can also blur an image, by multiplying the spectrum with
-the transfer function of a low pass filter. The transfer function
-of a low pass filter makes all high frequency components zero or at
-least weakens them, while keeping or amplifying the low frequency
-ones.<br />
+图像可以通过对每个像素计算该像素及其邻域的加权平均值来进行模糊，使用卷积矩阵：这就是 Photoshop 和 Paint Shop Pro 的做法，例如，您可以在这些程序中使用"用户自定义"滤波器来创建这样的卷积矩阵。但是，由于空间域中的卷积等同于频域中的乘法，我们也可以通过将频谱与低通滤波器的传递函数相乘来模糊图像。低通滤波器的传递函数使所有高频分量为零或至少削弱它们，同时保留或放大低频分量。<br />
 <br />
-For very blurry blurs, a very large convolution matrix is required,
-and this would require a lot of calculations. Taking the Fast
-Fourier Transform, then multiplying the spectrum, and then taking
-the Inverse FFT, goes much faster for heavy blurs. You can also
-create much nicers blurs easier and more intuitively by using the
-spectrum<br />
+对于非常强烈的模糊，需要一个非常大的卷积矩阵，这需要大量计算。进行快速傅里叶变换，然后乘以频谱，再进行逆 FFT，对于强模糊来说速度快得多。使用频谱还可以更简单、更直观地创建更好的模糊效果。<br />
 <br />
-The more high frequencies you remove of the spectrum, the blurrier
-the image, and the more calculations would be needed in the spatial
-domain:<br />
+从频谱中去除的高频越多，图像越模糊，在空间域中所需的计算也越多：<br />
 <br />
 <img alt="" src="images/theoriginal.jpg" style="width: 256px; height: 128px;" /><br />
 <img alt="" src="images/ftblur1.jpg" style="width: 256px; height: 128px;" /><br />
@@ -2004,134 +1477,72 @@ domain:<br />
 <img alt="" src="images/ftblur5.jpg" style="width: 256px; height: 128px;" /><br />
 <img alt="" src="images/DConly.gif" style="width: 256px; height: 128px;" /><br />
 <br />
-In the above images, a circular section of the spectrum is left. A much nicer blur
-would be created by not using such a "sharp" circle, but a gaussian kernel, which
-exponentially decreases in value from the center. That would give a gaussian blur.
+在上述图像中，保留了频谱的一个圆形区域。如果不使用这样"锐利"的圆形，而是使用从中心开始指数衰减的高斯核，可以创建更好的模糊效果，即高斯模糊。
 <p>
-You can also, for example, keep a square one, but round ones should
-give nicer blurs:<br />
+您也可以保留一个正方形区域，但圆形区域应该能产生更好的模糊效果：<br />
 <br />
 <img alt="" src="images/ftblursquare.jpg" style="width: 256px; height: 128px;" />
 <p>
-Side note: for some types of blur, such as gaussian blur, there
-are still other faster algorithms that don't require the FFT nor a large kernel,
-in the case of gaussian blur you can approximate it very well by doing three
-box blurs that take linear time for any size of box in a row, see the Filtering
-tutorial of this series for a bit more on that.
+附注：对于某些类型的模糊，例如高斯模糊，还有比 FFT 更快的算法，不需要 FFT 也不需要大卷积核。对于高斯模糊，可以通过连续进行三次对任意大小的盒子都能在线性时间内完成的盒式模糊来很好地近似，更多内容请参见本系列的滤波教程。
 
-<h2 style="font-weight: normal;"><a name="highpass" id="highpass"></a>High Pass Filters<br /></h2>
+<h2 style="font-weight: normal;"><a name="highpass" id="highpass"></a>高通滤波器<br /></h2>
 
-A high pass filter on an image keeps only the high frequency
-components. Since, by applying a high pass filter, the DC component
-of the spectrum is removed too, the resulting image can have
-negative pixel values that can't get drawn. To overcome this, the
-high pass filter of Photoshop adds 128 (half of the maximum value
-255) to each color component the resulting pixels, so grey
-represents zero. Here, we'll look at the positive part of the
-image, the amplitude (revealing the negative values), and the image
-with the DC component added again instead.<br />
+图像上的高通滤波器只保留高频分量。由于应用高通滤波器时，频谱的直流分量也被去除，结果图像可能有无法绘制的负像素值。为了解决这个问题，Photoshop 的高通滤波器会在结果像素的每个颜色分量上加 128（最大值 255 的一半），使灰色表示零。这里，我们将查看图像的正值实部、振幅（揭示负值），以及重新加入直流分量后的图像。<br />
 <br />
-A high pass filter is exactly the opposite of the low pass filters,
-so now a circular section in the center of the spectrum is removed.
-On the left is the resulting positive real part of the image, in
-the center the spectrum with the circle removed, and on the right
-the amplitude of the image:<br />
+高通滤波器与低通滤波器完全相反，因此现在去除频谱中心的一个圆形区域。左侧是图像的正值实部，中间是去除圆形后的频谱，右侧是图像的振幅：<br />
 <br />
 <img alt="" src="images/fthighpass.jpg" style="width: 384px; height: 128px;" /><br />
 <br />
-To see much better what's going on, add the DC component to it
-again:<br />
+为了更好地看清发生了什么，再次加入直流分量：<br />
 <br />
 <img alt="" src="images/fthighpasswithDC.jpg" style="width: 256px; height: 128px;" /><br />
 <br />
-It can be seen that only the high frequency parts of the image are
-left: subtle gradients and color changes are gone, only the edges
-of objects and especially the cooling fin are still
-recognisable.<br />
+可以看到只剩下图像的高频部分：细微的渐变和颜色变化消失了，只有物体的边缘，尤其是散热片仍然可以辨认。<br />
 <br />
-Photoshop, instead of adding the DC component, adds grey to the
-image to make all pixels positive, so the result of the High Pass
-filter in Photoshop is something like this:<br />
+Photoshop 不是加入直流分量，而是向图像添加灰色以使所有像素为正，因此 Photoshop 中高通滤波器的结果如下所示：<br />
 <br />
 <img alt="" src="images/photoshophighpass.jpg" style="width: 137px; height: 155px;" /><br />
 <br />
-If we use a higher radius for the removed circle, only the very
-highest frequencies remain, only the cooling fin still looks pretty
-nice:<br />
+如果我们对去除的圆形使用更大的半径，只有最高频率保留下来，只有散热片仍然看起来相当清晰：<br />
 <br />
 <img alt="" src="images/fthighpasswithDC2.jpg" style="width: 256px; height: 128px;" /><br />
 <br />
-A high pass filter can also be done by first blurring the image,
-and then substracting the blurred image from the original.<br />
+高通滤波器也可以通过先对图像进行模糊，然后从原始图像中减去模糊图像来实现。<br />
 <br />
-After seeing those pictures you might wonder if there is actually
-something useful that can be done with a High Pass Filter? Well, it
-can for example be used to make better tillable textures, take for
-example this grass texture:<br />
+看了这些图片后，您可能会想知道高通滤波器是否真的有什么实际用途？确实有，例如它可以用来制作更好的可平铺纹理，以这个草地纹理为例：<br />
 <br />
 <img alt="" src="images/grasstexture.jpg" style="width: 64px; height: 64px;" /><br />
 <br />
-If you tile it, it looks like this:<br />
+如果平铺它，看起来是这样的：<br />
 <br />
 <img alt="" src="images/grasstexturetiledugly.jpg" style="width: 256px; height: 256px;" /><br />
 <br />
-It looks pretty ugly, because there are obvious bright and dark
-spots in the image, and these look very repetitive. These large
-areas of bright and darker color are very low frequency components,
-so they can be removed with a subtle High Pass Filter!<br />
+看起来相当难看，因为图像中有明显的亮点和暗点，而且这些看起来非常重复。这些大面积的亮色和暗色区域是非常低频的分量，因此可以用一个细微的高通滤波器去除！<br />
 <br />
-Let's process the image to our program, apply a High Pass filter
-with a very small radius to it, and bring the DC component back:
-the DC component is the lowest frequency of all, just a flat color,
-so it can't look repetitive, and is very important because it
-contains the green color of the grass. As you can see on the third
-row on the right in the screenshot, a very small circular section
-of the spectrum is removed, and in the centre of the circle is a
-single white point which is the DC component.<br />
+让我们将图像导入程序，对其应用一个半径非常小的高通滤波器，然后恢复直流分量：直流分量是所有频率中最低的，只是一个平坦的颜色，因此不会显得重复，而且非常重要，因为它包含草地的绿色。如截图右侧第三行所示，频谱中只去除了一个非常小的圆形区域，圆心是一个白色点，即直流分量。<br />
 <br />
 <img alt="" src="images/fixthegrass.jpg" style="width: 198px; height: 281px;" /><br />
 <br />
-At the bottom row a new version of the grass texture appeared, that
-looks already much better when tiled if you take a certain distance
-from it:<br />
+底行出现了草地纹理的新版本，在保持一定距离观看时，平铺效果已经好多了：<br />
 <br />
 <img alt="" src="images/grasstexturetiledbetter.jpg" style="width: 256px; height: 256px;" /><br />
 <br />
-You can still recognise where the sides are, because the source
-image actually wasn't a perfectly tillable one. If the source image
-would've been perfectly tillable, the result would've been so as
-well. On a beautiful photorealistic texture of a rocky wall, with
-however a large dark spot in it that makes the rocky wall
-repetitive when tiled, the result of this high pass filter would've
-been very useful.<br />
+您仍然可以看出边缘在哪里，因为源图像实际上并不是一个完美可平铺的图像。如果源图像是完美可平铺的，结果也会如此。对于一个美丽的岩石墙壁写实纹理，如果其中有一个大的暗斑使岩石墙壁在平铺时显得重复，这个高通滤波器的结果将非常有用。<br />
 <br />
-The source code of the program was a little bit modified to get a
-high pass filter with a smaller radius under the "SDLK_j"
-button.
+程序的源代码经过了少量修改，以在"SDLK_j"按钮下获得半径更小的高通滤波器。
 <p>
-Side note: For sharpening, too, there are even faster algorithms than with FFT,
-such as using fast blur and then computing the following sum of images:
-original + (original - blur) * amount. This is "unsharp masking"
+附注：对于锐化，也有比 FFT 更快的算法，例如使用快速模糊然后计算以下图像之和：original + (original - blur) * amount。这就是"反锐化蒙版"（unsharp masking）。
 
 
-<h2 style="font-weight: normal;"><a name="bandpass" id="bandpass"></a>Band Pass Filters</h2>
+<h2 style="font-weight: normal;"><a name="bandpass" id="bandpass"></a>带通滤波器</h2>
 
-Band Pass filters leave though only frequencies that are between a
-certain lowest and a highest frequency. Your radio uses the 1D
-version of this to listen to a station with a certain frequency.
-Again the DC component is removed by such a filter, so we add it
-again, because without it the image is too dark to see it. Here's
-the original image again, and an example of such a BP filter with
-DC component:<br />
+带通滤波器只允许介于某个最低频率和最高频率之间的频率通过。您的收音机就使用其一维版本来收听特定频率的电台。同样，这种滤波器也会去除直流分量，因此我们再次将其加回，因为没有它图像太暗看不清。以下是原始图像，以及带直流分量的带通滤波器示例：<br />
 <br />
 <img alt="" src="images/theoriginal.jpg" style="width: 256px; height: 128px;" /><br />
 <br />
 <img alt="" src="images/ftbandpass.jpg" style="width: 256px; height: 127px;" /><br />
 <br />
-The sum of many images like this one together (but with the DC
-component added only once of course) forms the original image
-again. Here's are a few more BP filters, that leave through higher
-frequencies:<br />
+许多这样的图像之和（当然直流分量只加一次）就能还原出原始图像。以下是几个允许更高频率通过的带通滤波器：<br />
 <br />
 <img alt="" src="images/ftbandpass2.jpg" style="width: 255px; height: 127px;" /><br />
 <br />
@@ -2139,41 +1550,26 @@ frequencies:<br />
 <br />
 <img alt="" src="images/ftbandpass4.jpg" style="width: 256px; height: 128px;" /><br />
 <br />
-And here's the result of a much thinner BP filter, the thinner the
-BP filter, the more it can be seen how the image is a sum of sine
-functions:<br />
+以下是一个更窄的带通滤波器的结果，带通滤波器越窄，越能看出图像是如何由正弦函数之和构成的：<br />
 <br />
 <img alt="" src="images/ftbandpass5.jpg" style="width: 256px; height: 128px;" /><br />
 <br />
-Note: not all bandpass examples are included in the program by
-default, but you can easily get them by changing numbers of the BP
-filters in the code (under SDLK_r and SDLK_s in the second input
-loop).<br />
+注意：程序默认不包含所有带通示例，但您可以通过修改代码中带通滤波器的数值（第二个输入循环中的 SDLK_r 和 SDLK_s 下）轻松获得它们。<br />
 
 
-<h2 style="font-weight: normal;"><a name="real" id="real"></a>Keeping it Real<br /></h2>
+<h2 style="font-weight: normal;"><a name="real" id="real"></a>保持实数性<br /></h2>
 
-Up to this point, we always calculated the FT of each channel
-separately, and left the imaginary part black. This is a big loss
-of resources, since there are 3 unused imaginary channels.
+到目前为止，我们总是分别计算每个通道的 FT，并将虚部留为黑色。这是一种很大的资源浪费，因为有 3 个未使用的虚部通道。
 <br />
 <br />
-Since the result of the FT of a real function is symmetrical in the complex domain,
-half the information is in fact redundant. So it's possible to store the result of the
-FT into one real array anyway: Place the DC component in the center, on one side put
-one half of the real part, on the other side one half of the imaginary part.
-For even sized input, there will also be one value that is zero in the imaginary part and
-has some non-zero value in the real part. That one value can go in the remaining index. This
-transform is perfectly reversible, but it requires taking care of indices correctly. Providing
-the code here is currently beyond the scope of this already long tutorial.
+由于实函数的 FT 结果在复数域中是对称的，一半的信息实际上是冗余的。因此可以将 FT 的结果存储在一个实数数组中：将直流分量放在中心，一侧放实部的一半，另一侧放虚部的一半。对于偶数大小的输入，虚部还会有一个值为零的情况，其实部有某个非零值。该值可以放在剩余的索引中。这种变换是完全可逆的，但需要正确处理索引。在这个已经很长的教程中，提供相应代码目前超出了范围。
 <br />
 <br />
-Another way to avoid complex numbers is to use a real transform, such as the DCT (Discrete Cosine Transform).
-Several similar such transforms exist, and have similar "Fast" variants, but that too is beyond the scope here for now.
+另一种避免复数的方法是使用实数变换，例如 DCT（离散余弦变换）。存在几种类似的变换，也有类似的"快速"变体，但这也超出了本文目前的讨论范围。
 <br />
 <hr />
 <br />
-Copyright (c) 2004-2018 by Lode Vandevenne. All rights reserved.
+版权所有 (c) 2004-2018 Lode Vandevenne，保留所有权利。
 <br />
 <script language="javascript" src="colorcode.js"></script>
 </body>

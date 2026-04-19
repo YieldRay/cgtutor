@@ -1,44 +1,31 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-<title>Texture Generation using Random Noise</title>
+<title>使用随机噪声生成纹理</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <meta content="text/html; charset=us-ascii" http-equiv=
 "content-type" />
 <link rel="stylesheet" type="text/css" href="stylesheet.css" />
 </head>
 <body>
-<h1>Lode's Computer Graphics Tutorial</h1>
-<h1>Texture Generation using Random Noise<br /></h1>
-<h2>Table of Contents</h2>
+<h1>Lode 的计算机图形学教程</h1>
+<h1>使用随机噪声生成纹理<br /></h1>
+<h2>目录</h2>
 <ul>
-<li><a href="randomnoise.html#Introduction_">Introduction</a></li>
-<li><a href="randomnoise.html#Smooth_Noise_">Smooth Noise</a></li>
-<li><a href="randomnoise.html#Turbulence">Turbulence</a></li>
-<li><a href="randomnoise.html#Clouds">Clouds</a></li>
-<li><a href="randomnoise.html#Marble">Marble</a></li>
-<li><a href="randomnoise.html#Wood">Wood</a></li>
-<li><a href="randomnoise.html#3D_Random_Noise">3D Random Noise</a><br /></li>
+<li><a href="randomnoise.html#Introduction_">简介</a></li>
+<li><a href="randomnoise.html#Smooth_Noise_">平滑噪声</a></li>
+<li><a href="randomnoise.html#Turbulence">湍流</a></li>
+<li><a href="randomnoise.html#Clouds">云朵</a></li>
+<li><a href="randomnoise.html#Marble">大理石</a></li>
+<li><a href="randomnoise.html#Wood">木纹</a></li>
+<li><a href="randomnoise.html#3D_Random_Noise">3D 随机噪声</a><br /></li>
 </ul>
-<a href="index.html">Back to index</a><br />
+<a href="index.html">返回索引</a><br />
 <h2><a name="Introduction_" id=
-"Introduction_"></a>Introduction<br /></h2>
-In nature, everything has a random look, while mathematical
-formulas typically don't generate random looking results, unless
-you use them well. Random noise, such as Perlin noise invented by Ken Perlin, uses
-random numbers to generate natural looking textures.<br />
-<h2><a name="Smooth_Noise_" id="Smooth_Noise_"></a>Smooth
-Noise<br /></h2>
-As source for the random noise we need an array of random values,
-called noise[x][y]. Since our interest is generating 2D textures, a
-2D array is used. The function generateNoise will fill the array
-with noise, and the main function is programmed to show this noise
-array on the screen. The noise itself is generated with the rand()
-function from the &lt;cstdlib&gt; header file, this function
-returns a random integer value between 0 and 32768 (as defined in
-the header file). It's normalized to a random real number between 0
-and 1 by dividing it through 32768.0 (make sure to use floating
-point division).<br />
+"Introduction_"></a>简介<br /></h2>
+在自然界中，万物都呈现出随机的外观，而数学公式通常无法生成随机效果，除非你善加利用。随机噪声（例如由 Ken Perlin 发明的 Perlin 噪声）利用随机数来生成具有自然感的纹理。<br />
+<h2><a name="Smooth_Noise_" id="Smooth_Noise_"></a>平滑噪声<br /></h2>
+作为随机噪声的来源，我们需要一个随机值数组，称为 noise[x][y]。由于我们的目标是生成 2D 纹理，因此使用二维数组。函数 generateNoise 将用噪声填充该数组，而主函数负责将噪声数组显示到屏幕上。噪声本身由 &lt;cstdlib&gt; 头文件中的 rand() 函数生成，该函数返回 0 到 32768 之间的随机整数（如头文件中所定义）。通过除以 32768.0 将其归一化为 0 到 1 之间的随机实数（请确保使用浮点除法）。<br />
 <br />
 <center>
 <table class="codetable">
@@ -83,15 +70,12 @@ void generateNoise()
 </table>
 </center>
 <br />
-Here's the noise it generates:<br />
+以下是它生成的噪声：<br />
 <br />
 <img alt="" src="images/noise.gif" style=
 "width: 191px; height: 191px;" /><br />
 <br />
-This noise doesn't look very natural however, especially if you
-zoom in. Zoom in by dividing the x and y used to call the noise
-array through 8, in the pixel loop of the main function. You get
-something blocky:<br />
+然而，这种噪声看起来不够自然，尤其是放大之后。在主函数的像素循环中，将访问噪声数组所用的 x 和 y 除以 8 来进行放大，你会得到一种块状效果：<br />
 <br />
 <center>
 <table class="codetable">
@@ -104,12 +88,7 @@ something blocky:<br />
 </table>
 </center>
 <br />
-When zooming in, we want something smoother. For that, linear
-interpolation can be used. Currently the noise is an array and it's
-got only a discrete set of integer indices pointing to its
-contents. By using bilinear interpolation on the fractional part,
-you can make it smoother. For that, a new function, smoothNoise, is
-introduced:<br />
+放大时，我们希望得到更平滑的效果。为此，可以使用线性插值。目前噪声是一个数组，其内容只能通过离散的整数索引访问。通过对小数部分使用双线性插值，可以使其更加平滑。为此，引入了一个新函数 smoothNoise：<br />
 <br />
 <center>
 <table class="codetable">
@@ -143,10 +122,7 @@ introduced:<br />
 </table>
 </center>
 <br />
-The returned value is the weighed average of 4 neighboring pixels
-of the array. In the main function, now use this instead of
-directly calling the noise array, and use real numbers for the
-division:<br />
+返回值是数组中 4 个相邻像素的加权平均值。在主函数中，现在用它代替直接访问噪声数组，并对除法使用实数：<br />
 <br />
 <center>
 <table class="codetable">
@@ -159,70 +135,48 @@ division:<br />
 </table>
 </center>
 <br />
-This is again the result zoomed in 8 times, but now with the
-bilinear interpolation. If you don't zoom in you won't be able to
-see the interpolation:<br />
+这仍然是放大 8 倍后的结果，但现在加入了双线性插值。如果不放大，将无法看出插值效果：<br />
 <br />
 <img alt="" src="images/noisezoomsmooth.jpg" style=
 "width: 190px; height: 190px;" /><br />
 <br />
-This is quite useful for random noise, the smoothing method could
-be better maybe, bilinear interpolation is often used by 3D cards
-for smoothing textures in games as a cheap and fast
-technique.<br />
+这对随机噪声相当有用，平滑方法或许还可以更好，双线性插值常被 3D 显卡用于游戏中纹理的平滑处理，是一种廉价而快速的技术。<br />
 <br />
-Let's call this image a "noise texture".<br />
-<h2><a name="Turbulence" id="Turbulence"></a>Turbulence</h2>
-Turbulence is what creates natural looking features out of smoothed
-noise. The trick is to add multiple noise textures of different
-zooming scales together. An example of how this represents nature
-can be found in a mountain range: there are very large features
-(the main mountains), they are very deeply zoomed in noise.<br />
+我们将这张图像称为"噪声纹理"。<br />
+<h2><a name="Turbulence" id="Turbulence"></a>湍流</h2>
+湍流能够从平滑噪声中创造出具有自然感的特征。其技巧在于将多个不同缩放比例的噪声纹理叠加在一起。在山脉中可以找到这一原理在自然界中的体现：有非常大的特征（主山体），它们是深度放大的噪声。<br />
 <br />
 <img alt="" src="images/noisemountains1.jpg" style=
 "width: 378px; height: 156px;" /><br />
 <br />
-Then added to the mountains are smaller features: multiple tops,
-variations in the slope, ...<br />
+然后叠加在山体上的是较小的特征：多个山顶、坡度的变化……<br />
 <br />
 <img alt="" src="images/noisemountains2.jpg" style=
 "width: 396px; height: 164px;" /><br />
 <br />
-Then, at an even smaller scale, there are rocks on the
-mountains.<br />
+然后，在更小的尺度上，山上还有岩石。<br />
 <br />
 <img alt="" src="images/noisemountains3.jpg" style=
 "width: 370px; height: 164px;" /><br />
 <br />
-An even smaller layer is the grains of sand. Together, the sum of
-all these layers forms natural looking mountains.<br />
+更小的一层是沙粒。所有这些层叠加在一起，就形成了具有自然感的山脉。<br />
 <br />
-In 2D, this is done by adding different sizes of the smoothed noise
-together.<br />
+在 2D 中，这是通过将不同尺寸的平滑噪声叠加来实现的。<br />
 <br />
 <img alt="" src="images/noiseturbulence1.jpg" style=
 "width: 713px; height: 142px;" /><br />
 <br />
-The zooming factor started at 16 here, and is divided through two
-each time. Keep doing this until the zooming factor is 1. The small
-features in the mountain example weren't only smaller in the width,
-but also in the height. To achieve this in 2D textures, make the
-images with a smaller zoom darker, so adding them will have less
-effect:<br />
+这里缩放因子从 16 开始，每次除以 2。持续这样做直到缩放因子为 1。山脉示例中较小的特征不仅在宽度上更小，在高度上也更小。为了在 2D 纹理中实现这一点，将缩放比例较小的图像变暗，这样叠加时其影响就会较小：<br />
 <br />
 <img alt="" src="images/noiseturbulence2.jpg" style=
 "width: 713px; height: 142px;" /><br />
 <br />
-By adding these 5 images together, and dividing the result through
-5 to get the average, you get a turbulence texture:<br />
+将这 5 张图像叠加，再将结果除以 5 取平均值，就得到了湍流纹理：<br />
 <br />
 <img alt="" src="images/noiseturbulencesum.jpg" style=
 "width: 142px; height: 142px;" /><br />
 <br />
-Here's a function that'll automaticly do all this for a single
-pixel. The parameter "size" is the initial zoom factor, which was
-16 in the example above. The return value is normalized so that
-it'll be a number between 0 and 255.<br />
+以下是一个能自动对单个像素完成上述所有操作的函数。参数 "size" 是初始缩放因子，在上面的示例中为 16。返回值经过归一化，使其成为 0 到 255 之间的数值。<br />
 <br />
 <center>
 <table class="codetable">
@@ -245,8 +199,7 @@ it'll be a number between 0 and 255.<br />
 </table>
 </center>
 <br />
-To use the turbulence function, change the small part of the code
-in the loop that goes through every pixel by the following:<br />
+要使用湍流函数，将遍历每个像素的循环中的那小段代码替换为以下内容：<br />
 <br />
 <center>
 <table class="codetable">
@@ -259,39 +212,29 @@ in the loop that goes through every pixel by the following:<br />
 </table>
 </center>
 <br />
-The size is set to 64 there, and the result looks like this:<br />
+这里的 size 设为 64，结果如下所示：<br />
 <br />
 <img alt="" src="images/noiseturbulence64.jpg" style=
 "width: 256px; height: 256px;" /><br />
 <br />
-If you set the initial size to 256 instead, the result is much
-bigger and smoother:<br />
+如果将初始 size 设为 256，结果会更大也更平滑：<br />
 <br />
 <img alt="" src="images/noiseturbulence256.jpg" style=
 "width: 252px; height: 254px;" /><br />
 <br />
-And here's a very small initial size of only 8:<br />
+以下是初始 size 仅为 8 时的效果：<br />
 <br />
 <img alt="" src="images/noiseturbulence8.jpg" style=
 "width: 252px; height: 252px;" /><br />
 <br />
-The textures here have some obvious horizontal and vertical lines
-because of the bilinear filter smooth function. The Clouds filter
-in Photoshop generates a texture similar to the ones above, but
-with a nicer smooth function. Nicer smooth functions are beyond the
-scope of this article though.<br />
+由于使用了双线性滤波平滑函数，这里的纹理存在一些明显的水平和垂直线条。Photoshop 中的云彩滤镜会生成与上面类似的纹理，但使用了更优质的平滑函数。不过，更优质的平滑函数超出了本文的讨论范围。<br />
 <br />
-If you use no smooth function at all, it looks like this:<br />
+如果完全不使用平滑函数，效果如下：<br />
 <br />
 <img alt="" src="images/noiseturbulenceunsmooth.jpg" style=
 "width: 253px; height: 256px;" /><br />
-<h2><a name="Clouds" id="Clouds"></a>Clouds</h2>
-To generate a sky with clouds, you can use the turbulence texture
-above, but with a blue-white color palette instead of black and
-white. For that the HSLtoRGB function can be used, with the hue set
-to blue (169 or 240&deg;) and lightness ranging from 192 to 255 to
-make it white enough. Here's a new main function that'll do
-this:<br />
+<h2><a name="Clouds" id="Clouds"></a>云朵</h2>
+要生成带云朵的天空，可以使用上面的湍流纹理，但将黑白调色板替换为蓝白调色板。为此可以使用 HSLtoRGB 函数，将色调设为蓝色（169 或 240°），明度范围设为 192 到 255 以使其足够白。以下是实现此效果的新主函数：<br />
 <br />
 <center>
 <table class="codetable">
@@ -335,20 +278,13 @@ int main(int argc, char *argv[])
 <img alt="" src="images/noiseclouds.jpg" style=
 "width: 318px; height: 238px;" /><br />
 <br />
-<h2><a name="Marble" id="Marble"></a>Marble</h2>
-It's possible to use random Noise to create a texture that looks
-like marble. To do this, a sine pattern is taken as base, a sine
-pattern looks like this:<br />
+<h2><a name="Marble" id="Marble"></a>大理石</h2>
+可以使用随机噪声来创建看起来像大理石的纹理。为此，以正弦图案作为基础，正弦图案如下所示：<br />
 <br />
 <img alt="" src="images/plasmasine2.gif" style=
 "width: 256px; height: 256px;" /><br />
 <br />
-The sine texture is generated by giving the pixel at position (x,
-y) the color value 255 * sin(x + y). You can change the angle and
-period (= amount of lines) by multiplying x and y with factors. The
-sine pattern has dark and bright lines,&nbsp; and by applying
-turbulence to these lines by adding a turbulence term in the sine,
-you get something that looks like the veins of marble:<br />
+正弦纹理通过给位置 (x, y) 处的像素赋予颜色值 255 * sin(x + y) 来生成。可以通过将 x 和 y 乘以系数来改变角度和周期（即线条数量）。正弦图案具有深色和亮色线条，通过在正弦中加入湍流项来对这些线条施加湍流，就能得到类似大理石纹脉的效果：<br />
 <br />
 <center>
 <table class="codetable">
@@ -387,57 +323,36 @@ you get something that looks like the veins of marble:<br />
 </table>
 </center>
 <br />
-The value "xyValue" is the sum of x multiplied with a factor, y
-multiplied with a factor, and the turbulence multiplied with a
-factor. xPeriod, yPeriod and turbPower are parameters that you can
-change to get different textures. The division through 256 of the
-turbulence is done to bring it to a value between 0 and 1, because
-the turbulence function was made to return values from 0 to 255.
-The values above give the following result:<br />
+值 "xyValue" 是 x 乘以一个系数、y 乘以一个系数以及湍流乘以一个系数的总和。xPeriod、yPeriod 和 turbPower 是可以调整以获得不同纹理的参数。将湍流除以 256 是为了将其转换为 0 到 1 之间的值，因为湍流函数的返回值范围是 0 到 255。上述参数值给出如下结果：<br />
 <br />
 <img alt="" src="images/noisemarble1.jpg" style=
 "width: 192px; height: 192px;" /><br />
 <br />
-Decreasing turbPower will give less twists, for example if you set
-it to 1.0, you get:<br />
+减小 turbPower 会使扭曲减少，例如将其设为 1.0，你会得到：<br />
 <br />
 <img alt="" src="images/noisemarble2.jpg" style=
 "width: 190px; height: 190px;" /><br />
 <br />
-You can see much better how a sine pattern is used now, the dark
-and bright lines only twist a small bit, which still gives a sort
-of natural look.<br />
+现在可以更清楚地看到正弦图案的使用方式，深色和亮色线条只有轻微的扭曲，仍然呈现出一种自然感。<br />
 <br />
-Changing the initial size of the turbulence function makes the
-twists bigger (and thus much more subtle, similar to making
-turbPower smaller), while a small initial size gives much smaller
-but mor eaggressive twists. Here turbPower is set to 5.0 again, and
-turbSize to128.0 and 16.0 respectively:<br />
+增大湍流函数的初始 size 会使扭曲变大（从而更加微妙，类似于减小 turbPower），而较小的初始 size 则会产生更小但更剧烈的扭曲。这里 turbPower 再次设为 5.0，turbSize 分别设为 128.0 和 16.0：<br />
 <br />
 <img alt="" src="images/noisemarble3.jpg" style=
 "width: 190px; height: 191px;" /> <img alt="" src=
 "images/noisemarble4.jpg" style=
 "width: 189px; height: 190px;" /><br />
 <br />
-Changing the period of x and y makes more or less black lines, for
-example here the lines are made wider and with an angle of 0&deg;
-by setting xPeriod to 0 and yPeriod to 1 so that there'll be only
-one horizontal black line. turbSize is set to 32, and turbPower to
-only 1 so that you can see the direction of the line better:<br />
+改变 x 和 y 的周期可以增减黑色线条的数量，例如这里通过将 xPeriod 设为 0、yPeriod 设为 1，使线条变宽且角度为 0°，这样只会有一条水平黑线。turbSize 设为 32，turbPower 仅设为 1，以便更清楚地看到线条的方向：<br />
 <br />
 <img alt="" src="images/noisemarble5.jpg" style=
 "width: 191px; height: 189px;" /><br />
 <br />
-Here are the same parameters, but turbPower back to 5, so you can
-see how a big enough turbulence really totally hides the fact that
-there's only one black line:<br />
+以下是相同参数，但 turbPower 恢复为 5，可以看到足够大的湍流是如何完全掩盖只有一条黑线这一事实的：<br />
 <br />
 <img alt="" src="images/noisemarble6.jpg" style=
 "width: 190px; height: 188px;" /><br />
 <br />
-You can also change the colors of the marble by using a different
-value for R, G and B, for example to make it a bit red or
-yellowish:<br />
+你也可以通过为 R、G、B 使用不同的值来改变大理石的颜色，例如使其呈现略带红色或黄色的效果：<br />
 <br />
 <center>
 <table class="codetable">
@@ -457,22 +372,16 @@ yellowish:<br />
 <img alt="" src="images/noisemarble7.jpg" style=
 "width: 190px; height: 191px;" /><br />
 <br />
-By playing around with the parameters you can get totally different
-marble or stone patterns.<br />
-<h2><a name="Wood" id="Wood"></a>Wood</h2>
-Natural looking rings of wood can be created by adding turbulence
-to the following mathematical function:<br />
+通过调整这些参数，你可以得到完全不同的大理石或石材图案。<br />
+<h2><a name="Wood" id="Wood"></a>木纹</h2>
+通过向以下数学函数中添加湍流，可以创建出具有自然感的木纹年轮：<br />
 <br />
 <img alt="" src="images/plasmasinedist.gif" style=
 "width: 256px; height: 256px;" /><br />
 <br />
-To get the pattern above, take the sine of the distance of x and y
-to the center, so the color of the pixel at position x, y is 256 *
-sin(sqrt(x*x + y*y)). Add a turbulence term into the sine, and you
-get natural looking wood.<br />
+要得到上面的图案，取 x 和 y 到中心距离的正弦值，即位置 x, y 处像素的颜色值为 256 * sin(sqrt(x*x + y*y))。在正弦中加入湍流项，就能得到具有自然感的木纹。<br />
 <br />
-The values R, G and B are calculated out of the result in such a
-way that the wood will look brown:<br />
+R、G、B 的值由结果计算得出，使木纹呈现棕色外观：<br />
 <br />
 <center>
 <table class="codetable">
@@ -511,39 +420,32 @@ way that the wood will look brown:<br />
 </table>
 </center>
 <br />
-The rings are supposed to be visible here so, unlike for the
-marble, turbPower should be small.<br />
+这里年轮应当清晰可见，因此与大理石不同，turbPower 应当较小。<br />
 <br />
 <img alt="" src="images/noisewood.jpg" style=
 "width: 191px; height: 191px;" /><br />
 <br />
-Here's the result with more rings: xyPeriod is set to 25.<br />
+以下是年轮更多时的结果：xyPeriod 设为 25。<br />
 <br />
 <img alt="" src="images/noisewood2.jpg" style=
 "width: 191px; height: 190px;" /><br />
 <br />
-Here the wood has 12 rings again, but more turbulence: turbPower is
-set to 0.2:<br />
+这里木纹再次有 12 个年轮，但湍流更多：turbPower 设为 0.2：<br />
 <br />
 <img alt="" src="images/noisewood3.jpg" style=
 "width: 188px; height: 188px;" /><br />
 <br />
-If you make turbPower too high, the rings won't be visible anymore,
-and you'll get something that looks more like the marble patterns.
-Here it's set to 0.5:<br />
+如果将 turbPower 设得太高，年轮将不再可见，你会得到更像大理石图案的效果。这里设为 0.5：<br />
 <br />
 <img alt="" src="images/noisewood4.jpg" style=
 "width: 190px; height: 191px;" /><br />
 <br />
-So you see how you can turn a mathematical 2D function into a
-natural looking texture by adding noise to it. You can try this on
-much more functions, for example here's the mathematical pattern
-sin(x) + sin(y):<br />
+由此可见，通过添加噪声，可以将数学 2D 函数转变为具有自然感的纹理。你可以在更多函数上尝试这一方法，例如以下是数学图案 sin(x) + sin(y)：<br />
 <br />
 <img alt="" src="images/noiseplasma.jpg" style=
 "width: 190px; height: 189px;" /><br />
 <br />
-Add some noise to it with the following code:<br />
+用以下代码为其添加一些噪声：<br />
 <br />
 <center>
 <table class="codetable">
@@ -559,18 +461,15 @@ Add some noise to it with the following code:<br />
 </table>
 </center>
 <br />
-And you get:<br />
+你会得到：<br />
 <br />
 <img alt="" src="images/noiseplasma2.jpg" style=
 "width: 190px; height: 191px;" /><br />
 <br />
-2D random noise can also be used for terrain heightmaps, physical
-simulations, etc...<br />
-<h2><a name="3D_Random_Noise"></a>3D Random Noise</h2>
+2D 随机噪声还可用于地形高度图、物理模拟等……<br />
+<h2><a name="3D_Random_Noise"></a>3D 随机噪声</h2>
 <br />
-Random Noise can be extended to any number of dimensions. The
-extension to 3D requires adding a z component, apart from a width
-and height the noise array now also needs a depth.<br />
+随机噪声可以扩展到任意维度。扩展到 3D 需要添加一个 z 分量，除了宽度和高度之外，噪声数组现在还需要一个深度维度。<br />
 <br />
 <center>
 <table class="codetable">
@@ -586,8 +485,7 @@ double noise[noiseDepth][noiseHeight][noiseWidth]; //the noise array</span></pre
 </table>
 </center>
 <br />
-The generateNoise function now needs to fill up the 3-dimensional
-array so it gets an extra loop:<br />
+generateNoise 函数现在需要填充三维数组，因此增加了一个额外的循环：<br />
 <br />
 <center>
 <table class="codetable">
@@ -607,8 +505,7 @@ array so it gets an extra loop:<br />
 </table>
 </center>
 <br />
-The smoothing function now has to interpolate in the x, y and z
-direction so there are 8 terms instead of only 4:<br />
+平滑函数现在需要在 x、y 和 z 方向上进行插值，因此有 8 个项而不是只有 4 个：<br />
 <br />
 <center>
 <table class="codetable">
@@ -650,8 +547,7 @@ direction so there are 8 terms instead of only 4:<br />
 </table>
 </center>
 <br />
-The turbulence function is easy to extend, just add z / size to the
-call to the smoothNoise function:<br />
+湍流函数很容易扩展，只需在调用 smoothNoise 函数时加入 z / size：<br />
 <br />
 <center>
 <table class="codetable">
@@ -674,9 +570,7 @@ call to the smoothNoise function:<br />
 </table>
 </center>
 <br />
-The main function presented here will use the 3D random noise to
-generate clouds animated in the time. It's as if the clouds are
-forming and changing smoothly.<br />
+这里展示的主函数将使用 3D 随机噪声来生成随时间动态变化的云朵，仿佛云朵在平滑地形成和变化。<br />
 <br />
 <center>
 <table class="codetable">
@@ -712,22 +606,17 @@ forming and changing smoothly.<br />
 </table>
 </center>
 <br />
-The screenshot can't show how it animates of course:<br />
+截图当然无法展示动画效果：<br />
 <br />
 <img alt="" src="images/noisecloudsanim.jpg" style=
 "width: 191px; height: 191px;" /><br />
 <br />
-3D andom noise can be used for animating 2D textures, for 3D
-textures (3D textures can for example be used on a rock of which
-you can remove parts or shoot pieces off it to see the inside of
-it, if you'd lay a 2D on it, and you remove a part of it, that same
-2D texture would be drawn again), 3D planet textures, 3D volumetric
-fog, etc...<br />
+3D 随机噪声可用于 2D 纹理动画、3D 纹理（例如，3D 纹理可用于岩石，当你移除部分岩石或射掉一块来查看内部时，如果使用 2D 纹理，移除部分后同一张 2D 纹理会再次被绘制出来）、3D 星球纹理、3D 体积雾等……<br />
 <br />
 <hr />
-Last edited: 2004
+最后编辑：2004 年
 <br /><br />
-Copyright (c) 2004-2007 by Lode Vandevenne. All rights reserved.
+版权所有 (c) 2004-2007 Lode Vandevenne。保留所有权利。
 <script language="javascript" src="colorcode.js"></script>
 </body>
 </html>

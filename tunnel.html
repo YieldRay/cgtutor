@@ -2,97 +2,57 @@
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-<title>Tunnel Effect</title>
+<title>隧道特效</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <meta content="text/html; charset=us-ascii" http-equiv=
 "content-type" />
 <link rel="stylesheet" type="text/css" href="stylesheet.css" />
 </head>
 <body>
-<h1>Lode's Computer Graphics Tutorial</h1>
-<h1>Tunnel Effect<br /></h1>
-<h2>Table of Contents</h2>
+<h1>Lode 的计算机图形学教程</h1>
+<h1>隧道特效<br /></h1>
+<h2>目录</h2>
 <ul>
-<li><a href="tunnel.html#Introduction_">Introduction</a></li>
-<li><a href="tunnel.html#How_it_works">How it works</a></li>
-<li><a href="tunnel.html#The_code">The code</a></li>
-<li><a href="tunnel.html#Better_textures_">Better textures</a></li>
-<li><a href="tunnel.html#Looking_Around">Looking Around</a><br /></li>
+<li><a href="tunnel.html#Introduction_">简介</a></li>
+<li><a href="tunnel.html#How_it_works">工作原理</a></li>
+<li><a href="tunnel.html#The_code">代码</a></li>
+<li><a href="tunnel.html#Better_textures_">更好的纹理</a></li>
+<li><a href="tunnel.html#Looking_Around">环视四周</a><br /></li>
 </ul>
 <h2><a name="Introduction_" id=
-"Introduction_"></a>Introduction<br /></h2>
-One of those cool effects used in oldskool demos is the Tunnel
-Effect. This effect shows a tunnel in which you fly while the
-tunnel rotates, seemingly in 3D. This tutorial will explain how to
-make one.<br />
+"Introduction_"></a>简介<br /></h2>
+隧道特效是老式 demo 中常用的炫酷效果之一。该特效呈现一条隧道，你在其中飞行，同时隧道旋转，看起来像 3D 效果。本教程将讲解如何实现它。<br />
 <br />
-<h2><a name="How_it_works" id="How_it_works"></a>How it
-works<br /></h2>
-An example tunnel looks like this, only in reality it
-animates:<br />
+<h2><a name="How_it_works" id="How_it_works"></a>工作原理<br /></h2>
+隧道示例如下图所示，实际运行时会有动画效果：<br />
 <br />
 <img alt="" src="images/tunnelxor.jpg" style=
 "width: 320px; height: 240px;" /><br />
 <br />
-The effect works as follows:<br />
+特效的工作原理如下：<br />
 <br />
-First, you need a texture, which is the texture of the sides of the
-tunnel.<br />
+首先，需要一张纹理，即隧道侧壁的纹理。<br />
 <br />
-The animation of the tunnel actually isn't calculated on the fly
-while the animation runs, but it's precalculated. These
-calculations are stored in two tables: one for the angle and one
-for the distance.<br />
+隧道的动画实际上并非在运行时实时计算，而是预先计算好的。这些计算结果存储在两张表中：一张用于角度，一张用于距离。<br />
 <br />
-The distance table contains for every pixel of the screen, the
-inverse of the distance to the center of the screen this pixel has.
-This gives pixels of the center of the screen a very high value
-(those are very far away, as you can see on the picture above),
-while the pixels on the sides of the screen get a low value (these
-pixels represent parts of the tunnel close to the camera).<br />
+距离表存储屏幕上每个像素到屏幕中心距离的倒数。屏幕中心的像素具有非常大的值（它们距离很远，如上图所示），而屏幕边缘的像素值较小（这些像素代表隧道中靠近摄像机的部分）。<br />
 <br />
-The angle table contains the angle of every pixel of the screen,
-where the center of the screen represents the origin.<br />
+角度表存储屏幕上每个像素相对于屏幕中心的角度。<br />
 <br />
-Then after everything is precalculated the animation loop starts.
-This animation loop goes every frame, through every pixel (x,y),
-and then uses the angle and distance table to ask which texel of
-the texture it should draw at the current pixel. And, to get the
-animation, the values of the angle and distance table are shifted:
-shifting the angle table makes the tunnel rotate, while shifting
-the distance table makes you move forwards or backwards.<br />
+预计算完成后，动画循环开始。动画循环每帧遍历每个像素 (x, y)，利用角度表和距离表确定应在当前像素绘制哪个纹素。为了产生动画效果，角度表和距离表的值会发生偏移：偏移角度表使隧道旋转，偏移距离表使你向前或向后移动。<br />
 <br />
-The texture has only a finite size, while the values gotten by the
-distance go up to infinity, and the values of the angle are
-periodic. When a value outside the texture is asked, modulo divide
-it through the size of the texture, this way we get the texture
-repeated over and over (but always smaller as it's closer to the
-center of the screen). You'll see this much better in the
-code.<br />
+纹理的尺寸是有限的，而距离值可以趋向无穷大，角度值是周期性的。当需要纹理外的值时，对纹理尺寸取模，这样纹理就会不断重复（但越靠近屏幕中心越小）。在代码中你会看得更清楚。<br />
 <br />
-<h2><a name="The_code" id="The_code"></a>The code</h2>
-This code creates a tunnel where you fly forward while the tunnel
-rotates, and the center of the tunnel always remains in the center
-of the screen. The code is made so that no matter what size the
-texture has, the effect will always have the same speed, and the
-texture is as big on the screen.<br />
+<h2><a name="The_code" id="The_code"></a>代码</h2>
+该代码创建一个隧道，你在向前飞行的同时隧道旋转，隧道中心始终保持在屏幕中心。代码的设计使得无论纹理大小如何，特效速度始终相同，纹理在屏幕上的大小也相同。<br />
 <br />
-Here a few values are defined and buffers are created.<br />
+这里定义了一些值并创建了缓冲区。<br />
 <br />
-The texture array is the texture (duh). The bigger its size, the
-better the effect, I recommend making it at least 256*256 pixels,
-because it'll be as big as the screen, and the rotation goes very
-shaky if the texture is too small.<br />
+texture 数组就是纹理。尺寸越大效果越好，建议至少 256×256 像素，因为它将与屏幕一样大，纹理太小时旋转会非常抖动。<br />
 <br />
-The distanceTable is the precalculated table for the inverse
-distance of every pixel, and the angleTable is the precalculated
-angle of every pixel. These have to be at least as big as the
-screen, but if you also want to move the center of the tunnel
-around on the screen, you'll have to make them bigger.<br />
+distanceTable 是每个像素距离倒数的预计算表，angleTable 是每个像素角度的预计算表。它们至少要与屏幕一样大，但如果还想在屏幕上移动隧道中心，则需要更大。<br />
 <br />
-And the buffer array is used to draw the pixels to, so that the
-whole screen buffer can be drawn at once instead of using pset for
-every separate pixel.<br />
+buffer 数组用于存储待绘制的像素，这样可以一次性绘制整个屏幕缓冲区，而不必对每个像素单独调用 pset。<br />
 <br />
 <center>
 <table class="codetable">
@@ -113,8 +73,7 @@ Uint32 buffer[screenHeight][screenWidth];</span></pre>
 </table>
 </center>
 <br />
-Here the main function starts, and a blue XOR texture is generated
-(you can also load one from a bitmap instead).<br />
+主函数从这里开始，生成一张蓝色 XOR 纹理（也可以从位图文件加载）。<br />
 <br />
 <center>
 <table class="codetable">
@@ -136,23 +95,11 @@ Here the main function starts, and a blue XOR texture is generated
 </table>
 </center>
 <br />
-Next the buffers are generated. The distance buffer uses the
-formula of the inverse distance to the center of the screen (in
-2D), multiplied by texHeight so that no matter which size the
-texture has, it's always as big. It's also modulo divided through
-texHeight so that the same texture is repeated all the time over
-the whole distance.<br />
+接下来生成缓冲区。距离缓冲区使用到屏幕中心的距离倒数公式（2D），乘以 texHeight，使得无论纹理大小如何，显示效果始终相同。同时对 texHeight 取模，使同一纹理在整个距离范围内不断重复。<br />
 <br />
-The angle buffer calculates the angle of the current pixel (the
-angle it has to the pixel in the center of the screen), by using
-the atan2 function. The atan2 function belongs to the &lt;cmath&gt;
-header, and returns the angle in radians of a given point by giving
-its x and y coordinate. It's divided through pi, so that the
-texture will be wrapped exactly one time around the tunnel.<br />
+角度缓冲区使用 atan2 函数计算当前像素相对于屏幕中心像素的角度。atan2 函数属于 &lt;cmath&gt; 头文件，通过给定点的 x 和 y 坐标返回该点的弧度角。除以 pi，使纹理恰好在隧道周围包裹一圈。<br />
 <br />
-The ratio variable is the ratio between the width and height the
-texture will be having on screen, or how long the texture stretches
-out in the distance.<br />
+ratio 变量是纹理在屏幕上宽高比，即纹理在纵深方向上的拉伸程度。<br />
 <br />
 <center>
 <table class="codetable">
@@ -174,32 +121,15 @@ out in the distance.<br />
 </table>
 </center>
 <br />
-Then the animation loop starts.<br />
+然后动画循环开始。<br />
 <br />
-The animation variable is set to the time in seconds, and will be
-used for shifting the tables for rotation and the moving.<br />
+animation 变量设置为以秒为单位的时间，用于偏移旋转和移动所用的表。<br />
 <br />
-Then for every pixel (x,y), the correct texel is gotten from the
-texture by using the tables, and shifted with the animation value.
-The modulo division through the width and height of the texture are
-to make sure we won't ask for a pixel outside the texture, but use
-the same texture tiled instead. Unsigned integers are used, because
-the values can become negative, and the modulo division only works
-correctly if they're unsigned instead, so that negative numbers
-will wrap around. Because of this, the texture width and height
-should be powers of 2, or they won't nicely tile. The animation
-values (shiftX and shiftY) are multiplied with the texture width
-and height to make the speed of the effect independent of the
-texture size, only of the time.<br />
+对于每个像素 (x, y)，通过查表并加上动画偏移值从纹理中获取正确的纹素。对纹理宽高取模，确保不会请求纹理外的像素，而是使用平铺的纹理。使用无符号整数，因为值可能变为负数，而取模运算只有在无符号数下才能正确处理负数的环绕。因此纹理的宽高应为 2 的幂次，否则平铺效果不好。动画值（shiftX 和 shiftY）乘以纹理宽高，使特效速度与纹理大小无关，只与时间有关。<br />
 <br />
-The animation of the distance and angle is also multiplied with a
-constant value (1.0 and 0.25 here), by changing these you can
-independently change the speed of the rotation, and of the moving
-forward.<br />
+距离和角度的动画也乘以一个常量（这里分别为 1.0 和 0.25），通过修改这些值可以独立调整旋转速度和前进速度。<br />
 <br />
-The pixels of the screen are drawn to the buffer, and after all
-pixels are drawn, the buffer is put on screen, and the process
-restarts again for the next frame.<br />
+屏幕像素绘制到缓冲区，所有像素绘制完成后，缓冲区输出到屏幕，然后开始下一帧的处理。<br />
 <br />
 <center>
 <table class="codetable">
@@ -233,16 +163,14 @@ restarts again for the next frame.<br />
 </table>
 </center>
 <br />
-This is what the tunnel looks like, but it also animates:<br />
+隧道效果如下图所示，实际运行时会有动画：<br />
 <br />
 <img alt="" src="images/tunnelscreenshot.jpg" style=
 "width: 405px; height: 324px;" /><br />
 <br />
-<h2><a name="Better_textures_" id="Better_textures_"></a>Better
-textures<br /></h2>
+<h2><a name="Better_textures_" id="Better_textures_"></a>更好的纹理<br /></h2>
 <br />
-Use this code instead of the code that generates the XOR pattern to
-load a texture:<br />
+用以下代码替换生成 XOR 图案的代码，以加载纹理：<br />
 <br />
 <center>
 <table class="codetable">
@@ -255,8 +183,7 @@ load a texture:<br />
 </table>
 </center>
 <br />
-Here are two textures from Unreal Tournament 2003 applied to the
-tunnel:<br />
+以下是两张来自《虚幻竞技场 2003》的纹理应用于隧道的效果：<br />
 <br />
 <img alt="" src="images/tunnelstonetex.png" style=
 "width: 256px; height: 256px;" /> <img alt="" src=
@@ -268,16 +195,8 @@ tunnel:<br />
 "images/tunneltexture.jpg" style=
 "width: 326px; height: 265px;" /><br />
 <br />
-<h2><a name="Looking_Around" id="Looking_Around"></a>Looking
-Around</h2>
-Because you keep moving forward all the time, the effect becomes
-boring fast. To make it a bit more interesting, the camera can be
-made to look around. To do this, simply move the center of the
-tunnel around, it then seems as if the camera rotates. If you want
-to move the center of the tunnel around, bigger precalculated
-buffers are needed. Here's a modified version of the code that'll
-do this. The bold parts are new or changed, and the comments should
-explain it.<br />
+<h2><a name="Looking_Around" id="Looking_Around"></a>环视四周</h2>
+由于一直向前移动，特效很快就会变得单调。为了增加趣味性，可以让摄像机环视四周。只需移动隧道中心，就会产生摄像机旋转的感觉。若要移动隧道中心，需要更大的预计算缓冲区。以下是实现该功能的修改版代码，加粗部分为新增或修改的内容，注释会加以说明。<br />
 <br />
 <center>
 <table class="codetable">
@@ -352,22 +271,16 @@ int main(int argc, char *argv[])
 </table>
 </center>
 <br />
-Here for example it's looking to the bottom left, so the center of
-the tunnel is in the top right of the screen, but the looking
-direction changes all the time while the effect runs:<br />
+例如，此时正在向左下方看，所以隧道中心位于屏幕右上方，但在特效运行过程中视角方向会不断变化：<br />
 <br />
 <img alt="" src="images/tunnellook.jpg" style=
 "width: 404px; height: 323px;" /><br />
 <br />
-If you're interested, because two sine functions are used to look
-around, one for the looking in the x direction, and one for the
-looking in the y direction, the look-around movement (or the path
-the center of the tunnel follows on the screen) has the shape of a
-Lissajous figure.<br />
+如果你感兴趣，由于使用了两个正弦函数来环视四周——一个用于 x 方向，一个用于 y 方向——环视运动（即隧道中心在屏幕上的运动轨迹）呈利萨如图形（Lissajous figure）的形状。<br />
 <br />
 <hr />
-Last edited: 2004
+最后编辑：2004 年
 <br /><br />
-Copyright (c) 2004-2007 by Lode Vandevenne. All rights reserved. The UT2003 textures are copyright by Epic Games.<br />
+版权所有 (c) 2004-2007 Lode Vandevenne，保留所有权利。UT2003 纹理版权归 Epic Games 所有。<br />
 </body>
 </html>

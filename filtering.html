@@ -2,123 +2,63 @@
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-<title>Image Filtering</title>
+<title>图像滤镜</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <meta content="text/html; charset=us-ascii" http-equiv=
 "content-type" />
 <link rel="stylesheet" type="text/css" href="stylesheet.css" />
 </head>
 <body>
-<h1>Lode's Computer Graphics Tutorial</h1>
-<h1>Image Filtering</h1>
-<h2>Table of Contents</h2>
+<h1>Lode 的计算机图形学教程</h1>
+<h1>图像滤镜</h1>
+<h2>目录</h2>
 <ul>
-<li><a href="filtering.html#Introduction_">Introduction</a></li>
-<li><a href="filtering.html#Convolution">Convolution</a></li>
-<li><a href="filtering.html#Blur">Blur</a></li>
-<li><a href="filtering.html#Gaussian_Blur_">Gaussian Blur</a></li>
-<li><a href="filtering.html#Motion_Blur_">Motion Blur</a></li>
-<li><a href="filtering.html#Find_Edges_">Find Edges</a></li>
-<li><a href="filtering.html#Sharpen">Sharpen</a></li>
-<li><a href="filtering.html#Emboss">Emboss</a></li>
-<li><a href="filtering.html#Median">Mean and Median Filter</a></li>
-<li><a href="filtering.html#Conclusion">Conclusion</a></li>
+<li><a href="filtering.html#Introduction_">简介</a></li>
+<li><a href="filtering.html#Convolution">卷积</a></li>
+<li><a href="filtering.html#Blur">模糊</a></li>
+<li><a href="filtering.html#Gaussian_Blur_">高斯模糊</a></li>
+<li><a href="filtering.html#Motion_Blur_">运动模糊</a></li>
+<li><a href="filtering.html#Find_Edges_">边缘检测</a></li>
+<li><a href="filtering.html#Sharpen">锐化</a></li>
+<li><a href="filtering.html#Emboss">浮雕</a></li>
+<li><a href="filtering.html#Median">均值滤波与中值滤波</a></li>
+<li><a href="filtering.html#Conclusion">结语</a></li>
 </ul>
-<a href="index.html">Back to index</a><br />
+<a href="index.html">返回目录</a><br />
 <h2><a name="Introduction_" id=
-"Introduction_"></a>Introduction<br /></h2>
-Image filtering allows you to apply various effects on photos. The
-type of image filtering described here uses a 2D filter similar to
-the one included in Paint Shop Pro as User Defined Filter and in
-Photoshop as Custom Filter.<br />
-<h2><a name="Convolution" id="Convolution"></a>Convolution</h2>
-The trick of image filtering is that you have a 2D filter matrix,
-and the 2D image. Then, for every pixel of the image, take the sum
-of products. Each product is the color value of the current pixel
-or a neighbor of it, with the corresponding value of the filter
-matrix. The center of the filter matrix has to be multiplied with
-the current pixel, the other elements of the filter matrix with
-corresponding neighbor pixels.<br />
+"Introduction_"></a>简介<br /></h2>
+图像滤镜可以让你对照片应用各种特效。本文所介绍的图像滤镜使用一个 2D 滤波矩阵，与 Paint Shop Pro 中的"用户自定义滤镜"以及 Photoshop 中的"自定义滤镜"类似。<br />
+<h2><a name="Convolution" id="Convolution"></a>卷积</h2>
+图像滤镜的核心思路是：给定一个 2D 滤波矩阵和一幅 2D 图像，对图像中的每个像素计算乘积之和。每个乘积由当前像素或其邻域像素的颜色值，与滤波矩阵中对应位置的值相乘得到。滤波矩阵的中心元素与当前像素相乘，其余元素与对应的邻域像素相乘。<br />
 <br />
-This operation where you take the sum of products of elements from
-two 2D functions, where you let one of the two functions move over
-every element of the other function, is called Convolution or
-Correlation. The difference between Convolution and Correlation is
-that for Convolution you have to mirror the filter matrix, but
-usually it's symmetrical anyway so there's no difference.<br />
+这种对两个 2D 函数的对应元素求乘积之和，并让其中一个函数在另一个函数的每个位置上滑动的运算，称为卷积（Convolution）或相关（Correlation）。二者的区别在于：卷积需要对滤波矩阵进行镜像翻转，但通常滤波矩阵是对称的，因此二者结果相同。<br />
 <br />
-The filters with convolution are relatively simple. More complex
-filters, that can use more fancy functions, exist as well, and can
-do much more complex things (for example the Colored Pencil filter
-in Photoshop), but such filters aren't discussed here.<br />
+基于卷积的滤镜相对简单。更复杂的滤镜可以使用更灵活的函数，实现更复杂的效果（例如 Photoshop 中的彩色铅笔滤镜），但本文不作讨论。<br />
 <br />
-The 2D convolution operation requires a 4-double loop, so it isn't
-extremely fast, unless you use small filters. Here we'll usually be
-using 3x3 or 5x5 filters.<br />
+2D 卷积运算需要一个四重循环，因此速度并不特别快，除非使用较小的滤波核。本文通常使用 3x3 或 5x5 的滤波核。<br />
 <br />
-There are a few rules about the filter:<br />
+关于滤波矩阵，有以下几条规则：<br />
 <ul>
-<li>Its size has to be uneven, so that it has a center, for
-example 3x3, 5x5 and 7x7 are ok.</li>
-<li>It doesn't have to, but the sum of all elements of the filter
-should be 1 if you want the resulting image to have the same
-brightness as the original.</li>
-<li>If the sum of the elements is larger than 1, the result will be
-a brighter image, and if it's smaller than 1, a darker image. If
-the sum is 0, the resulting image isn't necessarily completely
-black, but it'll be very dark.</li>
+<li>滤波矩阵的尺寸必须为奇数，以保证存在中心元素，例如 3x3、5x5、7x7 均可。</li>
+<li>虽然不是强制要求，但若希望输出图像与原图亮度相同，滤波矩阵所有元素之和应为 1。</li>
+<li>若元素之和大于 1，结果图像会更亮；若小于 1，结果图像会更暗。若元素之和为 0，结果图像不一定完全是黑色，但会非常暗。</li>
 </ul>
-The image has finite dimensions, and if you're for example
-calculating a pixel on the left side, there are no more pixels to
-the left of it while these are required for the convolution. You
-can either use value 0 here, or wrap around to the other side of
-the image. In this tutorial, the wrapping around is chosen because
-it can easily be done with a modulo division.<br />
+图像的尺寸是有限的，例如在计算左侧边缘的像素时，其左边不存在更多像素，而卷积运算又需要这些像素。此时可以用 0 代替，也可以绕回到图像的另一侧。本教程选择绕回方式，因为这可以用取模运算轻松实现。<br />
 <br />
-The resulting pixel values after applying the filter can be
-negative or larger than 255, if that happens you can truncate them
-so that values smaller than 0 are made 0 and values larger than 255
-are set to 255. For negative values, you can also take the absolute
-value instead.<br />
+应用滤镜后，像素值可能为负数或大于 255。遇到这种情况，可以将其截断：小于 0 的值置为 0，大于 255 的值置为 255。对于负值，也可以取其绝对值。<br />
 <br />
-In the Fourier Domain or Frequency Domain, the convolution
-operation becomes a multiplication instead, which is faster. In the
-Fourier Domain, much more powerful and bigger filters can be
-applied faster, especially if you use the Fast Fourier Transform.
-More about this is in the Fourier Transform article. In this
-article, we'll look at a few very typical small filters, such as
-blur, edge detection and emboss.<br />
+在傅里叶域（频域）中，卷积运算变为乘法运算，速度更快。在傅里叶域中，可以更快速地应用功能更强大、尺寸更大的滤波器，尤其是配合快速傅里叶变换（FFT）使用时。详细内容请参阅傅里叶变换相关文章。本文将介绍几种典型的小型滤波器，如模糊、边缘检测和浮雕。<br />
 <br />
-Image filters aren't feasible for real time applications and games
-yet, but they're useful in image processing.<br />
+图像滤镜目前还不适合实时应用和游戏，但在图像处理领域非常有用。<br />
 <br />
-Digital audio and electronic filters work with convolution as well,
-but in 1D.<br />
+数字音频和电子滤波器同样使用卷积，只不过是在 1D 场景下。<br />
 <br />
-Here's the code that'll be used to try out different filters. Apart
-from using a filter matrix, it also has a multiplier factor and a
-bias. After applying the filter, the factor will be multiplied with
-the result, and the bias added to it. So if you have a filter with
-an element 0.25 in it, but the factor is set to 2, all elements of
-the filter are in theory multiplied by two so that element 0.25 is
-actually 0.5. The bias can be used if you want to make the
-resulting image brighter.<br />
+下面是用于测试各种滤镜的代码。除滤波矩阵外，代码还引入了一个乘法因子（factor）和一个偏置值（bias）。应用滤镜后，结果会先乘以 factor，再加上 bias。因此，如果滤波矩阵中某个元素为 0.25，而 factor 设为 2，则该元素实际上等效于 0.5。bias 可用于提高输出图像的亮度。<br />
 <br />
-The result of one pixel is stored in floats red, green and blue,
-before converting it to the integer value in the result buffer.
+单个像素的计算结果先以浮点数 red、green、blue 存储，再转换为整数写入结果缓冲区。
 <br />
 <br />
-The filter calculation itself is a 4-double loop that has to go
-through every pixel of the image, and then through every element of
-the filter matrix. The location imageX and imageY is calculated so
-that for the center element of the filter it'll be x, y, but for
-the other elements it'll be a pixel from the image to the left,
-right, top or bottom of x, y. Its modulo divided through the width
-(w) or height (h) of the image so that pixels outside the image
-will be wrapped around. Before modulo dividing it, w or h are also
-added to it, because this modulo division doesn't work correctly
-for negative values. Now, pixel (-1, -1) will correctly become
-pixel (w-1, h-1).<br />
+滤波计算本身是一个四重循环，需要遍历图像的每个像素，再遍历滤波矩阵的每个元素。imageX 和 imageY 的计算方式为：对于滤波矩阵的中心元素，坐标为 (x, y)；对于其他元素，坐标为图像中 (x, y) 左、右、上、下方向的某个像素。其坐标通过对图像宽度（w）或高度（h）取模来实现绕回。取模之前还需加上 w 或 h，以确保负数情况下取模结果正确。这样，像素 (-1, -1) 就能正确映射为像素 (w-1, h-1)。<br />
 <br />
 <center>
 <table class="codetable">
@@ -190,8 +130,7 @@ int main(int argc, char *argv[])
 </table>
 </center>
 <br />
-If you want to take the absolute value of values smaller than zero
-instead of truncating it, use this code instead:<br />
+如果希望对小于零的值取绝对值而非截断，请改用以下代码：<br />
 <br />
 <center>
 <table class="codetable">
@@ -207,30 +146,24 @@ instead of truncating it, use this code instead:<br />
 </table>
 </center>
 <br />
-The filter filled in currently,<br />
+当前填入的滤波矩阵为：<br />
 <br />
 <tt>[ 0 0 0 ]<br />
 [ 0 1 0 ]<br />
 [ 0 0 0 ],</tt><br />
 <br />
-does nothing more than returning the original image, since only the
-center value is 1 so every pixel is multiplied with 1.<br />
+该矩阵不做任何处理，只返回原始图像，因为只有中心值为 1，每个像素都乘以 1。<br />
 <br />
-The code tries to load the image "pics/photo3.bmp". This image can
-be downloaded <a href="files/photos.zip">here</a>.<br />
+代码会尝试加载图像 "pics/photo3.bmp"。该图像可在<a href="files/photos.zip">此处</a>下载。<br />
 <br />
-The original image looks like this:<br />
+原始图像如下所示：<br />
 <br />
 <img alt="" src="images/photo3.jpg" style=
 "width: 320px; height: 240px;" /><br />
 <br />
-Now we'll apply several filters to the image by changing the
-definition of the filter array and running the code.<br />
-<h2><a name="Blur" id="Blur"></a>Blur</h2>
-Blurring is done for example by taking the average of the current
-pixel and its 4 neighbors. Take the sum of the current pixel and
-its 4 neighbors, and divide it through 5, or thus fill in 5 times
-the value 0.2 in the filter:<br />
+接下来，我们将通过修改滤波矩阵的定义并运行代码，对图像应用多种滤镜。<br />
+<h2><a name="Blur" id="Blur"></a>模糊</h2>
+模糊效果可以通过取当前像素与其 4 个邻域像素的平均值来实现。将当前像素与其 4 个邻域像素求和后除以 5，即在滤波矩阵中填入 5 个值为 0.2 的元素：<br />
 <br />
 <center>
 <table class="codetable">
@@ -254,14 +187,12 @@ double bias = 0.0;</span></pre>
 </table>
 </center>
 <br />
-With such a small filter matrix, this gives only a very soft
-blur:<br />
+使用如此小的滤波矩阵，只能产生非常轻微的模糊效果：<br />
 <br />
 <img alt="" src="images/filterblur.jpg" style=
 "width: 320px; height: 238px;" /><br />
 <br />
-With a bigger filter you can blur it a bit more (don't forget to
-change the filterWidth and filterHeight values):<br />
+使用更大的滤波核可以获得更强的模糊效果（别忘了同步修改 filterWidth 和 filterHeight 的值）：<br />
 <br />
 <center>
 <table class="codetable">
@@ -287,52 +218,32 @@ double bias = 0.0;</span></pre>
 </table>
 </center>
 <br />
-The sum of all elements of the filter should be 1, but instead of
-filling in some floating point value inside the filter, instead the
-factor is divided through the sum of all elements, which is
-13.<br />
+滤波矩阵所有元素之和应为 1，但此处并未在矩阵内填入浮点数，而是将 factor 除以所有元素之和（即 13）来等效实现。<br />
 <br />
-This blurs it a bit more already:<br />
+这样可以获得更明显的模糊效果：<br />
 <br />
 <img alt="" src="images/filterblurmore.jpg" style=
 "width: 318px; height: 238px;" /><br />
 <br />
-The more blur you want, the bigger the filter has to be, or you can
-apply the same small blur filter multiple times.
+模糊程度越强，所需的滤波核就越大，或者也可以多次应用同一个小型模糊滤镜。
 <p>
-If your kernel is an entire box filled with the same value (with appropriate scaling factor
-so all elements sum to 1.0), then the blur is called a box blur. If you want a very large
-box blur, then the naive convolution code in this tutorial is too slow. But you can implement
-it easily with a much faster algorithm: Since every value has the same factor, you can go
-loop through the pixels of the image line by line, and sum N values (with N the width of the
-box) and divide through the appropriate scaling factor. Then for every next pixel, you add the
-value of the next pixel that appears in the box, and subtract the value from the leftmost pixel
-that disappears from the box. After doing this for each scanline horizontally, do the same
-vertically (to optimize use of the CPU cache, when doing it vertically, ensure that you still
-implement it in such way that you still operate in scanline order in practice rather than per
-columns, so store a sum per column). This all requires care with how you treat the edges (where
-the box is partially out of bounds) and the case where the image is smaller than the box. No
-code is given here as it goes a bit beyond the scope of this tutorial.
+如果滤波核是一个全部填充相同值的矩形（并配以适当的缩放因子使所有元素之和为 1.0），则该模糊称为均值模糊（box blur）。若需要非常大的均值模糊，本教程中的朴素卷积代码会过慢。但可以用更快的算法来实现：由于每个值的权重相同，可以逐行遍历图像像素，对 N 个值（N 为矩形框的宽度）求和并除以适当的缩放因子。对于每个后续像素，加入矩形框中新出现的像素值，减去从矩形框左侧移出的像素值。对每条扫描线水平处理完毕后，再垂直方向执行相同操作（为优化 CPU 缓存利用率，在垂直方向处理时，应确保实际上仍以扫描线顺序操作，而非按列操作，因此需要为每列维护一个求和值）。这一切都需要仔细处理边界情况（矩形框部分超出图像范围时）以及图像尺寸小于矩形框的情况。本文不提供相关代码，因为这已超出本教程的范围。
 
-<h2><a name="Gaussian_Blur_" id="Gaussian_Blur_"></a>Gaussian Blur<br /></h2>
+<h2><a name="Gaussian_Blur_" id="Gaussian_Blur_"></a>高斯模糊<br /></h2>
 
-In the blurring above, the kernel we used is rather harsh. A much smoother blur
-is achieved with a gaussian kernel. With a gaussian kernel, the value exponentially
-decreases as we go away from the center. The formula is: G(x) = exp(-x * x / 2 * sigma * sigma) / sqrt(2 * pi * sigma * sigma)
+上述模糊所用的滤波核较为生硬。使用高斯核可以获得更平滑的模糊效果。在高斯核中，数值随距中心距离的增大而指数级衰减。公式为：G(x) = exp(-x * x / 2 * sigma * sigma) / sqrt(2 * pi * sigma * sigma)
 <p>
-For 2D, you apply this formula in the X direction, then in the Y direction (it is separable), or combined it gives:
+对于 2D 情形，先在 X 方向应用该公式，再在 Y 方向应用（二者可分离），合并后为：
 G(x, y) = exp(-(x * x + y * y) / (2 * sigma * sigma)) / (2 * pi * sigma * sigma)
 <p>
-In the formulas:
+公式中各参数说明：
 <br>
-*) sigma determines the radius (in theory the radius is in finite, but in practice due to the exponential backoff
-there is a point where it becomes too small to see, the larger sigma is the further away this is)
-*) x and y must be coordinates such that 0 is in the center of the kernel
+*) sigma 决定模糊半径（理论上半径无限大，但由于指数衰减，实际上存在一个值小到肉眼不可见的截止点，sigma 越大，截止点越远）
+*) x 和 y 为坐标值，且以滤波核中心为原点
 <p>
-The above formula tells hwo to make arbitrarily large kernels. However, here are simple examples that can be
-used immediately:
+上述公式可用于构建任意大小的滤波核。以下是一些可直接使用的简单示例：
 <p>
-Approximation to 3x3 kernel:
+3x3 滤波核近似：
 <p>
 <span class="code">#define filterWidth 3
 #define filterHeight 3
@@ -347,7 +258,7 @@ double filter[filterHeight][filterWidth] =
 double factor = 1.0 / 16.0;
 double bias = 0.0;</span></pre>
 <p>
-Approximation to 5x5 kernel:
+5x5 滤波核近似：
 <p>
 <span class="code">#define filterWidth 5
 #define filterHeight 5
@@ -364,7 +275,7 @@ double filter[filterHeight][filterWidth] =
 double factor = 1.0 / 256.0;
 double bias = 0.0;</span></pre>
 <p>
-An exact intead of approximate example:
+精确（非近似）示例：
 <p>
 <span class="code">#define filterWidth 3
 #define filterHeight 3
@@ -379,19 +290,10 @@ double filter[filterHeight][filterWidth] =
 double factor = 1.0;
 double bias = 0.0;</span></pre>
 <p>
-For larger radius (such as you can try in a painting program that has gaussian
-blur), you need larger kernels. The naive convolution implementation
-like used in this tutorial would become too slow in practice for large radius
-gaussian blurs. But there are solutions to that: using the Fourier Transform as
-described in the Fourier Transform tutorial of this series, or an even faster approximation:
-The fast approximation involves doing multiple box blurs in a row, three in a row
-approximated it already very well. How to do a fast box blur is explained in the
-previous chapter. The reason this works is that a gaussian distribution arises
-naturally from a sum of other processes.
+对于较大的模糊半径（例如绘图软件中的高斯模糊），需要更大的滤波核。本教程中的朴素卷积实现对于大半径高斯模糊在实践中会过慢。但有解决方案：使用本系列傅里叶变换教程中介绍的傅里叶变换方法，或更快的近似方法：连续多次执行均值模糊，三次均值模糊已能很好地近似高斯模糊。如何实现快速均值模糊已在上一章节中介绍。该方法有效的原因在于，高斯分布自然地从多个过程的叠加中涌现。
 
-<h2><a name="Motion_Blur_" id="Motion_Blur_"></a>Motion Blur<br /></h2>
-Motion blur is achieved by blurring in only 1 direction. Here's a
-9x9 motion blur filter:<br />
+<h2><a name="Motion_Blur_" id="Motion_Blur_"></a>运动模糊<br /></h2>
+运动模糊通过仅在一个方向上进行模糊来实现。以下是一个 9x9 的运动模糊滤波核：<br />
 <br />
 <center>
 <table class="codetable">
@@ -424,11 +326,9 @@ double bias = 0.0;</span></pre>
 <img alt="" src="images/filtermotionblur.jpg" style=
 "width: 317px; height: 238px;" /><br />
 <br />
-It's as if the camera is moving from the top left to the bottom
-right, hence the name.<br />
-<h2><a name="Find_Edges_" id="Find_Edges_"></a>Find
-Edges<br /></h2>
-A filter to find the horizontal edges can look like this:<br />
+效果犹如相机从左上方向右下方移动，因此得名运动模糊。<br />
+<h2><a name="Find_Edges_" id="Find_Edges_"></a>边缘检测<br /></h2>
+用于检测水平边缘的滤波核示例如下：<br />
 <br />
 <center>
 <table class="codetable">
@@ -454,23 +354,14 @@ double bias = 0.0;</span></pre>
 </table>
 </center>
 <br />
-A filter of 5x5 instead of 3x3 was chosen, because the result of a
-3x3 filter is too dark on the current image. Note that the sum of
-all the elements is 0 now, which will result in a very dark image
-where only the edges it detected are colored.<br />
+此处选用 5x5 而非 3x3 的滤波核，是因为 3x3 滤波核在当前图像上的结果过暗。注意，现在所有元素之和为 0，这将产生一幅非常暗的图像，只有检测到的边缘处才有颜色。<br />
 <br />
 <img alt="" src="images/filterhoredge.jpg" style=
 "width: 319px; height: 239px;" /><br />
 <br />
-The reason why this filter can find horizontal edges, is that the
-convolution operation with this filter can be seen as a sort of
-discrete version of the derivative: you take the current pixel and
-subtract the value of the previous one from it, so you get a value
-that represents the difference between those two or the slope of
-the function.<br />
+该滤波核能够检测水平边缘的原因在于：使用该滤波核的卷积运算可以看作一种离散微分：取当前像素值减去前一个像素值，得到的差值代表两者之间的变化量，即函数的斜率。<br />
 <br />
-Here's a filter that'll find vertical edges instead, and uses both
-pixel values below and above the current pixel:<br />
+以下滤波核用于检测垂直边缘，同时利用当前像素上方和下方的像素值：<br />
 <br />
 <center>
 <table class="codetable">
@@ -499,9 +390,7 @@ double bias = 0.0;</span></pre>
 <img alt="" src="images/filterveredge.jpg" style=
 "width: 318px; height: 238px;" /><br />
 <br />
-Here's yet another possible filter, one that's good at finding
-edges of 45&deg;. The values '-2' were chosen for no particular
-reason at all, just make sure the sum of the values is 0.<br />
+以下是另一种可能的滤波核，擅长检测 45° 方向的边缘。值 '-2' 的选取没有特别原因，只需确保所有值之和为 0 即可。<br />
 <br />
 <center>
 <table class="codetable">
@@ -530,8 +419,7 @@ double bias = 0.0;</span></pre>
 <img alt="" src="images/filterslopededge.jpg" style=
 "width: 318px; height: 237px;" /><br />
 <br />
-And here's a simple edge detection filter that detects edges in all
-directions:<br />
+以下是一个能够检测所有方向边缘的简单边缘检测滤波核：<br />
 <br />
 <center>
 <table class="codetable">
@@ -558,15 +446,8 @@ double bias = 0.0;</span></pre>
 <img alt="" src="images/filteredge.jpg" style=
 "width: 319px; height: 236px;" /><br />
 <br />
-<h2><a name="Sharpen" id="Sharpen"></a>Sharpen</h2>
-To sharpen the image is very similar to finding edges, add the
-original image, and the image after the edge detection to each
-other, and the result will be a new image where the edges are
-enhanced, making it look sharper. Adding those two images is done
-by taking the edge detection filter from the previous example, and
-incrementing the center value of it with 1. Now the sum of the
-filter elements is 1 and the result will be an image with the same
-brightness as the original, but sharper.<br />
+<h2><a name="Sharpen" id="Sharpen"></a>锐化</h2>
+图像锐化与边缘检测非常相似：将原始图像与边缘检测后的图像叠加，结果是一幅边缘得到增强、看起来更清晰的新图像。这两幅图像的叠加，可以通过取上一示例中的边缘检测滤波核并将其中心值加 1 来实现。此时滤波矩阵所有元素之和为 1，输出图像的亮度与原图相同，但更加清晰。<br />
 <br />
 <center>
 <table class="codetable">
@@ -593,7 +474,7 @@ double bias = 0.0;</span></pre>
 <img alt="" src="images/filtersharp.jpg" style=
 "width: 318px; height: 238px;" /><br />
 <br />
-Here's a more subtle sharpen filter:<br />
+以下是一个效果更为细腻的锐化滤波核：<br />
 <br />
 <center>
 <table class="codetable">
@@ -622,7 +503,7 @@ double bias = 0.0;</span></pre>
 <img alt="" src="images/filtersharpen2.jpg" style=
 "width: 318px; height: 238px;" /><br />
 <br />
-Here's a filter that shows the edges excessively:<br />
+以下是一个会过度突出边缘的滤波核：<br />
 <br />
 <center>
 <table class="codetable">
@@ -648,17 +529,10 @@ double bias = 0.0;</span></pre>
 <br />
 <img alt="" src="images/filternotsharpen.jpg" style=
 "width: 316px; height: 237px;" /><br />
-<h2><a name="Emboss" id="Emboss"></a>Emboss</h2>
-An emboss filter gives a 3D shadow effect to the image, the result
-is very useful for a bumpmap of the image. It can be achieved by
-taking a pixel on one side of the center, and subtracting one of
-the other side from it. Pixels can get either a positive or a
-negative result. To use the negative pixels as shadow and positive
-ones as light, for a bumpmap, a bias of 128 is added to the image.
-Now, most parts of the image will be gray, and the sides will be
-either dark gray/black or bright gray/white.<br />
+<h2><a name="Emboss" id="Emboss"></a>浮雕</h2>
+浮雕滤镜可以为图像添加 3D 阴影效果，非常适合用作图像的凹凸贴图（bumpmap）。其实现方式是：取中心一侧的像素值，减去另一侧的像素值。像素的计算结果可能为正值或负值。为了将负值用作阴影、正值用作高光来生成凹凸贴图，需要为图像添加 128 的偏置值。这样，图像的大部分区域将呈现为灰色，而边缘处则呈现为深灰色/黑色或浅灰色/白色。<br />
 <br />
-For example here's an emboss filter with an angle of 45&deg;:<br />
+以下是一个 45° 角方向的浮雕滤波核示例：<br />
 <br />
 <center>
 <table class="codetable">
@@ -684,12 +558,12 @@ double bias = 128.0;</span></pre>
 <br />
 <img alt="" src="images/filteremboss.jpg" style="width: 315px; height: 239px;" /><br />
 <br />
-If you really want to use it as bumpmap, grayscale it:<br />
+如果确实要将其用作凹凸贴图，可以将其转为灰度图：<br />
 <br />
 <img alt="" src="images/filterembossgrey.jpg" style=
 "width: 315px; height: 239px;" /><br />
 <br />
-Here's a much more exaggerated emboss filter:<br />
+以下是一个效果更为夸张的浮雕滤波核：<br />
 <br />
 <center>
 <table class="codetable">
@@ -717,10 +591,8 @@ double bias = 128.0;</span></pre>
 <br />
 <img alt="" src="images/filteremboss2.jpg" style=
 "width: 314px; height: 236px;" /><br />
-<h2><a name="Median" id="Median"></a>Mean and Median Filter</h2>
-Both the Mean Filter and the Median Filter can be used to remove noise from an image.
-A Mean Filter is a filter that takes the average of the current pixel and its neighbors,
-for example if you use its 8 neighbors it becomes the filter with kernel:<br />
+<h2><a name="Median" id="Median"></a>均值滤波与中值滤波</h2>
+均值滤波（Mean Filter）和中值滤波（Median Filter）均可用于去除图像噪声。均值滤波取当前像素与其邻域像素的平均值，例如使用 8 个邻域像素时，其滤波核为：<br />
 <br />
 <center>
 <table class="codetable">
@@ -744,29 +616,20 @@ double bias = 0.0;</span></pre>
 </table>
 </center>
 <br />
-This is an ordinary blur filter. We can test it on the following image with so called "Salt and Pepper" Noise:<br />
+这是一个普通的模糊滤波核。我们可以用以下含有"椒盐噪声"（Salt and Pepper Noise）的图像来测试：<br />
 <br />
 <img alt="" src="images/horsesnoise.png" style="width: 319px; height: 239px;" /><br />
 <br />
-When applied, it gives a blurry result:<br />
+应用后，结果图像会变得模糊：<br />
 <br />
 <img alt="" src="images/filtermean.jpg" style="width: 315px; height: 239px;" /><br />
 <br />
-The Median Filter does somewhat the same, but, instead of taking the mean or average, it takes the median.
-The median is gotten by sorting all the values from low to high, and then taking the value in the center. If there
-are two values in the center, the average of these two is taken. A median filter gives better results to remove salt and pepper noise,
-because it completely eliminates the the noise. With an average filter, the color value of the noise particles are still used
-in the average calculations, when taking the median you only keep the color value of one or two healthy pixels. The median filter
-also reduces the image quality however.<br />
+中值滤波的处理方式类似，但不是取均值，而是取中位数。中位数的求法是：将所有值从小到大排序，然后取中间的值。若中间有两个值，则取其平均值。中值滤波在去除椒盐噪声方面效果更好，因为它能完全消除噪声。均值滤波在计算平均值时仍会受到噪声像素颜色值的影响，而取中位数时只保留一个或两个正常像素的颜色值。不过，中值滤波同样会降低图像质量。<br />
 <br />
-Such a median filter can't be done with a convolution,
-and a sorting algorithm is needed, in this case combsort was chosen, which is a relatively fast sorting algorithm.<br />
+中值滤波无法通过卷积实现，需要借助排序算法。本例选用了梳排序（combsort），这是一种相对较快的排序算法。<br />
 <br />
-To get the median of the current pixel and its 8 neighbors, set filterWidth and filterHeight to 3, but you can also make it higher
-to remove larger noise particles.<br />
-<br />The arrays red, green and blue will contain the values of the current pixel and all of its neighbors,
-and these are the arrays that'll be sorted by the sorting algorithm to be able to take the median value.
-The main function applies the filter, calculates the medians and then draws the result.<br />
+要对当前像素及其 8 个邻域像素求中位数，可将 filterWidth 和 filterHeight 设为 3，也可以设置更大的值以去除更大的噪声颗粒。<br />
+<br />数组 red、green 和 blue 将存储当前像素及其所有邻域像素的值，这些数组将由排序算法排序，以便取得中位数。主函数负责应用滤镜、计算中位数并绘制结果。<br />
 <br />
 <center>
 <table class="codetable">
@@ -835,11 +698,7 @@ int main(int argc, char *argv[])
 </table>
 </center>
 <br />
-The array contains the value of every color in the rectangular area you're working on, but it's not sorted so you can't immediatly take the median of it.
-Sorting it and taking the center element is one way, but it's in theory faster to use a selection algorithm to select the k-th largest element, with k = size / 2.
-This is implemented below with a very simple selection algorithm. It's possible to use the standard C++ function nth_element instead, which would be simpler and faster, but we're implementing
-all algorithms ourselves in this tutorial. Note that, unlike the statistical definition of median this will not take
-the average of two elements in case of even array but just take one of them.<br />
+数组中存储了所操作矩形区域内每个颜色通道的值，但尚未排序，因此无法直接取中位数。排序后取中间元素是一种方法，但从理论上讲，使用选择算法来选取第 k 大的元素（k = size / 2）更快。以下是一个非常简单的选择算法实现。也可以使用标准 C++ 函数 nth_element，它更简单也更快，但本教程中我们自行实现所有算法。需要注意的是，与统计学上中位数的定义不同，当数组长度为偶数时，本实现不会取两个中间元素的平均值，而是直接取其中一个。<br />
 <br />
 <center>
 <table class="codetable">
@@ -876,59 +735,38 @@ int selectKth(int* data, int s, int e, int k)  // in practice, use C++'s nth_ele
 </table>
 </center>
 <br />
-Here's again the noisy image:<br />
+再次展示含噪声的图像：<br />
 <br />
 <img alt="" src="images/horsesnoise.png" style="width: 319px; height: 239px;" /><br />
 <br />
-The 3x3 median filter removes its noise:<br />
+3x3 中值滤波可以去除其噪声：<br />
 <br />
 <img alt="" src="images/filtermedian3.jpg" style="width: 320px; height: 240px;" /><br />
 <br />
-Higher sizes of filters go pretty slow, because the code is very unoptimized. More specialized, much faster algorithms for 2D median filter exists but that's beyond the scope of this tutorial.
-The results of higher sizes are somewhat artistic, so here is the result of different sizes:<br />
+由于代码未经优化，较大尺寸的滤波核运行速度相当慢。针对 2D 中值滤波已有更专门、更快速的算法，但这超出了本教程的范围。较大尺寸的滤波结果颇具艺术感，以下展示不同尺寸的效果：<br />
 <br />
-5x5:
+5x5：
 <br />
 <img alt="" src="images/filtermedian5.jpg" style="width: 320px; height: 240px;" /><br />
 <br />
-9x9:
+9x9：
 <br />
 <img alt="" src="images/filtermedian9.jpg" style="width: 320px; height: 240px;" /><br />
 <br />
-15x15:
+15x15：
 <br />
 <img alt="" src="images/filtermedian15.jpg" style="width: 320px; height: 240px;" />
 <p>
-Side note: The median algorithm implementation above is very slow. Whether using C++'s nth_element
-function or the toy "selectKth" here, both provide little benefit for a median of 9 or 25 numbers. No
-matter what the theoretical complexity of the algorithm on large N is, if you only operate on a certain
-small finite sized input, you need to take what works best for that input size.
+补充说明：上述中值算法实现非常慢。无论是使用 C++ 的 nth_element 函数，还是这里演示用的 "selectKth"，对于求 9 个或 25 个数的中位数，二者带来的收益都很有限。无论某个算法在大 N 情况下的理论复杂度如何，如果只处理某个固定的小规模输入，就需要选用最适合该输入规模的方案。
 <p>
-If you want to implement, say, median with 3x3, then you get the fastest solution by using a hardcoded
-sorting network of size 9 of which you take the middle output to get the median. Then apply this for every output
-pixel to the corresponding 9 input pixels, and this all per color channel. The advantage of hardcoded
-is that the algorithm does not need to contain conditionals that depend on the size of the input (conditionals,
-like ifs and the for loop conditions, are very slow for CPUs as they interrupt the pipeline). No code is
-provided here since an efficiant practical implementation is beyond the scope of this tutorial.
-If interested, look up sorting network, it is a hardcoded series of swaps of two numbers depending on which
-is the maximum, find one that is proven to be optimal for the desired input size. Then since we don't want to
-fully sort but only take the median element, you can leave out every swap that does not contribute to the
-middle element output, and replace any swap of which only one
-output contributes to the middle output element with either min or max. That will give the theoretically
-fastest possible implementation, speedups on top of that can only be to make use of parallelism
-and/or better CPU instructions.
+如果要实现 3x3 中值滤波，最快的方案是使用一个大小为 9 的硬编码排序网络，取其中间输出即为中位数。然后对每个输出像素，将其对应的 9 个输入像素逐颜色通道地应用该网络。硬编码的优势在于算法无需包含依赖输入规模的条件判断（条件判断，如 if 语句和 for 循环的条件，对 CPU 来说非常慢，因为它们会打断流水线）。本文不提供相关代码，因为高效的实际实现超出了本教程的范围。如有兴趣，可以查阅"排序网络"（sorting network）相关资料——它是一种针对两个数的大小关系进行硬编码交换操作的序列，选用已被证明对所需输入规模最优的方案。由于我们不需要完全排序，只需取中位数，因此可以去掉所有不影响中间输出元素的交换操作，并将那些只有一个输出贡献于中间输出元素的交换操作替换为 min 或 max。这将给出理论上最快的实现，在此基础上的进一步加速只能依靠并行性和/或更优的 CPU 指令。
 
-<h2><a name="Conclusion" id="Conclusion"></a>Conclusion</h2>
-This article contained code to apply convolution filters on images,
-and showed a few different filters and their result. These are only
-the very basics of image filtering, with bigger filters and a lot
-of tweaking you can get much better filters.<br />
+<h2><a name="Conclusion" id="Conclusion"></a>结语</h2>
+本文提供了对图像应用卷积滤镜的代码，并展示了几种不同的滤镜及其效果。这些只是图像滤镜的基础入门内容，使用更大的滤波核并进行充分调整，可以获得效果更好的滤镜。<br />
 <br />
-The Fourier Transform article shows a different way to filter
-images, in the frequency domain. There Low Pass, High Pass and Band
-Pass filters are discussed.<br />
+傅里叶变换相关文章介绍了在频域中对图像进行滤波的另一种方式，其中讨论了低通滤波、高通滤波和带通滤波。<br />
 <hr />
-Copyright (c) 2004-2018 by Lode Vandevenne. All rights reserved.
+版权所有 &copy; 2004-2018 Lode Vandevenne。保留所有权利。
 <script language="javascript" src="colorcode.js"></script>
 </body>
 </html>

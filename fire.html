@@ -2,94 +2,42 @@
     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-<title>Fire Effect</title>
+<title>火焰特效</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <meta content="text/html; charset=us-ascii" http-equiv="content-type" />
 <link rel="stylesheet" type="text/css" href="stylesheet.css" />
 </head>
 <body>
-<h1>Lode's Computer Graphics Tutorial</h1>
-<h1>Fire Effect</h1>
-<h2>Table of Contents</h2>
+<h1>Lode 的计算机图形学教程</h1>
+<h1>火焰特效</h1>
+<h2>目录</h2>
 <ul>
-<li><a href="fire.html#Introduction">Introduction</a></li>
-<li><a href="fire.html#The_Classic_Fire_Effect">The Classic Fire
-Effect</a></li>
+<li><a href="fire.html#Introduction">简介</a></li>
+<li><a href="fire.html#The_Classic_Fire_Effect">经典火焰特效</a></li>
 </ul>
-<a href="index.html">Back to Index</a>
-<h2><a name="Introduction" id="Introduction"></a>Introduction</h2>
-This is a very short tutorial, about the very classic Fire Effect,
-and creating a fire color palette for it. Maybe this article will
-be extended later with fire made by particles or other better
-looking fires.
-<h2><a name="The_Classic_Fire_Effect" id="The_Classic_Fire_Effect"></a>The Classic Fire Effect</h2>
-This fire effect has been used quite often for java demos, oldskool
-demos, etc... It's very easy to program, and gives very neat
-looking fire.<br />
+<a href="index.html">返回目录</a>
+<h2><a name="Introduction" id="Introduction"></a>简介</h2>
+这是一篇关于经典火焰特效以及如何为其创建火焰调色板的简短教程。也许日后会扩展为用粒子或其他更好看的方式来制作火焰。
+<h2><a name="The_Classic_Fire_Effect" id="The_Classic_Fire_Effect"></a>经典火焰特效</h2>
+这种火焰特效在 Java 演示程序、老式 demo 等场景中被广泛使用。它非常容易编程，而且能产生非常漂亮的火焰效果。<br />
 <br />
-First you have to create a palette, typically of 256 colors, but it
-can be any other amount as well here because we emulate it. With
-the HSLtoRGB function it's easy to create a good palette, select a
-hue range from red to yellow, keep saturation at 255, and
-brightness from 0 to 255 so that more red colors become darker as
-well. The palette is created to be used with the drawBuffer
-function, so the RGB colors are stored in a single integer value in
-BGR order.<br />
+首先需要创建一个调色板，通常包含 256 种颜色，但由于这里是模拟实现，也可以使用其他数量。使用 HSLtoRGB 函数可以轻松创建合适的调色板：选择从红色到黄色的色相范围，饱和度保持为 255，亮度从 0 到 255，使得偏红的颜色同时也更暗。调色板是为配合 drawBuffer 函数使用而创建的，因此 RGB 颜色以 BGR 顺序存储在单个整数值中。<br />
 <br />
-To contain the fire, you need a buffer (called fire[][] here) with
-the same size as the screen. In a graphics mode that uses a
-palette, this buffer can be the screen itself, but here we use RGB
-mode and the palette is emulated. The buffer starts with every
-pixel at 0. Then at the bottom row, give a random value to each
-pixel, and keep changing the random values every frame. Each frame,
-calculate each row of pixels based on the two rows below it: the
-value of each pixel, becomes the sum of the 3 pixels below it (one
-directly below it, one to the left of this one, and one to the
-right of this one), and one pixel directly two rows below it. Then
-divide the sum through a value slightly larger than 4, so that the
-fire dies out as it rises. The larger the value you divide it
-through, the lower the flames can rise. For example, if you use
-*16, /65, which is the same as dividing through 4.0625, the flames
-will rise higher than if you use *4, /17, which is the same as
-dividing through 4.25. If you divide it though 4, the fire keeps
-rising forever, and if you divide it though 5, it dies out way to
-fast.<br />
+为了存储火焰数据，需要一个与屏幕大小相同的缓冲区（此处称为 fire[][]）。在使用调色板的图形模式下，该缓冲区可以就是屏幕本身，但这里使用 RGB 模式并模拟调色板。缓冲区初始时所有像素值为 0。然后在最底行给每个像素赋随机值，并在每帧都更新这些随机值。每帧中，根据下方两行像素来计算当前行的每个像素：每个像素的值等于其正下方 1 个像素、左下方 1 个像素、右下方 1 个像素，以及正下方第 2 行像素的总和，再除以一个略大于 4 的值，使火焰向上扩散时逐渐熄灭。除数越大，火焰能上升的高度越低。例如，使用 *16, /65（即除以 4.0625）时，火焰比使用 *4, /17（即除以 4.25）时上升得更高。若除以 4，火焰将永远上升；若除以 5，火焰会消散得太快。<br />
 <br />
-This image shows which pixels are included in the calculation: the
-pixel with the cross is the current pixel, and the 4 green pixels
-are the ones used to calculate the value of the current
-pixel.<br />
+下图展示了计算中涉及哪些像素：带十字的像素是当前像素，4 个绿色像素是用于计算当前像素值的像素。<br />
 <br />
 <img alt="" src="images/firepixel.gif" style="width: 115px; height: 115px;" /><br />
 <br />
-Do this from top to bottom, if you do the calculations in the wrong
-order, some pixels will already be recalculated while other pixels
-that depend on them still have to be calculated. Each new frame may
-depend only on the values of the previous frame. The top of the
-screen has y-coordinate 0, and the bottom has y-coordinate
-h-1.<br />
+计算应从上到下进行。若顺序错误，部分像素会在依赖它们的像素计算之前就被重新计算。每一新帧只能依赖上一帧的值。屏幕顶部的 y 坐标为 0，底部的 y 坐标为 h-1。<br />
 <br />
-On the sides of the screen, the pixels have no neighbors to the
-left or right anymore, and to overcome this, the effect can be made
-circular so that the rightmost pixel has the leftmost pixel as its
-neighbor and vica versa. For this, modulo division through the
-width of the screen can be used on the x-coordinate of the
-neighbors.<br />
+屏幕两侧的像素没有左邻居或右邻居，为解决此问题，可以将特效做成循环的，使最右侧像素以最左侧像素为邻居，反之亦然。为此，可以对邻居像素的 x 坐标对屏幕宽度取模。<br />
 <br />
-The version of the effect here isn't very fast at high resolutions,
-but there's still set a maximum number of frames per second by
-using the waitFrame function, so that it won't run too fast on
-faster computers in the future.<br />
+这里的特效在高分辨率下速度不是很快，但通过 waitFrame 函数设置了每秒最大帧数，以防在未来更快的计算机上运行得过快。<br />
 <br />
-Because we have a fire buffer, we can use the drawBuffer function
-instead of drawing each pixel separately, which is much faster. The
-buffer that gets drawn isn't the same as the fire array though,
-because that one has values from 0 to 256, which gives the wrong
-colors. Instead we create a new buffer and store the RGB color
-gotten from the palette in it, and then draw this buffer (which
-also has the name "buffer" here).<br />
+由于有了火焰缓冲区，可以使用 drawBuffer 函数代替逐像素绘制，速度快得多。不过绘制的缓冲区与 fire 数组不同，因为后者的值为 0 到 256，会产生错误的颜色。因此需要创建一个新缓冲区，将从调色板获取的 RGB 颜色存入其中，然后绘制这个缓冲区（此处也命名为"buffer"）。<br />
 <br />
-Put the following code inside the the main.cpp file. The comments in the code will explain a bit more:<br />
+将以下代码放入 main.cpp 文件中，代码中的注释会进一步说明：<br />
 <br />
 <center>
 <table class="codetable"><tr><td style="vertical-align: top;"><pre><span class="code">#include &lt;cmath>
@@ -174,22 +122,15 @@ int main(int argc, char *argv[])
 </table>
 </center>
 <br />
-If you run it, first everything is black, and the flames rise two
-pixels every frame until they reached their maximum height. Then
-they'll still keep animating because the bottom is randomized every
-frame:<br />
+运行后，一开始屏幕全黑，火焰每帧上升两个像素，直到达到最大高度。之后由于每帧底部都会随机化，火焰会持续动画：<br />
 <br />
 <img alt="" src="images/fire.jpg" style="width: 639px; height: 126px;" /><br />
 <br />
-If you don't randomize the bottom of the fire buffer every frame
-but only at the beginning, the flames won't be animated either, and
-once they have risen to their maximum height, they'll stay still
-forever:<br />
+如果不在每帧随机化火焰缓冲区底部，而只在开始时随机化一次，那么火焰也不会动画，一旦上升到最大高度就会永远静止：<br />
 <br />
 <img alt="" src="images/firestill.jpg" style="width: 639px; height: 127px;" /><br />
 <br />
-By changing parameters, you can tweak the fire, for example this is
-what I got for changing the calculations to:<br />
+通过修改参数可以调整火焰效果，例如将计算改为以下内容后的效果：<br />
 <br />
 <center>
 <table class="codetable">
@@ -211,14 +152,12 @@ what I got for changing the calculations to:<br />
 <img alt="" src="images/firetweak.jpg" style="width: 639px; height: 127px;" /><br />
 <br />
 <br />
-Instead of randomizing the bottom row of pixels you can also
-randomize the edges of objects, for example to make flaming text,
-...<br />
+除了随机化最底行像素，也可以随机化物体边缘，例如制作燃烧的文字等。<br />
 <br />
 <hr />
-Last edited: 20 august 2007
+最后编辑：2007 年 8 月 20 日
 <br /><br />
-Copyright (c) 2004-2007 by Lode Vandevenne. All rights reserved.
+版权所有 (c) 2004-2007 Lode Vandevenne，保留所有权利。
 <script language="javascript" src="colorcode.js"></script>
 </body>
 </html>

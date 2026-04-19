@@ -1,62 +1,50 @@
 <!DOCTYPE html>
 <head>
 <meta charset="utf-8"/>
-<title>Raycasting II: Floor and Ceiling</title>
+<title>光线投射 II：地板与天花板</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <meta content="text/html; charset=us-ascii" http-equiv="content-type" />
 <link rel="stylesheet" type="text/css" href="stylesheet.css" />
 </head>
 <body>
-<h1>Lode's Computer Graphics Tutorial</h1>
-<h1>Raycasting II: Floor and Ceiling<br /></h1>
-<h2>Table of Contents</h2>
+<h1>Lode 的计算机图形学教程</h1>
+<h1>光线投射 II：地板与天花板<br /></h1>
+<h2>目录</h2>
 <ul>
-<li><a href="raycasting2.html#Introduction">Introduction</a></li>
-<li><a href="raycasting2.html#Howitworks">How it Works</a></li>
-<li><a href="raycasting2.html#Code">The Code</a></li>
-<li><a href="raycasting2.html#Tricks">Special Tricks</a></li>
-<li><a href="raycasting2.html#Vertical">Vertical Version</a></li>
+<li><a href="raycasting2.html#Introduction">简介</a></li>
+<li><a href="raycasting2.html#Howitworks">工作原理</a></li>
+<li><a href="raycasting2.html#Code">代码</a></li>
+<li><a href="raycasting2.html#Tricks">特殊技巧</a></li>
+<li><a href="raycasting2.html#Vertical">垂直版本</a></li>
 </ul>
-<a href="index.html">Back to index</a><br />
-<h2><a name="Introduction" id="Introduction"></a>Introduction<br /></h2>
-In the previous raycasting article was shown how to render flat untextured walls, and how to render textured ones. The floor and ceiling have always
-remained flat and untextured however. If you want to keep the floor and ceiling untextured, no extra code is needed, but to have them textured too,
-more calculations are needed.<br />
-Wolfenstein 3D didn't have floor or ceiling textures, but some other raycasting games that followed soon after Wolf3D had them, for example Blake Stone 3D:<br />
+<a href="index.html">返回目录</a><br />
+<h2><a name="Introduction" id="Introduction"></a>简介<br /></h2>
+在前一篇光线投射文章中，介绍了如何渲染无纹理的平面墙壁，以及如何渲染带纹理的墙壁。然而，地板和天花板一直保持平面且无纹理的状态。如果你希望地板和天花板保持无纹理，则无需额外代码，但若要给它们添加纹理，则需要更多的计算。<br />
+《Wolfenstein 3D》没有地板或天花板纹理，但在 Wolf3D 之后不久出现的一些其他光线投射游戏拥有这些纹理，例如《Blake Stone 3D》：<br />
 <br />
 <img alt="" src="images/blakestone.gif" style="width: 320px; height: 200px;" /><br />
-<br />You can download the full source code of this tutorial <a href="files/raycaster_floor.cpp">here</a>.
-<h2><a name="Howitworks" id="Howitworks"></a>How it Works</h2>
-Unlike the wall textures, the floor and ceiling textures are horizontal
-so they can't be drawn the same way as the wall with vertical stripes. Instead, they're drawn with horizontal scanlines.
-The perspective is similar to that of walls but 90 degrees rotated, but unlike the walls which used exactly 1 texture
-per vertical stripes, multiple floor textures (or the same one repeatedly) may cross our horizontal line.
+<br />你可以在<a href="files/raycaster_floor.cpp">这里</a>下载本教程的完整源代码。
+<h2><a name="Howitworks" id="Howitworks"></a>工作原理</h2>
+与墙壁纹理不同，地板和天花板纹理是水平的，因此不能像墙壁那样用垂直条纹的方式绘制。它们改用水平扫描线来绘制。
+透视效果与墙壁类似，但旋转了 90 度。与墙壁每条垂直条纹恰好使用 1 个纹理不同，多个地板纹理（或同一纹理的重复）可能会跨越我们的水平线。
 <p/>
-Drawing the ceiling happens the same way as drawing the floor, so only the floor is explained here.
+绘制天花板的方式与绘制地板相同，因此这里只解释地板的绘制。
 <p/>
-The floor casting is done before the walls, so first we draw the entire floor (and ceiling), then overwrite part of
-the pixels with the walls, as before, in the next step.
+地板投射在墙壁之前完成，因此我们先绘制整个地板（和天花板），然后在下一步中像之前一样用墙壁覆盖部分像素。
 <br />
-In short, the floor casting works as follows: work scanline by scanline. For the current scanline,
-compute the position on the floor matching the left pixel of the scanline, and the position matching the
-right pixel. This can be computed as where the ray starting from the camera, going through that pixel of the
-camera plane, hits the floor. The formulas and explanation for this are in the floor casting code further below.<br />
+简而言之，地板投射的工作方式如下：逐扫描线处理。对于当前扫描线，计算与扫描线左侧像素对应的地板位置，以及与右侧像素对应的位置。这可以通过计算从摄像机出发、穿过摄像机平面上该像素的光线击中地板的位置来得出。相关公式和说明在下面的地板投射代码中。<br />
 <br />
-We can then linearly interpolate between this leftmost and rightmost point to get the floor coordinates matching the
-other pi xels of this scanline. This works because the floor texture is perfectly horizontal. If it were slanted, we
-would need to do more expensive perspective correct texture mapping instead.
+然后，我们可以在最左点和最右点之间进行线性插值，以获得与该扫描线其他像素对应的地板坐标。这之所以可行，是因为地板纹理是完全水平的。如果地板是倾斜的，我们则需要使用代价更高的透视校正纹理映射。
 <p/>
-NOTE: Ádám Tóth contributed the idea and demo code for the horizontal scanline technique in 2019. Before this, this tutorial described a vertical stripe based technique, but the horizontal technique is faster and matches how raycasting games really worked. The vertical technique is moved to a separate chapter at the end.
+注意：Ádám Tóth 于 2019 年贡献了水平扫描线技术的思路和演示代码。在此之前，本教程描述的是基于垂直条纹的技术，但水平技术更快，也更符合光线投射游戏的实际工作方式。垂直技术已移至末尾的单独章节。
 
 <p/>
-<h2><a name="Code" id="Code"></a>The Code</h2>
-The code tries to load the wolfenstein textures from the previous raycasting tutorial, you can download them <a href="files/wolftex.zip">here (copyright
-by id Software)</a>.
-If you don't want to load textures, you can use the part of code that generates textures from the previous raycasting tutorial instead, but
-it looks less good.<br />
+<h2><a name="Code" id="Code"></a>代码</h2>
+代码会尝试加载前一篇光线投射教程中的 wolfenstein 纹理，你可以在<a href="files/wolftex.zip">这里（版权归 id Software 所有）</a>下载它们。
+如果你不想加载纹理，可以改用前一篇光线投射教程中生成纹理的那部分代码，但效果会稍差一些。<br />
 <br /><img alt="" src="images/wolftextures.png" style="width: 512px; height: 64px;" /><br />
 <br />
-The first part of the code is exactly the same as in the previous raycasting tutorial, but is given here to situate where the new code will be. There's also a new map. This piece of code declares all needed variables, loads the textures, and draws textured vertical wall stripes. For the loading of the textures, please see the previous raycasting tutorial about getting the images or using an alternative way to generate the textures.<br />
+代码的第一部分与前一篇光线投射教程完全相同，在此列出是为了说明新代码将插入的位置。这里还有一张新地图。这段代码声明了所有需要的变量、加载纹理，并绘制带纹理的垂直墙壁条纹。关于纹理的加载，请参阅前一篇光线投射教程中关于获取图像或使用其他方式生成纹理的说明。<br />
 <br />
 
 <center><table class="codetable"><tr><td style="vertical-align: top;">
@@ -128,28 +116,13 @@ int main(int /*argc*/, char */*argv*/[])
   {</span></pre>
 </td></tr></table></center>
 
-Now comes the new floor casting code, going line by line instead of vertical
-stripe by vertical stripe.
+接下来是新的地板投射代码，它逐行处理，而不是逐垂直条纹处理。
 <p/>
-The formula for rowDistance, the horizontal distance from camera to the floor
-for the current row, which is posZ / p with p the current pixel distance from
-the screen center, can be explained as follows:
+rowDistance 的公式表示从摄像机到当前行地板的水平距离，即 posZ / p，其中 p 是当前像素到屏幕中心的距离，可以解释如下：
 <p/>
-The camera ray goes through the following two points: the camera itself,
-which is at a certain height (posZ), and a point in front of the camera (through an imagined
-vertical plane containing the screen pixels) with horizontal distance
-1 from the camera, and vertical position p lower than posZ (posZ - p). When going
-through that point, the line has vertically traveled by p units and
-horizontally by 1 unit. To hit the floor, it instead needs to travel by
-posZ units. It will travel the same ratio horizontally. The ratio was
-1 / p for going through the camera plane, so to go posZ times farther
-to reach the floor, we get that the total horizontal distance is posZ / p.
+摄像机光线经过以下两点：摄像机本身（位于某个高度 posZ），以及摄像机前方的一个点（穿过一个包含屏幕像素的假想垂直平面），该点与摄像机的水平距离为 1，垂直位置比 posZ 低 p（即 posZ - p）。当光线经过该点时，它在垂直方向移动了 p 个单位，在水平方向移动了 1 个单位。要击中地板，光线需要在垂直方向移动 posZ 个单位，水平方向的移动比例相同。穿过摄像机平面时的比例是 1 / p，因此要向前移动 posZ 倍才能到达地板，总水平距离为 posZ / p。
 <p/>
-NOTE: The stepping being done here is affine texture mapping, which means we can
-interpolate linearly between two points rather than have to compute a different
-division for each pixel. This is not perspective correct in general, but for
-perfectly horizontal floors/ceilings (and also perfectly vertical walls) it is,
-so we can use it for raycasting.
+注意：这里所做的步进是仿射纹理映射，这意味着我们可以在两点之间进行线性插值，而不必为每个像素计算一次除法。这在一般情况下并不是透视正确的，但对于完全水平的地板/天花板（以及完全垂直的墙壁）来说是正确的，因此我们可以在光线投射中使用它。
 
 <p/>
 <center><table class="codetable"><tr><td style="vertical-align: top;">
@@ -214,10 +187,7 @@ so we can use it for raycasting.
 </td></tr></table></center>
 
 <p/>
-Next is the wall casting code, this is exactly the same as the previous tutorial,
-nothing new here, only inserted here to complete the full code. It's done right
-after the floor casting. This one goes vertical stripe by vertical stripe, not
-line by line like the floor casting code above.
+接下来是墙壁投射代码，与前一篇教程完全相同，这里没有任何新内容，仅为完整展示全部代码而列出。它紧接在地板投射之后执行。这部分是逐垂直条纹处理，而不像上面的地板投射代码那样逐行处理。
 <p/>
 
 <center><table class="codetable"><tr><td style="vertical-align: top;">
@@ -333,7 +303,7 @@ line by line like the floor casting code above.
 </td></tr></table></center>
 
 <br />
-Finally, the screen is drawn and cleared again, and the input is handled. This code is the same as before again.<br />
+最后，屏幕被绘制并再次清空，同时处理输入。这段代码与之前相同。<br />
 <br />
 
 <center><table class="codetable"><tr><td style="vertical-align: top;">
@@ -389,15 +359,15 @@ Finally, the screen is drawn and cleared again, and the input is handled. This c
 }</span></pre>
 </td></tr></table></center>
 
-<br />Here's what it looks like at lower resolution:<br />
+<br />以下是低分辨率下的效果：<br />
 <br />
 <img alt="" src="images/raycastfloor.jpg" style="width: 400px; height: 300px;" /><br />
 <br />
-This raycaster is very slow at high resolutions and certainly has room for optimizations.
-<h2><a name="Tricks" id="Tricks"></a>Special Tricks</h2>
-These tricks actually aren't that special, it's just things that you can modify to get other results.<br />
+这个光线投射器在高分辨率下非常慢，肯定还有优化空间。
+<h2><a name="Tricks" id="Tricks"></a>特殊技巧</h2>
+这些技巧其实并不那么特别，只是一些可以修改以获得不同效果的方法。<br />
 <br />
-To resize the floor and ceiling textures, for example to make them 4 times larger, you can modify this part of the code:<br />
+要调整地板和天花板纹理的大小，例如将其放大 4 倍，可以修改代码的这一部分：<br />
 <br />
 
 <center><table class="codetable"><tr><td style="vertical-align: top;">
@@ -408,7 +378,7 @@ To resize the floor and ceiling textures, for example to make them 4 times large
 
 <br />
 
-into<br />
+改为：<br />
 <br />
 
 <center><table class="codetable"><tr><td style="vertical-align: top;">
@@ -420,18 +390,8 @@ into<br />
 <br />
 <img alt="" src="images/raycastfloorresize.jpg" style="width: 400px; height: 300px;" /><br />
 <br />
-So far, the whole level had the same floor texture everywhere. Since, in the way the level is described,
-all non-walls have code 0, this can't be used to give each square its own floortile texture. You could
-make non-wall tiles 0 or negative instead, then while raycasting a negative number means no wall, and the
-value can be used to say what floor texture has to be used there. If you want to do the same with the ceiling,
-you'd need another value for the ceiling textures too, so you could also consider using a separate map for
-the walls, floor and ceiling. Instead of doing that, here will now be
-demonstrated how to give each tile its own texture based on its coordinates: if the sum of its x and y
-coordinate on the map is even, it gets texture 3, if it's odd, it gets texture 4, this will give a checkerboard
-pattern.<br />
-<br />To get the x and y coordinate of the current tile in the map, take the integer part of currentFloorX and
-currentFloorY. To get this, the for loop of the floor casting part is changed into this (the bold parts are new
-or changed):<br />
+到目前为止，整个关卡各处的地板纹理都相同。由于在关卡的描述方式中，所有非墙壁的格子代码均为 0，因此无法用这个值为每个格子指定独立的地板纹理。你可以将非墙壁格子的值改为 0 或负数，这样在光线投射时负数表示无墙壁，该值可用于指定该处应使用哪个地板纹理。如果你想对天花板做同样的处理，还需要另一个值来表示天花板纹理，因此也可以考虑为墙壁、地板和天花板分别使用独立的地图。这里不采用那种方式，而是演示如何根据格子的坐标为每个格子指定独立纹理：如果其在地图上的 x 和 y 坐标之和为偶数，则使用纹理 3；若为奇数，则使用纹理 4，这将产生棋盘格图案。<br />
+<br />要获取地图中当前格子的 x 和 y 坐标，取 currentFloorX 和 currentFloorY 的整数部分。为此，将地板投射部分的 for 循环修改如下（粗体部分为新增或修改的内容）：<br />
 <br />
 
 <center><table class="codetable"><tr><td style="vertical-align: top;">
@@ -465,63 +425,37 @@ or changed):<br />
 <br />
 <img alt="" src="images/raycastfloorchecker.jpg" style="width: 400px; height: 300px;" /><br />
 <br />
-In a similar way, it's also possible to choose the floor texture for each tile based on a map instead. The integer part of currentFloorX gives the coordinates of the current floortile in the map, while the fractional part gives the coordinate of the texel on the texture.<br />
+类似地，也可以根据地图来为每个格子选择地板纹理。currentFloorX 的整数部分给出当前地板格子在地图中的坐标，而小数部分则给出纹理上纹素的坐标。<br />
 <br />
-If you modify the checkerboard code from "<span class="inlinecode">(int(currentFloorX) + int(currentFloorY)) % 2</span>" into "<span class="inlinecode">(int(currentFloorX + currentFloorY)) % 2</span>",
-you don't get a checkerboard pattern but diagonal stripes instead, because now the fractional parts are added as well.<br />
+如果将棋盘格代码从 "<span class="inlinecode">(int(currentFloorX) + int(currentFloorY)) % 2</span>" 改为 "<span class="inlinecode">(int(currentFloorX + currentFloorY)) % 2</span>"，
+得到的不是棋盘格图案，而是斜线条纹，因为此时小数部分也被加进去了。<br />
 <br /><img alt="" src="images/raycastfloorchecker2.jpg" style="width: 400px; height: 300px;" /><br />
 <br />
-<h2><a name="Vertical" id="Vertical"></a>Vertical Version</h2>
-As an alternative to the horizontal scanline based floor casting technique described above, it's also possible to work vertically.
-This allows to continue drawing the same vertical stripe a current wall stripe was drawn. However, this technique is slower because
-it requires perspective correct texture mapping, doing a division for every single pixel. In addition, the scanline based technique
-is also faster because scanline order is faster to render thanks to locality for memory caching.
+<h2><a name="Vertical" id="Vertical"></a>垂直版本</h2>
+作为上述水平扫描线地板投射技术的替代方案，也可以采用垂直方式处理。
+这样可以在绘制当前墙壁条纹的同一垂直条纹中继续绘制地板。然而，这种技术更慢，因为它需要透视正确的纹理映射，对每个像素都要进行一次除法运算。此外，基于扫描线的技术也更快，因为扫描线顺序由于内存缓存的局部性而渲染更快。
 <p/>
-The result looks the same (the floors are still horizontal), it's just rendered in a different way.
+结果看起来相同（地板仍然是水平的），只是以不同的方式渲染。
 <p/>
-This technique works as follows: after you've drawn a vertical stripe from the wall,
-you do the floor casting for every pixel below the bottom wall pixel until the bottom of the screen.
-You need to know the exact coordinates of two points of the floor that are inside the current stripe,
-two such points that can easily be found are: the position of the player, and, the point of the floor
-right in front of the wall. Then, for every pixel, calculate the distance its projection on the floor
-has to the player. With that distance, you can find the exact location of the floor that pixel
-represents by using linear interpolation between the two points you found (the one at the wall and the
-one at your position).<br />
-<br />Once you've done all the floor calculations, out of the exact position you can easily find
-the coordinates of the texel from the texture to get the color of the pixel you need to draw.
-Because the floor and ceiling are symmetrical, you know the texel coordinates of the ceiling
-texture are the same, you just draw it at the corresponding pixel in the upper half of the screen
-instead and can use a different texture for the ceiling and the floor.<br />
+这种技术的工作方式如下：绘制完墙壁的垂直条纹后，对墙壁底部像素以下直到屏幕底部的每个像素进行地板投射。你需要知道当前条纹内地板上两个点的精确坐标，两个容易找到的点是：玩家的位置，以及墙壁正前方地板上的点。然后，对每个像素，计算其在地板上的投影到玩家的距离。有了这个距离，你可以通过在找到的两个点（墙壁处的点和你所在位置的点）之间进行线性插值，找到该像素所代表的地板的精确位置。<br />
+<br />完成所有地板计算后，根据精确位置可以轻松找到纹理上纹素的坐标，从而获取需要绘制的像素颜色。由于地板和天花板是对称的，天花板纹理的纹素坐标相同，只需在屏幕上半部分对应的像素处绘制，并可以为天花板和地板使用不同的纹理。<br />
 <br />
-The distance the projection of the current pixel is to the floor can be calculated as follows:
+当前像素的投影到地板的距离可按如下方式计算：
 <ul>
-<li>If the pixel is in the center of the screen (in vertical direction), the distance is infinite.</li>
-<li>If the pixel is at the bottom of the screen, you can choose a certain distance, for example 1</li>
-<li>So all the pixels between those are between 1 and infinite, the distance the pixel represents in function
-of its height in the bottom half of the screen is inversely related as 1 / height. You can use the formula
-"currentDist = h / (2.0 * y - h)" for the distance of the current pixel.</li>
-<li>You can also precalculate a lookup table for this instead,
-since there are only h / 2 possible values (one half of the screen in vertical direction).</li>
+<li>如果像素位于屏幕中心（垂直方向），距离为无穷大。</li>
+<li>如果像素位于屏幕底部，可以选择一个特定距离，例如 1。</li>
+<li>因此，介于两者之间的所有像素的距离在 1 到无穷大之间，像素所代表的距离与其在屏幕下半部分的高度成反比，关系为 1 / height。可以使用公式 "currentDist = h / (2.0 * y - h)" 计算当前像素的距离。</li>
+<li>也可以为此预先计算一个查找表，因为只有 h / 2 个可能的值（屏幕垂直方向的一半）。</li>
 </ul>
-The linear interpolation, to get the exact floor location based on the current distance and the two known distances,
-can be done with a weight factor. This weight factor is "weight = (currentDist - distPlayer) / (distWall - distPlayer)",
-and since the current pixel will always be between the wall and the position of the player, the exact position is then:
-"currentFloorPos = weight * floorPosWall + (1.0 - weight) * playerPos". Note that distPlayer is actually 0, so the weight
-is actually "currentDist / distWall".<br />
+线性插值——根据当前距离和两个已知距离获取精确的地板位置——可以用一个权重因子来完成。该权重因子为 "weight = (currentDist - distPlayer) / (distWall - distPlayer)"，由于当前像素始终位于墙壁和玩家位置之间，精确位置为："currentFloorPos = weight * floorPosWall + (1.0 - weight) * playerPos"。注意 distPlayer 实际上为 0，因此权重实际上是 "currentDist / distWall"。<br />
 <br />
 
 
 <br />
-The code is not given in full this time, the floor casting is now done right after the wall casting, in the same x-loop. Don't forget to remove or disable the other floor casting code before adding this.
+这次不给出完整代码，地板投射现在紧接在墙壁投射之后完成，在同一个 x 循环中。在添加此代码之前，不要忘记移除或禁用另一段地板投射代码。
 <br />
 <br />
-Right after the walls are drawn, the floor casting can begin. First the position of the floor
-right in front of the wall is calculated, and there are 4 different cases possible depending
-if a north, east, south or west side of a wall was hit. After this position and the distances
-are set, the for loop in the y direction that goes from the pixel below the wall until the bottom
-of the screen starts, it calculates the current distance, out of that the weight, out of
-that the exact position of the floor, and out of that the texel coordinate on the texture.
-With this info, both a floor and a ceiling pixel can be drawn. The floor is made darker.<br />
+墙壁绘制完毕后，地板投射即可开始。首先计算墙壁正前方地板的位置，根据光线击中的是墙壁的北、东、南还是西侧，共有 4 种不同情况。设置好该位置和距离后，y 方向的 for 循环从墙壁下方的像素开始直到屏幕底部，依次计算当前距离、由此得出权重、由此得出地板的精确位置，以及由此得出纹理上的纹素坐标。有了这些信息，就可以同时绘制地板和天花板像素。地板会被调暗处理。<br />
 <br />
 
 <center><table class="codetable"><tr><td style="vertical-align: top;">
@@ -585,12 +519,12 @@ With this info, both a floor and a ceiling pixel can be drawn. The floor is made
 </td></tr></table></center>
 
 <br />
-<h2>Next Part</h2>
-<a href="raycasting3.html">Go directly to part III</a>
+<h2>下一部分</h2>
+<a href="raycasting3.html">直接跳转至第 III 部分</a>
 <hr />
-Last edited: 2019
+最后编辑于：2019 年
 <br /><br />
-Copyright (c) 2004-2020 by Lode Vandevenne. All rights reserved.
+版权所有 © 2004-2020 Lode Vandevenne。保留所有权利。
 <script language="javascript" src="colorcode.js"></script>
 </body>
 </html>

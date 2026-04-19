@@ -11,35 +11,34 @@
   <tbody>
     <tr>
       <td style="vertical-align: top;">Vector3</td>
-      <td style="vertical-align: top;">A 3-dimensional vector class, with components x, y and z, and vareous functions.</td>
+      <td style="vertical-align: top;">三维向量类，包含分量 x、y 和 z 及各种函数。</td>
     </tr>
     <tr>
       <td style="vertical-align: top;">Matrix3</td>
-      <td style="vertical-align: top;">A 3x3 matrix class, with components a, b, c, d, e, f, g, h, i and various functions.</td>
+      <td style="vertical-align: top;">3x3 矩阵类，包含分量 a、b、c、d、e、f、g、h、i 及各种函数。</td>
     </tr>
     <tr>
       <td style="vertical-align: top;">Camera</td>
-      <td style="vertical-align: top;">A 3D camera class full of handy functions for 3D transformations.</td>
+      <td style="vertical-align: top;">3D 摄像机类，包含大量用于 3D 变换的实用函数。</td>
     </tr>
   </tbody>
 </table>
   
   
   
-<h3><a name="QuickCG_Vector3_Class_Functions_and_" id="QuickCG_Vector3_Class_Functions_and_"></a>QuickCG Vector3 Class
-Functions and Members<br />
+<h3><a name="QuickCG_Vector3_Class_Functions_and_" id="QuickCG_Vector3_Class_Functions_and_"></a>QuickCG Vector3 类的函数与成员<br />
 </h3>
 <table style="width: 100%; text-align: left;" border="1" cellpadding="1"
  cellspacing="0">
   <tbody>
     <tr>
-      <td style="vertical-align: top;"><b>Function</b></td>
+      <td style="vertical-align: top;"><b>函数</b></td>
       <td colspan="1" rowspan="1" style="vertical-align: top;">
-      <b>Information</b></td>
+      <b>说明</b></td>
     </tr>
     <tr>
       <td style="vertical-align: top;"><tt>x, y, z</tt></td>
-      <td style="vertical-align: top;"><span class="codenopre">double x, double y, double z</span><br /> The 3 elements of the 3D vector. The vector is of the form<br />
+      <td style="vertical-align: top;"><span class="codenopre">double x, double y, double z</span><br /> 3D 向量的 3 个元素，向量的形式为<br />
       <tt>[ x ]</tt><br />
       <tt>[ y ]</tt><br />
       <tt>[ z ]</tt></td>
@@ -48,53 +47,53 @@ Functions and Members<br />
       <td style="vertical-align: top; font-family: monospace;"><br />
       </td>
       <td colspan="1" rowspan="1" style="vertical-align: top;">
-      <span class="codenopre">Vector3(double x, double y, double z);</span><br />Constructor, create vector with given x, y and z coordinate</td>
+      <span class="codenopre">Vector3(double x, double y, double z);</span><br />构造函数，以给定的 x、y、z 坐标创建向量</td>
     </tr>
     <tr>
       <td style="vertical-align: top; font-family: monospace;"><br />
       </td>
       <td colspan="1" rowspan="1" style="vertical-align: top;">
-      <span class="codenopre">Vector3();</span><br />Constructor, create vector with x, y and z set to 0</td>
+      <span class="codenopre">Vector3();</span><br />构造函数，创建 x、y、z 均为 0 的向量</td>
     </tr>
     <tr>
       <td style="vertical-align: top; font-family: monospace;">length</td>
       <td colspan="1" rowspan="1" style="vertical-align: top;">
-      <span class="codenopre">double length();</span><br />Returns the length of the vector</td>
+      <span class="codenopre">double length();</span><br />返回向量的长度</td>
     </tr>
     <tr>
       <td style="vertical-align: top; font-family: monospace;">normalize</td>
       <td colspan="1" rowspan="1" style="vertical-align: top;">
-      <span class="codenopre">void normalize();</span><br />Normalizes the vector</td>
+      <span class="codenopre">void normalize();</span><br />对向量进行归一化</td>
     </tr>
     <tr>
       <td style="vertical-align: top;"><tt>distance</tt></td>
-      <td style="vertical-align: top;"><span class="codenopre">double distance(const Vector3&amp; v);</span><br />Returns the distance between this vector and v</td>
+      <td style="vertical-align: top;"><span class="codenopre">double distance(const Vector3&amp; v);</span><br />返回当前向量与 v 之间的距离</td>
     </tr>
     <tr>
       <td style="vertical-align: top;"><tt>dot</tt></td>
-      <td style="vertical-align: top;"><span class="codenopre">double dot(const Vector3&amp; v);</span><br />Returns the dot product between this vector and v</td>
+      <td style="vertical-align: top;"><span class="codenopre">double dot(const Vector3&amp; v);</span><br />返回当前向量与 v 的点积</td>
     </tr>
     <tr>
       <td style="vertical-align: top; font-family: monospace;">cross</td>
       <td colspan="1" rowspan="1" style="vertical-align: top;">
-      <span class="codenopre">Vector3 cross(const Vector3&amp; v);</span><br />Returns the cross product between this vector and v</td>
+      <span class="codenopre">Vector3 cross(const Vector3&amp; v);</span><br />返回当前向量与 v 的叉积</td>
     </tr>
   </tbody>
 </table>
 <br />
-<h3><a name="QuickCG_Matrix3_Class_Functions_and_" id="QuickCG_Matrix3_Class_Functions_and_"></a>QuickCG Matrix3 Class Functions and Members<br />
+<h3><a name="QuickCG_Matrix3_Class_Functions_and_" id="QuickCG_Matrix3_Class_Functions_and_"></a>QuickCG Matrix3 类的函数与成员<br />
 </h3>
 <table style="width: 100%; text-align: left;" border="1" cellpadding="1"
  cellspacing="0">
   <tbody>
     <tr>
-      <td style="vertical-align: top;"><b>Function</b></td>
+      <td style="vertical-align: top;"><b>函数</b></td>
       <td colspan="1" rowspan="1" style="vertical-align: top;">
-      <b>Information</b></td>
+      <b>说明</b></td>
     </tr>
     <tr>
       <td style="vertical-align: top;"><tt>a to i</tt></td>
-      <td style="vertical-align: top;"><span class="codenopre">double a, double b, double c, double d, double e, double f, double g, double h, double i</span><br />The 9 elements of the 3x3 matrix. The matrix is of the form<br />
+      <td style="vertical-align: top;"><span class="codenopre">double a, double b, double c, double d, double e, double f, double g, double h, double i</span><br />3x3 矩阵的 9 个元素，矩阵的形式为<br />
       <tt>[ a b c ]</tt><br />
       <tt>[ d e f ]</tt><br />
       <tt>[ g h i ]</tt></td>
@@ -103,51 +102,51 @@ Functions and Members<br />
       <td style="vertical-align: top; font-family: monospace;"><br />
       </td>
       <td colspan="1" rowspan="1" style="vertical-align: top;">
-      <span class="codenopre">Matrix3(double a, double b, double c, double d, double e, double f, double g, double h, double i);</span><br />Constructor, create vector with given values for the elements.</td>
+      <span class="codenopre">Matrix3(double a, double b, double c, double d, double e, double f, double g, double h, double i);</span><br />构造函数，以给定的各元素值创建矩阵。</td>
     </tr>
     <tr>
       <td style="vertical-align: top; font-family: monospace;"><br />
       </td>
       <td colspan="1" rowspan="1" style="vertical-align: top;">
-      <span class="codenopre">Matrix3();</span><br />Constructor, create vector with all elements set to 0</td>
+      <span class="codenopre">Matrix3();</span><br />构造函数，创建所有元素均为 0 的矩阵</td>
     </tr>
     <tr>
       <td style="vertical-align: top; font-family: monospace;">transpose</td>
       <td colspan="1" rowspan="1" style="vertical-align: top;">
-      <span class="codenopre">void transpose();</span><br />Transpose the matrix</td>
+      <span class="codenopre">void transpose();</span><br />对矩阵进行转置</td>
     </tr>
     <tr>
       <td style="vertical-align: top; font-family: monospace;">determinant</td>
       <td colspan="1" rowspan="1" style="vertical-align: top;">
-      <span class="codenopre">double determinant();</span><br />Returns the determinant of the matrix</td>
+      <span class="codenopre">double determinant();</span><br />返回矩阵的行列式</td>
     </tr>
     <tr>
       <td style="vertical-align: top;"><tt>invert</tt></td>
-      <td style="vertical-align: top;"><span class="codenopre">void invert();</span><br />Invert the matrix</td>
+      <td style="vertical-align: top;"><span class="codenopre">void invert();</span><br />对矩阵求逆</td>
     </tr>
   </tbody>
 </table>
 <br />
 <h3><a name="QuickCG_Camera_Class_Functions_and"
- id="QuickCG_Camera_Class_Functions_and"></a>QuickCG Camera Class Functions and Members</h3>White rows are public, grey rows are private.<br />
+ id="QuickCG_Camera_Class_Functions_and"></a>QuickCG Camera 类的函数与成员</h3>白色行为公有成员，灰色行为私有成员。<br />
 <br />
 <table style="width: 100%; text-align: left;" border="1" cellpadding="1"
  cellspacing="0">
   <tbody>
     <tr>
-      <td style="vertical-align: top;"><b>Function</b></td>
+      <td style="vertical-align: top;"><b>函数</b></td>
       <td colspan="1" rowspan="1" style="vertical-align: top;">
-      <b>Information</b></td>
+      <b>说明</b></td>
     </tr>
     <tr>
       <td style="vertical-align: top; font-family: monospace;">nearClip</td>
       <td colspan="1" rowspan="1" style="vertical-align: top;">
-      <span class="codenopre">double nearClip</span><br />The near clipping distance of the camera</td>
+      <span class="codenopre">double nearClip</span><br />摄像机的近裁剪距离</td>
     </tr>
     <tr>
       <td style="vertical-align: top; font-family: monospace;">farClip</td>
       <td colspan="1" rowspan="1" style="vertical-align: top;">
-      <span class="codenopre">farClip</span><br />The far clipping distance of the camera</td>
+      <span class="codenopre">farClip</span><br />摄像机的远裁剪距离</td>
     </tr>
     <tr>
       <td style="vertical-align: top; font-family: monospace;"><br />
@@ -158,14 +157,14 @@ double ux, double uy, double uz,<br />
 double vx, double vy, double vz,<br />
 double dirx, double diry, double dirz,<br />
 double nearClip, double farClip);</span><br />
-Generate the camera with given values</td>
+以给定的值生成摄像机</td>
     </tr>
     <tr>
       <td style="vertical-align: top; font-family: monospace;"><br />
       </td>
       <td colspan="1" rowspan="1" style="vertical-align: top;">
       <span class="codenopre">Camera();</span><br />
-Generate the camera with default values</td>
+以默认值生成摄像机</td>
     </tr>
     <tr>
       <td style="vertical-align: top;"><tt>getU,<br />
@@ -176,8 +175,7 @@ getPos</tt></td>
 Vector3 getV();<br />
 Vector3 getDir();<br />
 Vector3 getPos();</span><br />
-Returns the horizontal, vertical, direction or position vector of
-the camera</td>
+返回摄像机的水平、垂直、方向或位置向量</td>
     </tr>
     <tr>
       <td style="vertical-align: top;"><tt>setU,<br />
@@ -189,35 +187,33 @@ setU();<br />
 void setV();<br />
 void setDir();<br />
 void setPos();</span><br />
-Sets the horizontal, vertical, direction or position vector of the
-camera</td>
+设置摄像机的水平、垂直、方向或位置向量</td>
     </tr>
     <tr>
       <td style="vertical-align: top; font-family: monospace;">move</td>
       <td colspan="1" rowspan="1" style="vertical-align: top;">
       <span class="codenopre">void move(const Vector3&amp; offset);</span><br />
-Move with given offset</td>
+按给定偏移量移动摄像机</td>
     </tr>
     <tr>
       <td style="vertical-align: top;"><tt>rotate</tt></td>
       <td style="vertical-align: top;"><span class="codenopre">void
 rotate(const Vector3&amp; axis, double angle);<br />
-      </span> Rotate the camera
-around given axis with given angle</td>
+      </span> 绕给定轴以给定角度旋转摄像机</td>
     </tr>
     <tr>
       <td style="vertical-align: top; font-family: monospace;">
 setLookDir</td>
       <td colspan="1" rowspan="1" style="vertical-align: top;">
       <span class="codenopre">void setLookDir(const Vector3&amp; newDir);</span><br />
-Let the camera look in given direction</td>
+使摄像机朝给定方向看</td>
     </tr>
     <tr>
       <td style="vertical-align: top; font-family: monospace;">
 lookAt</td>
       <td colspan="1" rowspan="1" style="vertical-align: top;">
       <span class="codenopre">void lookAt(const Vector3&amp; lookAtMe);</span><br />
-Look at given point</td>
+使摄像机注视给定点</td>
     </tr>
     <tr>
       <td style="vertical-align: top; font-family: monospace;">
@@ -226,9 +222,7 @@ setDist</td>
       <td colspan="1" rowspan="1" style="vertical-align: top;">
       <span class="codenopre">double getDist(const Vector3&amp; point);<br />
 void setDist(const Vector3&amp; point, double dist);<br />
-      </span> Get and set
-the distance of the camera to a certain point (translate without
-rotating it)</td>
+      </span> 获取和设置摄像机到某点的距离（平移而不旋转）</td>
     </tr>
     <tr>
       <td style="vertical-align: top;"><tt>getZoomU,<br />
@@ -237,8 +231,7 @@ getZoomV<br />
       <td style="vertical-align: top;"><span class="codenopre">double
 getZoomU();<br />
 double getZoomV();</span><br />
-Get the zoom value of the camera in horizontal or vertical
-direction<br />
+获取摄像机在水平或垂直方向上的缩放值<br />
       </td>
     </tr>
     <tr>
@@ -248,7 +241,7 @@ setZoomV<br />
       <td style="vertical-align: top;"><span class="codenopre">void
 setZoomU(double a);<br />
 void setZoomV(double a);</span><br />
-Set the zoom of the camera in horizontal or vertical direction</td>
+设置摄像机在水平或垂直方向上的缩放值</td>
     </tr>
     <tr>
       <td style="vertical-align: top; font-family: monospace;">
@@ -259,8 +252,7 @@ zoomV</td>
       <span class="codenopre">void zoom(double a);<br />
 void zoomU(double a);<br />
 void zoomV(double a);</span><br />
-Zoom both horizontally and vertically, only horizontally or only
-vertically, with a certain factor.</td>
+以指定倍数同时在水平和垂直方向缩放、仅水平缩放或仅垂直缩放。</td>
     </tr>
     <tr>
       <td style="vertical-align: top;"><tt>getFOVU,<br />
@@ -269,10 +261,7 @@ getFOVV<br />
       <td style="vertical-align: top;"><span class="codenopre">double
 getFOVU();<br />
 double getFOVV();<br />
-      </span> Returns the Field Of View in
-horizontal or vertical direction in radians. This is just another
-way of describing the zoom, with an angle instead of a
-factor.<br />
+      </span> 以弧度返回水平或垂直方向的视野角（FOV）。这只是描述缩放的另一种方式，用角度代替倍数。<br />
       </td>
     </tr>
     <tr>
@@ -282,7 +271,7 @@ setFOVV<br />
       <td style="vertical-align: top;"><span class="codenopre">void
 setFOVU(double angle);<br />
 void setFOVV(double angle);</span><br />
-Set the Field Of View in horizontal or vertical direction.</td>
+设置水平或垂直方向的视野角（FOV）。</td>
     </tr>
     <tr>
       <td style="vertical-align: top; font-family: monospace;">
@@ -293,9 +282,7 @@ getRoll</td>
       <span class="codenopre">double getYaw();<br />
 double getPitch();<br />
 double getRoll();</span><br />
-Get those 3 Euler Angles from the camera. These aren't native
-members of the camera but have to be calculated out of its
-vectors.</td>
+从摄像机获取这 3 个欧拉角。它们不是摄像机的原生成员，需要从其向量中计算得出。</td>
     </tr>
     <tr>
       <td style="vertical-align: top; font-family: monospace;">
@@ -306,9 +293,7 @@ setRoll</td>
       <span class="codenopre">void setYaw(double angle);<br />
 void setPitch(double angle);<br />
 void setRoll(double angle);</span><br />
-Get those 3 Euler Angles from the camera. These aren't native
-members of the camera but have to be converted to its
-vectors.</td>
+设置摄像机的这 3 个欧拉角。它们不是摄像机的原生成员，需要转换为其向量。</td>
     </tr>
     <tr>
       <td style="vertical-align: top; font-family: monospace;">
@@ -321,10 +306,10 @@ roll</td>
 void yawSpace(double angle);<br />
 void pitch(double angle);<br />
 void roll(double angle);</span><br />
-yawPlanet rotates the camera around the world y axis with given angle<br />
-yawSpace rotates the camera around the camera "up" axis with given angle<br />
-pitch rotates the camera around the camera "right" axis with given angle<br />
-roll rotates the camera around the camera "direction" axis with given angle</td>
+yawPlanet 以给定角度绕世界 y 轴旋转摄像机<br />
+yawSpace 以给定角度绕摄像机"上"轴旋转摄像机<br />
+pitch 以给定角度绕摄像机"右"轴旋转摄像机<br />
+roll 以给定角度绕摄像机"方向"轴旋转摄像机</td>
     </tr>
     <tr>
       <td style="vertical-align: top; font-family: monospace;">
@@ -333,9 +318,9 @@ resetSkewV</td>
       <td colspan="1" rowspan="1" style="vertical-align: top;">
       <span class="codenopre">Vector3 resetSkewU();<br />
 Vector3 resetSkewV();</span><br />
-Make the camera orthogonal again if somehow it became skewed.<br />
-resetSkewU maintains exact direction and roll if only v was skewed<br />
-resetSkewV maintains exact direction and roll if only u was skewed</td>
+若摄像机因某种原因发生了倾斜，则将其恢复为正交状态。<br />
+resetSkewU 在仅 v 倾斜时保持精确的方向和滚转<br />
+resetSkewV 在仅 u 倾斜时保持精确的方向和滚转</td>
     </tr>
     <tr>
       <td style="vertical-align: top; font-family: monospace;">
@@ -344,8 +329,7 @@ getRatioVU</td>
       <td colspan="1" rowspan="1" style="vertical-align: top;">
       <span class="codenopre">double getRatioUV();<br />
 double getRatioVU();</span><br />
-Returns length(u)/length(v) and length(v)/length(u)
-respectively.</td>
+分别返回 length(u)/length(v) 和 length(v)/length(u)。</td>
     </tr>
     <tr>
       <td style="vertical-align: top; font-family: monospace;">
@@ -354,10 +338,7 @@ setRatioVU</td>
       <td colspan="1" rowspan="1" style="vertical-align: top;">
       <span class="codenopre">void setRatioUV(double ratio);<br />
 void setRatioVU(double ratio);</span><br />
-Sets the ratio of the length of u and v, to have a good view on the
-computer screen, ratioUV should match the resolution ratio of the
-screen, e.g. if using resolution 1024 * 768, then ratioUV should be
-set to 1024 / 768 = 1.333333</td>
+设置 u 和 v 长度的比值。为在屏幕上获得良好的显示效果，ratioUV 应与屏幕分辨率比例一致，例如使用 1024 * 768 分辨率时，ratioUV 应设置为 1024 / 768 = 1.333333</td>
     </tr>
     <tr>
       <td style="vertical-align: top; font-family: monospace;">
@@ -368,22 +349,15 @@ scale</td>
       <span class="codenopre">double getScale();<br />
 void setScale(double dirLength);<br />
 void scale(double factor);</span><br />
-Scaling the camera changes the length of u, v and dir with the same
-ratio. This has no effect on what you see. getScale returns the
-length of the direction vector, and setScale scales the camera
-until the direction vector has given length.</td>
+缩放摄像机会以相同比例改变 u、v 和 dir 的长度，不影响视觉效果。getScale 返回方向向量的长度，setScale 对摄像机进行缩放，直到方向向量达到给定长度。</td>
     </tr>
     <tr>
       <td style="vertical-align: top; font-family: monospace;">
 generateMatrix</td>
       <td colspan="1" rowspan="1" style="vertical-align: top;">
       <span class="codenopre">void generateMatrix();</span><br />
-Generates the internal variable camMatrix. This matrix is nothing
-else than the column vectors u, v and dir sticked together, and is
-used for the transformation calculations.<br />
-Generatematrix has to be used everytime you change u, v or dir. For
-the functions given above that rotate, scale, etc... this is
-already done automaticly.</td>
+生成内部变量 camMatrix。该矩阵就是将列向量 u、v 和 dir 拼合在一起，用于变换计算。<br />
+每次修改 u、v 或 dir 后都必须调用 generateMatrix。对于上述执行旋转、缩放等操作的函数，此步骤已自动完成。</td>
     </tr>
     <tr>
       <td style="vertical-align: top; font-family: monospace;">
@@ -392,15 +366,14 @@ setMatrix,</td>
       <td colspan="1" rowspan="1" style="vertical-align: top;">
       <span class="codenopre">Matrix3 getMatrix();<br />
 void setMatrix(const Matrix3&amp; matrix);</span><br />
-Get or set camMatrix. Setting it automaticly updates u, v and dir
-as well.</td>
+获取或设置 camMatrix。设置时会自动同步更新 u、v 和 dir。</td>
     </tr>
     <tr>
       <td style="vertical-align: top; font-family: monospace;">
 transform</td>
       <td colspan="1" rowspan="1" style="vertical-align: top;">
       <span class="codenopre">Vector3 transform(const Vector3&amp; v);</span><br />
-Multiply given vector v with the inverse of camMatrix</td>
+将给定向量 v 与 camMatrix 的逆矩阵相乘</td>
     </tr>
     <tr>
       <td style="vertical-align: top; font-family: monospace;">
@@ -411,9 +384,7 @@ projectOnScreen</td>
 int &amp; y, double &amp; z);<br />
 bool projectOnScreen(const Vector3&amp; point, int &amp; x, int &amp;
 y);</span><br />
-Return the coordinates a certain 3D point has on screen. You can
-choose wether or not you want it to return the distance of that
-point to the screen in camera space.</td>
+返回某个 3D 点在屏幕上的坐标。可以选择是否同时返回该点在摄像机空间中到屏幕的距离。</td>
     </tr>
     <tr>
       <td
@@ -422,7 +393,7 @@ pos</td>
       <td colspan="1" rowspan="1"
  style="vertical-align: top; background-color: rgb(204, 204, 204);">
       <span class="codenopre">Vector3 pos;</span><br />
-The position of the camera in the world</td>
+摄像机在世界空间中的位置</td>
     </tr>
     <tr>
       <td
@@ -431,9 +402,7 @@ u</td>
       <td
  style="vertical-align: top; background-color: rgb(204, 204, 204);">
       <span class="codenopre">Vector3 u;<br />
-      </span> The "right" vector of
-the camera, parallel with the horizontal bottom of the computer
-screen, the unit vector of the X axis of the camera space</td>
+      </span> 摄像机的"右"向量，与屏幕水平底边平行，是摄像机空间 X 轴的单位向量</td>
     </tr>
     <tr>
       <td
@@ -442,9 +411,7 @@ v</td>
       <td colspan="1" rowspan="1"
  style="vertical-align: top; background-color: rgb(204, 204, 204);">
       <span class="codenopre">Vector3 v;</span><br />
-The "up" vector of the camera, parallel with the vertical side of
-the computer screen, the unit vector of the Y axis of the camera
-space</td>
+摄像机的"上"向量，与屏幕垂直边平行，是摄像机空间 Y 轴的单位向量</td>
     </tr>
     <tr>
       <td
@@ -453,9 +420,7 @@ dir</td>
       <td colspan="1" rowspan="1"
  style="vertical-align: top; background-color: rgb(204, 204, 204);">
       <span class="codenopre">Vector3 dir;</span><br />
-The direction of the camera, where you're looking at, points into
-the computer screen, the unit vector of the Z axis of the camera
-space</td>
+摄像机的方向，即视线所指方向，指向屏幕内部，是摄像机空间 Z 轴的单位向量</td>
     </tr>
     <tr>
       <td
@@ -464,8 +429,7 @@ camMatrix</td>
       <td colspan="1" rowspan="1"
  style="vertical-align: top; background-color: rgb(204, 204, 204);">
       <span class="codenopre">Matrix3 camMatrix;</span><br />
-The camera matrix for transformations. Should always be updated
-together with the u, v and dir vectors.</td>
+用于变换的摄像机矩阵，应始终与 u、v 和 dir 向量同步更新。</td>
     </tr>
     <tr>
       <td
@@ -474,35 +438,33 @@ invCamMatrix</td>
       <td
  style="vertical-align: top; background-color: rgb(204, 204, 204);">
       <span class="codenopre">Matrix3 invCamMatrix;</span><br />
-The inverse camera matrix for transformations. Should always be
-updated together with the u, v and dir vectors.</td>
+用于变换的摄像机逆矩阵，应始终与 u、v 和 dir 向量同步更新。</td>
     </tr>
   </tbody>
 </table>
 <br />
-<h3><a name="QuickCG_3D_Functions_" id="QuickCG_3D_Functions_"></a>QuickCG
-3D Functions</h3>
+<h3><a name="QuickCG_3D_Functions_" id="QuickCG_3D_Functions_"></a>QuickCG 3D 函数</h3>
 <table style="width: 100%; text-align: left;" border="1" cellpadding="1"
  cellspacing="0">
   <tbody>
     <tr>
-      <td style="vertical-align: top;"><b>Function</b></td>
+      <td style="vertical-align: top;"><b>函数</b></td>
       <td colspan="1" rowspan="1" style="vertical-align: top;">
-      <b>Information</b></td>
+      <b>说明</b></td>
     </tr>
     <tr>
       <td style="vertical-align: top; font-family: monospace;">
 length</td>
       <td colspan="1" rowspan="1" style="vertical-align: top;">
       <span class="codenopre">double length(const Vector3&amp; v);</span><br />
-Returns the length of vector v</td>
+返回向量 v 的长度</td>
     </tr>
     <tr>
       <td style="vertical-align: top; font-family: monospace;">
 normalize</td>
       <td colspan="1" rowspan="1" style="vertical-align: top;">
       <span class="codenopre">Vector3 normalize(const Vector3&amp; v);</span><br />
-Returns a vector with length 1 and the same direction as v</td>
+返回与 v 方向相同且长度为 1 的向量</td>
     </tr>
     <tr>
       <td style="vertical-align: top; font-family: monospace;">
@@ -510,59 +472,59 @@ distance</td>
       <td colspan="1" rowspan="1" style="vertical-align: top;">
       <span class="codenopre">double distance(const Vector3&amp; v, const Vector3&amp;
 w);</span><br />
-Returns the distance between v and w</td>
+返回 v 与 w 之间的距离</td>
     </tr>
     <tr>
       <td style="vertical-align: top;"><tt>dot</tt></td>
       <td style="vertical-align: top;"><span class="codenopre">double
 dot(const Vector3&amp; v, const Vector3&amp; w);</span><br />
-Returns the dot product of v and w</td>
+返回 v 与 w 的点积</td>
     </tr>
     <tr>
       <td style="vertical-align: top;"><tt>cross</tt></td>
       <td style="vertical-align: top;"><span class="codenopre">Vector3
 cross(const Vector3&amp; v, const Vector3&amp; w);</span><br />
-Returns the corss product of v and w</td>
+返回 v 与 w 的叉积</td>
     </tr>
     <tr>
       <td style="vertical-align: top; font-family: monospace;">-</td>
       <td colspan="1" rowspan="1" style="vertical-align: top;">
       <span class="codenopre">Vector3 operator-(const Vector3&amp; v, const Vector3&amp;
 w);</span><br />
-Returns v - w</td>
+返回 v - w</td>
     </tr>
     <tr>
       <td style="vertical-align: top;"><tt>-</tt></td>
       <td style="vertical-align: top;"><span class="codenopre">Vector3
 operator-(const Vector3&amp; v);</span><br />
-Returns -v</td>
+返回 -v</td>
     </tr>
     <tr>
       <td style="vertical-align: top; font-family: monospace;">+</td>
       <td colspan="1" rowspan="1" style="vertical-align: top;">
       <span class="codenopre">Vector3 operator+(const Vector3&amp; v, const Vector3&amp;
 w);</span><br />
-Returns v + w</td>
+返回 v + w</td>
     </tr>
     <tr>
       <td style="vertical-align: top; font-family: monospace;">*</td>
       <td colspan="1" rowspan="1" style="vertical-align: top;">
       <span class="codenopre">Vector3 operator*(const Vector3&amp; v, double a);<br />
 const Vector3&amp; operator*(double a, const Vector3&amp; v);</span><br />
-Returns v multiplied with a</td>
+返回 v 与 a 的乘积</td>
     </tr>
     <tr>
       <td style="vertical-align: top; font-family: monospace;">/</td>
       <td colspan="1" rowspan="1" style="vertical-align: top;">
       <span class="codenopre">Vector3 operator/(const Vector3&amp; v, double
 a);</span><br />
-Return v divided through a</td>
+返回 v 除以 a 的结果</td>
     </tr>
     <tr>
       <td style="vertical-align: top;"><tt>vectorAngle</tt></td>
       <td style="vertical-align: top;"><span class="codenopre">double
 vectorAngle(const Vector3&amp; v, const Vector3&amp; w);</span><br />
-Return angle between vectors v and w</td>
+返回向量 v 与 w 之间的夹角</td>
     </tr>
     <tr>
       <td style="vertical-align: top;">
@@ -570,55 +532,54 @@ Return angle between vectors v and w</td>
       <td style="vertical-align: top;"><span class="codenopre">Vector3
 rotateAroundArbitrary(const Vector3&amp; v, const Vector3&amp; axis, double
 angle);<br />
-      </span> Returns vector v rotated around axis through
-the origin over the given angle</td>
+      </span> 返回向量 v 绕过原点的给定轴旋转指定角度后的结果</td>
     </tr>
     <tr>
       <td style="vertical-align: top; font-family: monospace;">
 transpose</td>
       <td colspan="1" rowspan="1" style="vertical-align: top;">
       <span class="codenopre">Matrix3 transpose(const Matrix3&amp; A);</span><br />
-Returns the transpose of A</td>
+返回 A 的转置矩阵</td>
     </tr>
     <tr>
       <td style="vertical-align: top;"><tt>determinant</tt></td>
       <td style="vertical-align: top;"><span class="codenopre">double
 determinant(const Matrix3&amp; A);</span><br />
-Returns the determinant of A</td>
+返回 A 的行列式</td>
     </tr>
     <tr>
       <td style="vertical-align: top;"><tt>inverse</tt></td>
       <td style="vertical-align: top;"><span class="codenopre">Matrix3
 inverse(const Matrix3&amp; A);</span><br />
-Returns the inverse of A</td>
+返回 A 的逆矩阵</td>
     </tr>
     <tr>
       <td style="vertical-align: top; font-family: monospace;">+</td>
       <td colspan="1" rowspan="1" style="vertical-align: top;">
       <span class="codenopre">Matrix3 operator+(const Matrix3&amp; A, const Matrix3&amp;
 B);</span><br />
-Returns A + B</td>
+返回 A + B</td>
     </tr>
     <tr>
       <td style="vertical-align: top; font-family: monospace;">-</td>
       <td colspan="1" rowspan="1" style="vertical-align: top;">
       <span class="codenopre">Matrix3 operator-(const Matrix3&amp; A, const Matrix3&amp;
 B);</span><br />
-Returns A - B</td>
+返回 A - B</td>
     </tr>
     <tr>
       <td style="vertical-align: top; font-family: monospace;">*</td>
       <td colspan="1" rowspan="1" style="vertical-align: top;">
       <span class="codenopre">Matrix3 operator*(const Matrix3&amp; A, double a);<br />
 Matrix3 operator*(double a, const Matrix3&amp; A);</span><br />
-Returns A multiplied with a</td>
+返回 A 与 a 的乘积</td>
     </tr>
     <tr>
       <td style="vertical-align: top; font-family: monospace;">/</td>
       <td colspan="1" rowspan="1" style="vertical-align: top;">
       <span class="codenopre">Matrix3 operator/(const Matrix3&amp; A, double
 a);</span><br />
-Returns A divided through a</td>
+返回 A 除以 a 的结果</td>
     </tr>
     <tr>
       <td style="vertical-align: top; font-family: monospace;">*</td>
@@ -626,8 +587,7 @@ Returns A divided through a</td>
       <span class="codenopre">Vector3 operator*(const Matrix3&amp; A, const Vector3&amp; v);<br />
 Vector3 operator*(const Vector3&amp; v, const Matrix3&amp; A);<br />
 Matrix3 operator*(const Matrix3&amp; A, const Matrix3&amp; B);</span><br />
-Returns matrix multiplied with vector, vector multiplied with
-matrix, or matrix multiplied with matrix</td>
+返回矩阵与向量的乘积、向量与矩阵的乘积，或矩阵与矩阵的乘积</td>
     </tr>
     <tr>
       <td style="vertical-align: top; font-family: monospace;">
@@ -636,14 +596,14 @@ degToRad</td>
       <td colspan="1" rowspan="1" style="vertical-align: top;">
       <span class="codenopre">double radToDeg(double rad);<br />
 double degToRad(double deg);</span><br />
-Convert from radians to degrees or from degrees to radians.</td>
+在弧度与角度之间相互转换。</td>
     </tr>
   </tbody>
 </table>
 <br />
 <hr />
-Last edited: 2004
+最后编辑于：2004 年
 <br /><br />
-Copyright (c) 2004-2007 by Lode Vandevenne. All rights reserved.
+版权所有 © 2004-2007 Lode Vandevenne。保留所有权利。
 </body>
 </html>

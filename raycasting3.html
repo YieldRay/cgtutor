@@ -1,88 +1,87 @@
 <!DOCTYPE html>
 <head>
 <meta charset="utf-8"/>
-<title>Raycasting III: Sprites</title>
+<title>光线投射 III：精灵</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <meta content="text/html; charset=us-ascii" http-equiv="content-type" />
 <link rel="stylesheet" type="text/css" href="stylesheet.css" />
 </head>
 <body>
-<h1>Lode's Computer Graphics Tutorial</h1>
-<h1>Raycasting III: Sprites<br /></h1>
-<h2>Table of Contents</h2>
+<h1>Lode 的计算机图形学教程</h1>
+<h1>光线投射 III：精灵<br /></h1>
+<h2>目录</h2>
 <ul>
-<li><a href="raycasting3.html#Introduction">Introduction</a></li>
-<li><a href="raycasting3.html#How">How it Works</a></li>
-<li><a href="raycasting3.html#Code">The Code</a></li>
-<li><a href="raycasting3.html#Scale">Scaling Sprites</a></li>
-<li><a href="raycasting3.html#Translucent">Translucent Sprites</a></li>
+<li><a href="raycasting3.html#Introduction">简介</a></li>
+<li><a href="raycasting3.html#How">工作原理</a></li>
+<li><a href="raycasting3.html#Code">代码</a></li>
+<li><a href="raycasting3.html#Scale">缩放精灵</a></li>
+<li><a href="raycasting3.html#Translucent">半透明精灵</a></li>
 </ul>
-<a href="index.html">Back to index</a><br />
-<h2><a name="Introduction" id="Introduction"></a>Introduction</h2>
-The articles Raycasting and Raycasting II described how to make textured walls and floors,
-but something is missing. In a game, a world with only walls and floors is empty,
-for a game to work, there have to be goodies, enemies, objects like barrels or trees, ...
-These can't be drawn as wall or floor, and, in the
-time when raycasting games were made, can't be drawn as 3D models either.
-Instead, they used sprites, 2D pictures always facing to you
-(so they're easy to draw and require a single picture),
-but that become smaller if they're further away.<br />
-<br />You can download the full source code of this tutorial <a href="files/raycaster_sprites.cpp">here</a>.
-<h2><a name="How" id="How"></a>How it Works</h2>
-The technique used to draw the sprites is totally different from the raycasting technique.
-Instead, it works very similar to how sprites are drawn in a 3D engine with projections,
-like in the "Points, Sprites and Moving" article. Only, we have to do the projection only
-in 2D, and some extra techniques to combine it with raycasting are used.<br />
+<a href="index.html">返回目录</a><br />
+<h2><a name="Introduction" id="Introduction"></a>简介</h2>
+《光线投射》和《光线投射 II》两篇文章介绍了如何制作带纹理的墙壁和地板，
+但还缺少一些东西。在游戏中，只有墙壁和地板的世界是空洞的，
+要让游戏正常运行，就必须有道具、敌人、桶或树之类的物体……
+这些东西无法作为墙壁或地板来绘制，而且在光线投射游戏盛行的年代，
+也无法绘制为 3D 模型。
+于是，开发者使用了精灵——始终朝向玩家的 2D 图片
+（因此易于绘制，只需一张图片），
+但距离越远时显示得越小。<br />
+<br />你可以在<a href="files/raycaster_sprites.cpp">这里</a>下载本教程的完整源代码。
+<h2><a name="How" id="How"></a>工作原理</h2>
+绘制精灵所用的技术与光线投射技术完全不同。
+它的工作方式与带投影的 3D 引擎中绘制精灵的方式非常相似，
+就像《点、精灵与移动》一文中介绍的那样。只不过，这里只需在
+2D 中进行投影，并使用一些额外技术将其与光线投射结合起来。<br />
 <br />
-Drawing the sprites is done after the walls and floor are already drawn. Here are the steps used to draw the sprites:
+精灵的绘制是在墙壁和地板都已绘制完成之后进行的。以下是绘制精灵所用的步骤：
 <ul>
-<li>1: While raycasting the walls, store the perpendicular distance of each vertical stripe in a 1D ZBuffer</li>
-<li>2: Calculate the distance of each sprite to the player</li>
-<li>3: Use this distance to sort the sprites, from furthest away to closest to the camera</li>
-<li>4: Project the sprite on the camera plane (in 2D): subtract the player position from the sprite position, then multiply the result with the inverse of the 2x2 camera matrix</li>
-<li>5: Calculate the size of the sprite on the screen (both in x and y direction) by using the perpendicular distance</li>
-<li>6: Draw the sprites vertical stripe by vertical stripe, don't draw the vertical stripe if the distance is further away than the 1D ZBuffer of the walls of the current stripe</li>
-<li>7: Draw the vertical stripe pixel by pixel, make sure there's an invisible color or all sprites would be rectangles</li>
+<li>1：在对墙壁进行光线投射时，将每条竖直条带的垂直距离存储到一个一维 ZBuffer 中</li>
+<li>2：计算每个精灵到玩家的距离</li>
+<li>3：利用该距离对精灵进行排序，从距摄像机最远的排到最近的</li>
+<li>4：将精灵投影到摄像机平面（在 2D 中）：用精灵位置减去玩家位置，然后将结果乘以 2x2 摄像机矩阵的逆矩阵</li>
+<li>5：利用垂直距离计算精灵在屏幕上的尺寸（x 方向和 y 方向均需计算）</li>
+<li>6：逐条竖直条带地绘制精灵，若该条带的距离比当前条带墙壁的一维 ZBuffer 值更远，则不绘制该条带</li>
+<li>7：逐像素绘制竖直条带，确保存在不可见颜色，否则所有精灵都会显示为矩形</li>
 </ul>
-You don't have to update the ZBuffer while drawing the stripes: since they're sorted, the ones closer to you will be drawn last, so they're drawn over the further away ones.<br />
+在绘制条带时无需更新 ZBuffer：由于精灵已排序，离你更近的精灵会最后绘制，从而覆盖在更远的精灵之上。<br />
 <br />
-How to project the sprite on screen is explained in full 3D rendering mathematics (with 3D matrices and camera), for true 3D rasterizer or ray<i>tracer</i> 3D engines, and is not explained here in the ray<i>caster</i> tutorial.
-However, here it's done in 2D and no fancy camera class is used. To bring the sprite's coordinates to camera space, first subtract the player's position from the sprite's
-position, then you have the position of the sprite relative to the player. Then it has to be rotated so that the direction is relative to the player. The camera
-can also be skewed and has a certain size, so it isn't really a rotation, but a transformation. The transformation is done by multiplying the relative
-position of the sprite with the inverse of the camera matrix. The camera matrix is in our case
+如何将精灵投影到屏幕上，在完整的 3D 渲染数学（使用 3D 矩阵和摄像机）中有详细说明，适用于真正的 3D 光栅化器或光线<i>追踪</i> 3D 引擎，在本光线<i>投射</i>教程中不作解释。
+不过，这里是在 2D 中完成的，不使用复杂的摄像机类。要将精灵坐标转换到摄像机空间，首先用精灵位置减去玩家位置，
+得到精灵相对于玩家的位置，然后需要旋转使方向相对于玩家。摄像机
+也可以倾斜并具有一定尺寸，所以这并不是真正的旋转，而是一种变换。该变换通过将精灵的相对
+位置乘以摄像机矩阵的逆矩阵来完成。在我们的情况下，摄像机矩阵为
 <br /><pre>
 [planeX   dirX]
 [planeY   dirY]
-</pre>And the inverse of a 2x2 matrix is very easy to calculate
+</pre>而 2x2 矩阵的逆矩阵非常容易计算
 <pre>
 ____________1___________    [dirY      -dirX]
 (planeX*dirY-dirX*planeY) * [-planeY  planeX]
 </pre><br />
-Then you get the X and Y coordinate of the sprite in camera space, where Y is the depth inside the screen (in a true 3D engine, Z is the depth). To
-project it on screen, divide X through the depth, and then translate and scale it so that it's in pixel coordinates.<br />
+这样就得到了精灵在摄像机空间中的 X 和 Y 坐标，其中 Y 是屏幕内的深度（在真正的 3D 引擎中，Z 是深度）。要
+将其投影到屏幕上，用 X 除以深度，然后平移并缩放，使其转换为像素坐标。<br />
 <br />
-To place the objects in the level, many things can be done. Each object can have its own floating point coordinates, it doesn't have to be
-exactly in the center of floor tiles. You can make a list of each object and give its coordinates and texture one by one, or you can place
-the objects by making a second map (a 2D array), and for every tile coordinate place one or no object, the same way as placing the walls. If you do that,
-then let the program read that map and create a list of objects out of it, with every object placed in the center of the corresponding map tile.
-Coordinates in the center of a tile are a halve, e.g. (11.5, 15.5), while whole coordinates will be the corners of tiles.<br />
+在关卡中放置物体有很多方法。每个物体可以有自己的浮点坐标，不必
+恰好位于地板格子的中心。你可以为每个物体创建一个列表，逐一给出其坐标和纹理，也可以通过创建第二张地图（一个 2D 数组）来放置
+物体，对每个格子坐标放置一个或零个物体，方式与放置墙壁相同。如果这样做，
+则让程序读取该地图并从中创建物体列表，每个物体放置在对应地图格子的中心。
+格子中心的坐标为 0.5 的倍数，例如 (11.5, 15.5)，而整数坐标则是格子的角点。<br />
 <br />
-The code presented below uses a small list of objects instead of a map.
-<h2><a name="Code" id="Code"></a>The Code</h2>
-The code tries to load the wolfenstein textures, with extra textures for 3 sprites, you can download them <a href="files/wolftex.zip">here (copyright
-by id Software)</a>.
-If you don't want to load textures, you can use the part of code that generates textures from the previous raycasting tutorial instead, but
-it looks less good. You'll also have to invent something yourself for the sprites, black is the invisible color.<br />
+下面展示的代码使用了一个小型物体列表，而非地图。
+<h2><a name="Code" id="Code"></a>代码</h2>
+代码尝试加载《德军总部》的纹理，另附 3 个精灵的额外纹理，你可以在<a href="files/wolftex.zip">这里（版权归 id Software 所有）</a>下载。
+如果不想加载纹理，可以改用前一篇光线投射教程中生成纹理的那部分代码，但
+效果会差一些。精灵部分也需要自己想办法，黑色是不可见颜色。<br />
 <br /><img alt="" src="images/wolftexturesobj.gif" style="width: 704px; height: 64px;" /><br />
 <br />
-The full code of the whole thing is given, it's similar to the code of Raycasting II, but with added code here and there.<br />
+下面给出了整个程序的完整代码，与《光线投射 II》的代码类似，只是在各处添加了新代码。<br />
 <br />
-The new variables for sprite casting are the struct Sprite, containing the position and texture of the sprite, the value numSprites: the
-number of sprites, the sprite array: defines the positions and textures of all the Sprites, the declaration of the bubbleSort function:
-this will sort the sprites, and the arrays used as arguments for this function: spriteOrder and spriteDistance, and finally, ZBuffer: this
-is the 1D equivalent of the ZBuffer in a true 3D engine. In the sprite array, every third number is the number of its texture, you
-can see which number means what there where the textures are loaded.<br />
+精灵投射的新变量包括：结构体 Sprite，包含精灵的位置和纹理；值 numSprites：
+精灵的数量；精灵数组：定义所有精灵的位置和纹理；bubbleSort 函数的声明：
+用于对精灵排序；以及该函数的参数数组：spriteOrder 和 spriteDistance；最后是 ZBuffer：这
+是真正 3D 引擎中 ZBuffer 的一维等价物。在精灵数组中，每第三个数字是其纹理编号，
+你可以在加载纹理的地方看到每个编号对应什么。<br />
 <br />
 <center><table class="codetable"><tr><td style="vertical-align: top;">
 <pre><span class="code">#define screenWidth 640
@@ -182,8 +181,8 @@ int main(int /*argc*/, char */*argv*/[])
   for(int i = 0; i &lt; 11; i++) texture[i].resize(texWidth * texHeight);</span></pre>
 </td></tr></table></center>
 <br />
-3 new textures are loaded: the sprites. There's nothing that stops you from loading more textures, or
-making the textures higher resolution.<br />
+加载了 3 个新纹理：即精灵纹理。没有任何限制阻止你加载更多纹理，或者
+使用更高分辨率的纹理。<br />
 <br />
 <center><table class="codetable"><tr><td style="vertical-align: top;">
 <pre><span class="code">  screen(screenWidth, screenHeight, 0, "Raycaster");
@@ -206,7 +205,7 @@ making the textures higher resolution.<br />
   if(error) { std::cout &lt;&lt; "error loading images" &lt;&lt; std::endl; return 1; }</span></pre>
 </td></tr></table></center>
 <br />
-Here's the main loop which starts with raycasting the floors and walls, same code as before.
+以下是主循环，从对地板和墙壁进行光线投射开始，代码与之前相同。
 <br />
 <br />
 <center><table class="codetable"><tr><td style="vertical-align: top;">
@@ -382,9 +381,9 @@ Here's the main loop which starts with raycasting the floors and walls, same cod
       }</span></pre>
 </td></tr></table></center>
 <br />
-After raycasting the wall, the ZBuffer has to be set. This ZBuffer is 1D, because it only contains the distance to the wall
-of every vertical stripe, instead of having this for every pixel. This also ends the loop through every vertical stripe, because rendering the sprites
-will be done outside this loop.<br />
+对墙壁进行光线投射后，必须设置 ZBuffer。这个 ZBuffer 是一维的，因为它只包含每条竖直条带到墙壁的距离，
+而不是每个像素都有一个值。这也结束了遍历每条竖直条带的循环，因为精灵的渲染
+将在该循环之外完成。<br />
 <br />
 <center><table class="codetable"><tr><td style="vertical-align: top;">
 <pre><span class="code">      //SET THE ZBUFFER FOR THE SPRITE CASTING
@@ -393,14 +392,11 @@ will be done outside this loop.<br />
 </span></pre>
 </td></tr></table></center>
 <br />
-After the floors and walls are finally drawn, the sprites can be drawn. This code is very unoptimized, a few improvements
-are explained later. First it sorts the sprites from far to close, so that the far ones will be drawn first. Then it
-projects each sprite, calculates the size it should have on screen, and draws it stripe by stripe. The matrix multiplication
-for the projection is very easy because it's only a 2x2 matrix. It comes in very handy again that they raycaster already
-used a 2D camera matrix, instead of representing the player with an angle and a position instead like some raycasters do.<br />
-<br />The distance calculated for the sorting of the sprites is never used later on, because the perpendicular distance
-is used instead. For sorting the sprites it doesn't matter if you take the square root of the distance or not, so no
-calculation time is wasted for that.<br />
+地板和墙壁最终绘制完成后，就可以绘制精灵了。这段代码尚未优化，后面会介绍一些改进方法。
+首先将精灵从远到近排序，使远处的精灵先被绘制。然后
+对每个精灵进行投影，计算其在屏幕上应有的尺寸，并逐条带地绘制。投影的矩阵乘法
+非常简单，因为只是一个 2x2 矩阵。光线投射器已经使用了 2D 摄像机矩阵，而不是像某些光线投射器那样用角度和位置来表示玩家，这再次带来了很大便利。<br />
+<br />为精灵排序而计算的距离之后不再使用，因为改用垂直距离。对精灵排序时，是否对距离取平方根并不重要，因此不会在这上面浪费计算时间。<br />
 <br />
 <center><table class="codetable"><tr><td style="vertical-align: top;">
 <pre><span class="code">    //SPRITE CASTING
@@ -467,7 +463,7 @@ calculation time is wasted for that.<br />
     }</span></pre>
 </td></tr></table></center>
 <br />
-After it all is drawn, the screen is updated, and the input keys are handled.
+所有内容绘制完成后，更新屏幕并处理输入按键。
 <br />
 <br />
 <center><table class="codetable"><tr><td style="vertical-align: top;">
@@ -523,10 +519,8 @@ After it all is drawn, the screen is updated, and the input keys are handled.
 }</span></pre>
 </td></tr></table></center>
 <br />
-The sortSprites sorts the sprites from farthest away to closest by distance. It
-uses the standard std::sort function provided by C++. But since we need to sort
-two arrays using the same order here (order and dist), most of the code is spent
-moving the data into and out of a vector of pairs.
+sortSprites 按距离将精灵从最远到最近排序。它
+使用 C++ 提供的标准 std::sort 函数。但由于这里需要用相同的顺序对两个数组（order 和 dist）排序，大部分代码都花在了将数据移入和移出 pair 向量上。
 <br />
 <br />
 <center>
@@ -556,20 +550,19 @@ void sortSprites(int* order, double* dist, int amount)
 </center>
 <br />
 <img alt="" src="images/raycastsprites1.jpg" style="width: 408px; height: 328px;" /><img alt="" src="images/raycastsprites2.jpg" style="width: 408px; height: 328px;" /><br />
-<br />The green light is a very small sprite, but the program still goes through all its invisible pixels to check their color. It could be made faster by
-telling which sprites have large invisible parts, and only drawing a smaller rectangular part of them containing all visible pixels.<br />
+<br />绿色光源是一个非常小的精灵，但程序仍然会遍历其所有不可见像素来检查颜色。可以通过
+标记哪些精灵有大面积不可见区域，并只绘制包含所有可见像素的更小矩形区域来提升速度。<br />
 <br />
-To make some objects unwalkthroughable, you can either check the distance of the player to every object when he moves for collision detection,
-or, make another 2D map that contains for every square if it's walkthroughable or not, this can be used for walls as well.<br />
+要使某些物体不可穿越，可以在玩家移动时检查玩家与每个物体的距离来进行碰撞检测，
+或者创建另一张 2D 地图，记录每个格子是否可以穿越，这也可以用于墙壁。<br />
 <br />
-In for example Wolfenstein 3D, some objects (for example the soldiers) have 8 different pictures when viewing it from different angles,
-to make it appear as if the sprite is really 3D. You can get the angle of the object to the player for example with the atan2 function,
-and then choose 1 of 8 textures depending on the angle. You can also give the sprites even more textures for animation.
-<h2><a name="Scale" id="Scale"></a>Scaling Sprites</h2>
-It's pretty easy to let the program draw the sprites larger or smaller, and move the sprites up or down. To shrink the sprite, divide spriteWidth and spriteHeight
-through something. If you halve the height of the sprites, for example the pillar, then the bottom will move up so that the pillar appears to be floating. That's
-why in the code below, apart from the parameters uDiv and vDiv to shrink the sprite, also a parameter vMove is added to move the sprite down if it has to stand
-on the floor, or up if it has to hang on the ceiling. vMoveScreen is vMove projected on the screen by dividing it through the depth.<br />
+例如在《德军总部 3D》中，某些物体（例如士兵）在从不同角度观看时有 8 张不同图片，
+以使精灵看起来真正具有 3D 效果。可以使用 atan2 函数获取物体相对于玩家的角度，
+然后根据角度从 8 个纹理中选择一个。也可以为精灵提供更多纹理用于动画。
+<h2><a name="Scale" id="Scale"></a>缩放精灵</h2>
+让程序将精灵绘制得更大或更小，以及上下移动精灵，都相当容易。要缩小精灵，可以将 spriteWidth 和 spriteHeight
+除以某个值。如果将精灵的高度减半，例如柱子，那么底部会上移，使柱子看起来像在漂浮。这就是
+为什么在下面的代码中，除了用于缩小精灵的参数 uDiv 和 vDiv，还添加了参数 vMove，用于在精灵需要站在地板上时向下移动，或在需要悬挂在天花板上时向上移动。vMoveScreen 是 vMove 通过除以深度投影到屏幕上的值。<br />
 <br />
 <center><table class="codetable"><tr><td style="vertical-align: top;">
 <pre><span class="code">      //parameters for scaling and moving the sprites
@@ -615,28 +608,28 @@ on the floor, or up if it has to hang on the ceiling. vMoveScreen is vMove proje
     }</span></pre>
 </td></tr></table></center>
 <br />
-When uDiv = 2, vDiv = 2, vMove = 0.0, the sprites are half as big, and float:<br/>
+当 uDiv = 2、vDiv = 2、vMove = 0.0 时，精灵缩小为原来的一半，并且漂浮在空中：<br/>
 <br/>
 <img alt="" src="images/raycastspritescalefloat.jpg" style="width: 328px; height: 268px;" /><br />
 <br/>
-Put it back on the ground by setting vMove to 64.0 (the size of the texture):<br/>
+将 vMove 设置为 64.0（纹理的尺寸）可以将精灵放回地面：<br/>
 <br/>
 <img alt="" src="images/raycastspritescale.jpg" style="width: 328px; height: 268px;" /><br />
 <br/>
-If you make vMove even higher to place the sprites under the ground, they'll still be drawn through the ground, because the ZBuffer is 1D
-and can only detect if the sprite is in front or behind a wall.<br/>
+如果将 vMove 设置得更大以将精灵放到地面以下，它们仍然会穿透地面被绘制出来，因为 ZBuffer 是一维的，
+只能检测精灵是在墙壁前面还是后面。<br/>
 <br/>
 <img alt="" src="images/raycastspritescalesink.jpg" style="width: 328px; height: 268px;" /><br />
 <br/>
-Of course, by lowering the barrels, the green light is lower too so it doesn't hang on the ceiling anymore. To make this useful, you
-have to give each sprite its own uDiv, vDiv and vMove parameters, for example you can put them in the sprite struct.<br/>
+当然，降低桶的位置时，绿色光源也会随之降低，不再悬挂在天花板上。要使这一功能实用，
+需要为每个精灵提供各自的 uDiv、vDiv 和 vMove 参数，例如可以将它们放入精灵结构体中。<br/>
 <br/>
 <img alt="" src="images/raycastspritescalelight.jpg" style="width: 328px; height: 268px;" />
 
-<h2><a name="Translucent" id="Translucent"></a>Translucent Sprites</h2>
-Because we're working in RGB color, making sprites translucent is very simple. All you have to do is take the average of the old color
-in the buffer and the new color of the sprite. Old games like for example Wolfenstein 3D used a palette of 256 colors with no
-logical mathematical rules for the colors in the palette, so there translucency wasn't so easy. Change the following line of code<br />
+<h2><a name="Translucent" id="Translucent"></a>半透明精灵</h2>
+由于我们使用的是 RGB 颜色，使精灵半透明非常简单。只需取缓冲区中旧颜色
+与精灵新颜色的平均值即可。像《德军总部 3D》这样的老游戏使用 256 色调色板，调色板中的颜色没有
+合乎逻辑的数学规律，因此半透明处理并不那么容易。将以下代码行<br />
 <br />
 
 <center><table class="codetable"><tr><td style="vertical-align: top;">
@@ -644,7 +637,7 @@ logical mathematical rules for the colors in the palette, so there translucency 
 </td></tr></table></center>
 
 <br />
-into<br />
+改为<br />
 <br />
 
 <center><table class="codetable"><tr><td style="vertical-align: top;">
@@ -653,7 +646,7 @@ into<br />
 
 <br /><br/>
 <img alt="" src="images/raycastspritetranslucent.jpg" style="width: 328px; height: 268px;" /><br />
-To make them more translucent, try something like<br />
+要使其更加透明，可以尝试类似这样的写法<br />
 <br />
 
 <center><table class="codetable"><tr><td style="vertical-align: top;">
@@ -662,7 +655,7 @@ To make them more translucent, try something like<br />
 
 <br /><br/>
 <img alt="" src="images/raycastspritetranslucent2.jpg" style="width: 328px; height: 268px;" /><br />
-<br />You can also try more special tricks, for example translucent sprites, that make the walls behind them of negative color:<br />
+<br />你也可以尝试更多特殊技巧，例如让半透明精灵使其身后的墙壁呈现负色：<br />
 <br />
 
 <center><table class="codetable"><tr><td style="vertical-align: top;">
@@ -671,14 +664,14 @@ To make them more translucent, try something like<br />
 
 <br /><br/>
 <img alt="" src="images/raycastspritetranslucent3.jpg" style="width: 328px; height: 268px;" /><br />
-<br />To be useful for a game, it would be more handy to give each sprite its own translucency effect (if any),
-with an extra parameter in the sprite struct. For example the green light could be translucent, but a pillar
-certainly not.
+<br />要在游戏中实用，更方便的做法是为每个精灵提供各自的半透明效果（如有需要），
+在精灵结构体中添加一个额外参数。例如绿色光源可以是半透明的，但柱子
+肯定不行。
 <br />
 <hr />
-Last edited: 2020
+最后编辑于：2020 年
 <br /><br />
-Copyright (c) 2004-2020 by Lode Vandevenne. All rights reserved.
+版权所有 © 2004-2020 Lode Vandevenne。保留所有权利。
 <script language="javascript" src="colorcode.js"></script>
 </body>
 </html>

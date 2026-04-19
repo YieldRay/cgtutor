@@ -2,51 +2,29 @@
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-<title>Recursion Trees</title>
+<title>递归树</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <meta content="text/html; charset=us-ascii" http-equiv=
 "content-type" />
 <link rel="stylesheet" type="text/css" href="stylesheet.css" />
 </head>
 <body>
-<h1>Lode's Computer Graphics Tutorial</h1>
-<h1>Recursion Trees</h1>
-<h2>Table of Contents</h2>
+<h1>Lode 的计算机图形学教程</h1>
+<h1>递归树</h1>
+<h2>目录</h2>
 <ul>
-<li><a href="recursiontrees.html#Introduction">Introduction</a></li>
-<li><a href="recursiontrees.html#Recursion_Tree_with_Two_Branches">Recursion Tree with
-Two Branches</a></li>
-<li><a href="recursiontrees.html#Recursion_Tree_with_More_Branches">Recursion Tree
-with More Branches</a></li>
+<li><a href="recursiontrees.html#Introduction">简介</a></li>
+<li><a href="recursiontrees.html#Recursion_Tree_with_Two_Branches">两分支递归树</a></li>
+<li><a href="recursiontrees.html#Recursion_Tree_with_More_Branches">多分支递归树</a></li>
 </ul>
-<a href="index.html">Back to Index</a><br />
-<h2><a name="Introduction" id="Introduction"></a>Introduction</h2>
-Fractals have the property of self-similarity. One type of figure
-that fulfills this requirement, are Recursion Trees. The idea is as
-follows: you draw the stem of the tree, then the stem splits into
-two smaller branches, each of these two branches again splits into
-two smaller branches, etc... until infinity.<br />
+<a href="index.html">返回目录</a><br />
+<h2><a name="Introduction" id="Introduction"></a>简介</h2>
+分形具有自相似性。递归树就是满足这一特性的一类图形。其思路如下：先画树干，然后树干分裂为两个较小的分支，每个分支再分裂为两个更小的分支，如此无限循环。<br />
 <h2><a name="Recursion_Tree_with_Two_Branches" id=
-"Recursion_Tree_with_Two_Branches"></a>Recursion Tree with Two
-Branches</h2>
-To code such a recursion tree, we need of course a recursive
-function. This function will draw one branch, and call itself again
-to draw two new branches, and since it has called itself again,
-these two called versions will again call itself again, etc... The
-parameters are changed each time to draw the branch at the correct
-position, with the correct angle and size. There's also a stop
-condition, it'll stop after n recursions, otherwise the calculation
-would never be finished and it'd end up in an infinite loop. In the
-nth step of recursion, 2^n branches have to be drawn.<br />
+"Recursion_Tree_with_Two_Branches"></a>两分支递归树</h2>
+要编写这样的递归树，当然需要一个递归函数。该函数绘制一个分支，然后再次调用自身绘制两个新分支，由于它又调用了自身，这两个被调用的版本又会再次调用自身，如此循环。每次调用时参数都会改变，以便在正确的位置、以正确的角度和大小绘制分支。还有一个终止条件，在递归 n 次后停止，否则计算永远不会结束，陷入无限循环。在第 n 步递归时，需要绘制 2^n 个分支。<br />
 <br />
-First, some variables and the recursive function are declared. "pi"
-can be used to give your favorite angle in radians more easily.
-"maxRecursions" is for the stop condition of the recursive
-functions. "angle" is a constant, it's the angle each new branch
-will have compared to its parent branch. "shrink" is how much
-smaller each new branch is compared to its parent branch. You can
-change their values, the values here have been chosen to give one
-of the many possible nice results.<br />
+首先声明一些变量和递归函数。"pi" 可以方便地以弧度表示角度。"maxRecursions" 是递归函数的终止条件。"angle" 是常量，表示每个新分支相对于父分支的角度。"shrink" 表示每个新分支相对于父分支缩小的比例。你可以修改这些值，这里的值经过选择，能产生众多漂亮效果之一。<br />
 <br />
 <center>
 <table class="codetable">
@@ -64,11 +42,7 @@ void recursion(double posX, double posY, double dirX, double dirY, double size, 
 </table>
 </center>
 <br />
-The main function doesn't do much more than setting up the screen,
-and then calling the recursive function. The value "h/2.3" in the
-parameters of the recursion function is the initial length of the
-first branch (the stem). The coordinates are the begin point and
-direction vector of the first branch.<br />
+主函数除了设置屏幕之外，只是调用递归函数。递归函数参数中的 "h/2.3" 是第一个分支（树干）的初始长度。坐标是第一个分支的起点和方向向量。<br />
 <br />
 <center>
 <table class="codetable">
@@ -91,20 +65,9 @@ direction vector of the first branch.<br />
 </table>
 </center>
 <br />
-Now follows the recursion function, a function that only draws a
-single line and calls itself a few times, but results in a huge
-tree!<br />
+接下来是递归函数，它只绘制一条线并多次调用自身，但最终会生成一棵庞大的树！<br />
 <br />
-Here's the part that draws the line. First the line is clipped to
-the screen, then drawn. The line is drawn from (posX, posY) to
-(posX+dirX, posY+dirY). So the position and direction of the line
-is given as a vector, instead of a begin point, an angle and a
-size, because direction vectors are much easier to work with. The
-size parameter itself isn't used to draw the line directly, it's
-only needed later to calculate the direction vector of the next
-branches. If the maximum number of recursions is needed, the
-function returns immediately after drawing the line, without
-calling itself again.<br />
+以下是绘制线段的部分。首先对线段进行屏幕裁剪，然后绘制。线段从 (posX, posY) 画到 (posX+dirX, posY+dirY)。线段的位置和方向以向量形式给出，而不是起点、角度和大小，因为方向向量更易于操作。size 参数本身不直接用于绘制线段，只在后面计算下一分支的方向向量时使用。若达到最大递归次数，函数在绘制线段后立即返回，不再调用自身。<br />
 <br />
 <center>
 <table class="codetable">
@@ -127,15 +90,7 @@ calling itself again.<br />
 </table>
 </center>
 <br />
-And in the second part of the function, the new position of the new
-branches is calculated as the endpoint of the previous branch, and
-the new direction vector for the new branches is calculated out of
-the size and current direction of the current branch. The new
-branches are rotated with the angle, the sine and cosine formulas
-are actually the calculation of the rotation matrix. Then the
-recursion function is called again with the new branch in its
-parameters. This is done twice: once for a branch rotated to the
-right, and then for a branch rotated to the left.<br />
+函数的第二部分计算新分支的位置（即上一分支的终点），并根据当前分支的大小和方向计算新分支的方向向量。新分支按角度旋转，正弦和余弦公式实际上是旋转矩阵的计算。然后以新分支参数再次调用递归函数。这样做两次：一次向右旋转的分支，一次向左旋转的分支。<br />
 <br />
 <center>
 <table class="codetable">
@@ -159,17 +114,14 @@ right, and then for a branch rotated to the left.<br />
 </table>
 </center>
 <br />
-The result looks like this:<br />
+结果如下图所示：<br />
 <br />
 <img alt="" src="images/recursiontree1.gif" style=
 "width: 324px; height: 263px;" /><br />
 <br />
-It's very easy to make the screen bigger, just change the
-parameters in the screen function, all the rest of the code is made
-relative to the size of the screen.<br />
+扩大屏幕非常简单，只需修改 screen 函数的参数，其余代码都是相对于屏幕大小计算的。<br />
 <br />
-Here's an alternative main function, that will redraw the tree all
-the time with a different angle.<br />
+以下是一个替代的主函数，会以不同角度不断重绘树。<br />
 <br />
 <center>
 <table class="codetable">
@@ -192,32 +144,17 @@ the time with a different angle.<br />
 </table>
 </center>
 <br />
-The angle is set to the time divided through some factor
-determining the speed of the animation. Here are a few of the
-results you get for different angles:<br />
+角度被设置为时间除以某个决定动画速度的系数。以下是不同角度下的几个结果：<br />
 <br />
 <img alt="" src="images/recursiontree2.gif" style="width: 75px; height: 237px;" />
 <img alt="" src="images/recursiontree3.gif" style="width: 240px; height: 208px;" /> <img alt="" src="images/recursiontree4.gif" style="width: 204px; height: 167px;" />
 <img alt="" src="images/recursiontree5.gif" style="width: 142px; height: 126px;" /><br />
-<h2><a name="Recursion_Tree_with_More_Branches" id="Recursion_Tree_with_More_Branches"></a>Recursion Tree with More Branches</h2>
-Instead of only 2 branches, you can also give it more branches of
-course. For example, to give it 3 branches, let the recursive
-function call itself 3 times instead of only 2. This gives a huge
-increase in complexity however: now, if n is the max number of
-recursions, the number of branches to draw will be 3^n only in the
-last step, so if n=8, that's 6561 branches!<br />
+<h2><a name="Recursion_Tree_with_More_Branches" id="Recursion_Tree_with_More_Branches"></a>多分支递归树</h2>
+当然，不必只有 2 个分支，也可以有更多分支。例如，给它 3 个分支，让递归函数调用自身 3 次而不是 2 次。但这会大幅增加复杂度：若 n 为最大递归次数，仅最后一步就需要绘制 3^n 个分支，若 n=8，则有 6561 个分支！<br />
 <br />
-It isn't difficult to extend to 3 or more branches, you just have
-to choose a nice angle for the new branches. The following code
-also has something extra: at the end of each branch, a green circle
-will be painted, making it look like leaves. It also allows to turn
-on or off&nbsp; up to 4 branches separately, and give each branch a
-fixed or time varying angle. In the main function are different
-input keys that create different angles and settings.<br />
+扩展到 3 个或更多分支并不难，只需为新分支选择合适的角度。以下代码还有一个额外功能：在每个分支末端绘制一个绿色圆形，使其看起来像叶子。还可以单独开启或关闭最多 4 个分支，并为每个分支设置固定或随时间变化的角度。主函数中有不同的输入键，可以创建不同的角度和设置。<br />
 <br />
-Everything is declared again, the explanation of each variable is
-in the comments. The angle of branch i will be angle*ai+ci, where
-angle varies with the time.<br />
+所有变量重新声明，每个变量的说明在注释中。分支 i 的角度为 angle*ai+ci，其中 angle 随时间变化。<br />
 <br />
 <center>
 <table class="codetable">
@@ -240,9 +177,7 @@ void recursionTree(double posX, double posY, double dirX, double dirY, double si
 </table>
 </center>
 <br />
-In the main function, some initial parameters are set, and then the
-while loop starts. This while loop will draw the tree each time and
-change the angle a with the time.<br />
+在主函数中设置一些初始参数，然后 while 循环开始。该循环每次绘制树，并随时间改变角度 a。<br />
 <br />
 <center>
 <table class="codetable">
@@ -273,12 +208,7 @@ change the angle a with the time.<br />
 </table>
 </center>
 <br />
-The second part of the loop changes the settings like the angles,
-the number of recursions, ... according to some presets. It's easy
-to change them or add more if you like. The releaseSpace variable
-is used for the space key: it's there so that if you press the
-space key, it'll only change the setting again after you released
-the space key again.<br />
+循环的第二部分根据一些预设更改设置，如角度、递归次数等。如果你想，可以轻松修改或添加更多预设。releaseSpace 变量用于空格键：按下空格键后，只有在松开空格键之后才会再次更改设置。<br />
 <br />
 <center>
 <table class="codetable">
@@ -303,13 +233,9 @@ the space key again.<br />
 </table>
 </center>
 <br />
-The recursion function is extended a bit too now:<br />
+递归函数现在也做了一些扩展：<br />
 <br />
-First it'll clip and draw the line of the branch, and then, if the
-last recursion is reached, it'll draw a leave. Which type of leave
-it draws depends on the drawLeaves setting, that can be changed
-with the space key. If the max number of recursions is reached, the
-function returns so that it doesn't call itself anymore.<br />
+首先裁剪并绘制分支线段，然后在到达最后一次递归时绘制叶子。绘制哪种类型的叶子取决于 drawLeaves 设置，可以用空格键更改。若达到最大递归次数，函数返回，不再调用自身。<br />
 <br />
 <center>
 <table class="codetable">
@@ -336,9 +262,7 @@ function returns so that it doesn't call itself anymore.<br />
 </table>
 </center>
 <br />
-Finally, the function calculates new angles and vectors for the
-next branches and calls itself again, if that branch is enabled at
-least.<br />
+最后，函数为下一批分支计算新的角度和向量，并在该分支已启用的情况下再次调用自身。<br />
 <br />
 <center>
 <table class="codetable">
@@ -380,8 +304,7 @@ least.<br />
 </table>
 </center>
 <br />
-Here are just a few of the trees that can be generated this
-way:<br />
+以下只是用这种方式可以生成的几种树：<br />
 <br />
 <br />
 <img alt="" src="images/recursiontree6.gif" style=
@@ -389,15 +312,10 @@ way:<br />
 "images/recursiontree7.gif" style=
 "width: 509px; height: 381px;" /><br />
 <br />
-You can do much more with this to create very natural trees, for
-example you can randomize the angle each recursion, or randomize
-whether or not a next branch will be drawn. You can draw thicker
-stems, with a texture, and nicer leaves instead, or even extend
-this to 3D and make some nice OpenGL demo! Use your fantasy
-:)<br />
+你还可以做更多来创建非常自然的树，例如在每次递归时随机化角度，或随机化是否绘制下一个分支。你可以绘制带纹理的更粗的树干和更漂亮的叶子，甚至可以将其扩展到 3D 并制作精美的 OpenGL demo！发挥你的想象力吧 :)<br />
 <hr />
-Last edited: 2004
+最后编辑：2004 年
 <br /><br />
-Copyright (c) 2004-2007 by Lode Vandevenne. All rights reserved.<br />
+版权所有 (c) 2004-2007 Lode Vandevenne，保留所有权利。<br />
 </body>
 </html>

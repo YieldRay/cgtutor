@@ -1,147 +1,147 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-  <title>SDL, C++ and QuickCG</title>
+  <title>SDL、C++ 与 QuickCG</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta content="text/html; charset=us-ascii" http-equiv="content-type">
+  <meta content="text/html; charset=utf-8" http-equiv="content-type">
   <link rel="stylesheet" type="text/css" href="stylesheet.css">
 </head>
 <body>
-<h1>Lode's Computer Graphics Tutorial</h1>
-<h1>C++, SDL and QuickCG<br />
+<h1>Lode 的计算机图形学教程</h1>
+<h1>C++、SDL 与 QuickCG<br />
 </h1>
-<h2>Table of Contents</h2>
+<h2>目录</h2>
 <ul>
-  <li><a href="quickcg.html#Q">C++, SDL and QuickCG</a></li>
+  <li><a href="quickcg.html#Q">C++、SDL 与 QuickCG</a></li>
   <li><a href="quickcg.html#DevCpp">DevC++</a></li>
   <li><a href="quickcg.html#gpp">g++</a></li>
-  <li><a href="quickcg.html#Using_the_Codebase_">Using QuickCG</a></li>
-  <li><a href="quickcg.html#Full_Command_List_">Full Function List</a></li>
+  <li><a href="quickcg.html#Using_the_Codebase_">使用 QuickCG</a></li>
+  <li><a href="quickcg.html#Full_Command_List_">完整函数列表</a></li>
   <li style="list-style-type: none; list-style-image: none; list-style-position: outside;">
   <ul>
-    <li><a href="quickcg.html#The_Codebase_Global_Variables">QuickCG Global Variables</a></li>
-    <li><a href="quickcg.html#QuickCG_Data_Types">QuickCG Data Types</a></li>
-    <li><a href="quickcg.html#Basic_SDL_Data_Types">Basic SDL Data Types</a></li>
-    <li><a href="quickcg.html#The_Codebase_Functions_">QuickCG Functions</a></li>
-    <li><a href="quickcg.html#C_Operators_">C++ Operators</a></li>
-    <li><a href="quickcg.html#C_Functions">C++ Functions</a></li>
-    <li><a href="quickcg.html#C_Arrays_and_Pointers">C++ Arrays and Pointers</a></li>
-    <li><a href="quickcg.html#SDL_Key_List_copied_from_the_SDL">SDL Key List</a></li>
-    <li><a href="q3dmath.html">Q3DMath</a> (currently not used anymore by the tutorials)</li>
+    <li><a href="quickcg.html#The_Codebase_Global_Variables">QuickCG 全局变量</a></li>
+    <li><a href="quickcg.html#QuickCG_Data_Types">QuickCG 数据类型</a></li>
+    <li><a href="quickcg.html#Basic_SDL_Data_Types">SDL 基本数据类型</a></li>
+    <li><a href="quickcg.html#The_Codebase_Functions_">QuickCG 函数</a></li>
+    <li><a href="quickcg.html#C_Operators_">C++ 运算符</a></li>
+    <li><a href="quickcg.html#C_Functions">C++ 函数</a></li>
+    <li><a href="quickcg.html#C_Arrays_and_Pointers">C++ 数组与指针</a></li>
+    <li><a href="quickcg.html#SDL_Key_List_copied_from_the_SDL">SDL 按键列表</a></li>
+    <li><a href="q3dmath.html">Q3DMath</a>（目前教程中已不再使用）</li>
   </ul>
   </li>
 </ul>
-<a href="index.html">Back to Index</a>
+<a href="index.html">返回索引</a>
 <br />
-<h2><a name="Q" id="Q"></a>C++, SDL and QuickCG</h2>
-An SDL 1.2 codebase is given with this tutorial, called QuickCG. All the C++ code in the articles uses QuickCG and its functions to draw graphics on the screen.
+<h2><a name="Q" id="Q"></a>C++、SDL 与 QuickCG</h2>
+本教程附带了一个名为 QuickCG 的 SDL 1.2 代码库。文章中所有的 C++ 代码都使用 QuickCG 及其函数在屏幕上绘制图形。
 <p />
-This page will explain how to use QuickCG to get the examples working. Information is provided to get SDL and QuickCG working in the DevC++ IDE, as well as how to do ith with g++.
+本页将介绍如何使用 QuickCG 运行示例。其中提供了在 DevC++ IDE 以及 g++ 中配置 SDL 和 QuickCG 的方法。
 <p />
-Then a few examples of scripts for QuickCG follow.
+接下来是一些 QuickCG 的示例脚本。
 <p />
-And finally, tables are given with all the QuickCG functions, some C++ functions and operators, QuickCG and SDL datatypes, and all the SDL names for keyboard keys.
+最后，页面提供了包含所有 QuickCG 函数、部分 C++ 函数和运算符、QuickCG 与 SDL 数据类型，以及所有 SDL 键盘按键名称的表格。
 <p />
-QuickCG can be downloaded here:
+QuickCG 可在此处下载：
 <ul>
   <li><a href="files/quickcg/quickcg.cpp">quickcg.cpp</a><br /></li>
   <li><a href="files/quickcg/quickcg.h">quickcg.h</a><br /></li>
   <li><a href="files/quickcg/main.cpp">main.cpp</a><br /></li>
-  <li><a href="files/quickcg/quickcg.dev">quickcg.dev</a> (optional DevC++ project file)</li>
+  <li><a href="files/quickcg/quickcg.dev">quickcg.dev</a>（可选的 DevC++ 项目文件）</li>
 </ul>
 <p />
-SDL is an API that can handle graphics, audio, keyboard, mouse and joystick input on many platforms, including Windows and Linux. SDL can also be used to initialize and use OpenGL for 3D graphics. The codebase of this tutorial uses SDL for its graphics and input, but the rest of the focus of this tutorial is on the graphics algorithms, and not SDL. In this tutorial SDL's functions are rarely used directly (but through QuickCG instead), though it's always handy to learn a thing or two about SDL if you'd like to make some games with it.
+SDL 是一个可在 Windows、Linux 等多种平台上处理图形、音频、键盘、鼠标和手柄输入的 API。SDL 也可用于初始化并使用 OpenGL 进行 3D 图形渲染。本教程的代码库使用 SDL 处理图形和输入，但教程的重点在于图形算法本身，而非 SDL。在本教程中，SDL 的函数很少被直接调用（而是通过 QuickCG 间接使用），不过如果你想用 SDL 制作游戏，学习一些 SDL 知识总是有益的。
 <p />
-QuickCG was designed specifically for this tutorial, to be as easy to use and as universal as possible and to feel a bit like a scripting language. QuickCG includes functions to set up the screen, draw pixels and 2D primitives on it, handle input, do color model conversions, print texts and numbers on the screen using a built in font, load pictures, etc... QuickCG is less useful for making actual games because it's not really optimized.<br /> A full list of all functions it contains is further on this page.
+QuickCG 是专为本教程设计的，目标是尽可能易用、通用，使用起来有点像脚本语言。QuickCG 提供了用于设置屏幕、在屏幕上绘制像素和 2D 基本图形、处理输入、进行颜色模型转换、使用内置字体在屏幕上打印文字和数字、加载图片等功能。由于 QuickCG 并未针对性能进行优化，因此不太适合用于开发实际游戏。<br /> 本页后续提供了其包含的所有函数的完整列表。
 
 <h2><a name="DevCpp" id="DevCpp"></a>DevC++<br /></h2>
 
-This section is for if you want to use DevC++ in Windows to run the examples. Please note that DevC++ is very old now, at the time this tutorial was written it was popular but as of 2016 it is very outdated. Feel free to use a more modern tool such as Code::Blocks, Visual Studio, or if you have it: a POSIX terminal with g++ or clang++ (see next section) and your favorite text editor. The steps in this section can still be helpful in other IDE's, so read on.
+本节适用于想在 Windows 中使用 DevC++ 运行示例的用户。请注意，DevC++ 现在已经非常老旧了，在本教程编写时它很流行，但截至 2016 年已相当过时。你可以自由选择更现代的工具，例如 Code::Blocks、Visual Studio，或者（如果你有的话）带有 g++ 或 clang++ 的 POSIX 终端（见下一节）以及你喜欢的文本编辑器。本节的步骤在其他 IDE 中也可能有参考价值，请继续阅读。
 <p />
-DevC++ is a free IDE for Windows, that uses the compiler gcc 3.2 or later. For help on using DevC++, I suggest you check out the help files, try to open and compile some of the included examples, check out the bloodshed.net website, or just read on here. DevC++ can be downloaded from <a href="http://www.bloodshed.net/">http://www.bloodshed.net/</a>.
+DevC++ 是一款免费的 Windows IDE，使用 gcc 3.2 或更高版本的编译器。如需 DevC++ 的使用帮助，建议查阅帮助文件、尝试打开并编译一些内置示例、访问 bloodshed.net 网站，或直接继续阅读本文。DevC++ 可从 <a href="http://www.bloodshed.net/">http://www.bloodshed.net/</a> 下载。
 <p />
-This chapter is only for Windows users who want to be able to compile QuickCG and the examples with the free DevC++ IDE. It's also perfectly possible to use SDL and QuickCG on other platforms, but for now that's not explained here. If you don't know how, use the SDL site or google to find out how to install it with your compiler, and then make a new project in your compiler and add the .cpp and .h files of QuickCG to it.
+本章仅面向希望使用免费的 DevC++ IDE 编译 QuickCG 和示例的 Windows 用户。在其他平台上使用 SDL 和 QuickCG 也完全可行，但目前本文暂不作介绍。如果你不知道如何操作，可以访问 SDL 官网或通过搜索引擎查找如何在你的编译器中安装它，然后在编译器中新建一个项目并将 QuickCG 的 .cpp 和 .h 文件添加进去。
 <p />
-If you don't have the newest version of DevC++ installed yet, follow these steps to get it up and running with SDL. If you have it installed, but not yet the SDL developer libraries, start at step <b>2)</b>.
+如果你尚未安装最新版本的 DevC++，请按照以下步骤将其与 SDL 配置好。如果已安装 DevC++ 但尚未安装 SDL 开发库，请从步骤 <b>2)</b> 开始。
 <p />
-It's not very easy to install SDL 1.2 for DevC++, but it <i>is</i> possible to get the <i>newest</i> version of SDL 1.2 to work with DevC++, if you follow these steps very carefully:<br />
+为 DevC++ 安装 SDL 1.2 并不容易，但只要仔细按照以下步骤操作，<i>是</i>可以让 SDL 1.2 的<i>最新</i>版本在 DevC++ 中正常工作的：<br />
 <br />
-<b>1)</b> download and install the latest version of DevCpp from <a href="http://www.bloodshed.net/dev/devcpp.html">http://www.bloodshed.net/dev/devcpp.html</a><br />
-<b>2)</b> download SDL 1.2 from <a href="http://www.libsdl.org/">http://www.libsdl.org/</a>: download the Development Libraries for Mingw32 (under Windows) and the runtime libraries for Windows. You may need WinRAR to be able to unpack the .tar.gz files. Note: This tutorial was written during the time of SDL 1.2, and will not work with the latest SDL 2.0 and higher.<br />
-<b>3)</b> The runtime library contains the file SDL.DLL, put it either in your C:\Windows\System32 folder, or put one in the folder of your compiled program, and don't forget that you always have to include SDL.DLL with your program if you want other people who don't have the file to run it. Programs compiled for the newest version of SDL won't work with older versions of the DLL.<br />
-<b>4)</b> Unpack the SDL developer files, but not yet inside the DevC++ folder, put them in another folder.<br />
-<b>5)</b> Copy the SDL folder of the development files, which is inside the folder include, into the include folder of DevC++ (so that all the SDL header files are in DevC++ under include/SDL)<br />
-<b>6)</b> Copy the files in the lib folder of the development files, into the lib folder of DevC++.
+<b>1)</b> 从 <a href="http://www.bloodshed.net/dev/devcpp.html">http://www.bloodshed.net/dev/devcpp.html</a> 下载并安装最新版本的 DevCpp<br />
+<b>2)</b> 从 <a href="http://www.libsdl.org/">http://www.libsdl.org/</a> 下载 SDL 1.2：下载适用于 Mingw32 的开发库（Windows 版）和 Windows 运行时库。解压 .tar.gz 文件可能需要 WinRAR。注意：本教程编写于 SDL 1.2 时代，不兼容最新的 SDL 2.0 及更高版本。<br />
+<b>3)</b> 运行时库中包含 SDL.DLL 文件，将其放入 C:\Windows\System32 文件夹，或放入你编译好的程序所在的文件夹。请记住，如果你希望没有该文件的其他人也能运行你的程序，必须始终将 SDL.DLL 随程序一起分发。针对最新版 SDL 编译的程序无法与旧版 DLL 兼容。<br />
+<b>4)</b> 解压 SDL 开发文件，但暂时不要放入 DevC++ 文件夹，先放到其他文件夹中。<br />
+<b>5)</b> 将开发文件中 include 文件夹内的 SDL 文件夹，复制到 DevC++ 的 include 文件夹中（这样所有 SDL 头文件就位于 DevC++ 的 include/SDL 目录下）。<br />
+<b>6)</b> 将开发文件的 lib 文件夹中的所有文件，复制到 DevC++ 的 lib 文件夹中。
 <p />
-Now you have installed DevC++ with SDL 1.2! You still need to know how to make a working project that uses SDL though. The other files in the development package include the full SDL documentation, example and tests, and the binaries. Your DevC++ folder structure should now look like this, where the SDL folder is new, and the lib folder contains new files from the SDL development package.
+现在你已经安装好带有 SDL 1.2 的 DevC++ 了！不过你还需要了解如何创建一个使用 SDL 的可运行项目。开发包中的其他文件包含完整的 SDL 文档、示例和测试，以及二进制文件。你的 DevC++ 文件夹结构现在应如下图所示，其中 SDL 文件夹是新增的，lib 文件夹中也包含了来自 SDL 开发包的新文件。
 <p />
 <img alt="" src="images/devcppsdl.gif" style="width: 165px; height: 273px;">
 <p />
-If you use the SDL 1.2 codebase (QuickCG) provided with the tutorial, unzip it to your code folder (that folder where you store all your DevC++ projects and code in, which is hopefully not in the unreliable My Documents folder of Windows), and just open its *.dev file with Dev-C++, and it should compile and run correctly. To compile it, use "Execute -&gt; Compile" from the menu. The exe file will appear in the same folder as where your code is located. You can run it with "Execute -&gt; Run". You can also compile&amp;run your projects by pressing F9. If it doesn't work, look a bit further for a list of possible solutions. It's highly recommended that you use QuickCG for this tutorial, because the rest of the tutorial focuses on the commands of it and not on the actual SDL itself.
+如果你使用本教程提供的 SDL 1.2 代码库（QuickCG），请将其解压到你的代码文件夹（即存放所有 DevC++ 项目和代码的文件夹，最好不要放在不可靠的 Windows"我的文档"文件夹中），然后用 Dev-C++ 打开其 *.dev 文件，即可正常编译和运行。编译时，请使用菜单中的"执行 -&gt; 编译"。生成的 exe 文件将出现在代码所在的同一文件夹中。你可以通过"执行 -&gt; 运行"来运行它，也可以按 F9 直接编译并运行项目。如果无法正常工作，请继续往下查看可能的解决方案列表。强烈建议在本教程中使用 QuickCG，因为教程的其余部分聚焦于其命令，而非 SDL 本身。
 <p />
-But if you want to make a new SDL project of your own in DevC++ (not needed for this tutorial):
+但如果你想在 DevC++ 中创建自己的新 SDL 项目（本教程不需要此操作）：
 <p />
-<b>7)</b> Start up DevC++ and make a new project. Add any .cpp and .h files you need to it.<br />
-<b>8)</b> In the menu Project open Project Options and locate the setting for Linker Commands (in DevC++ 5 Beta 8.10 it's under Parameters) and add:<br />
+<b>7)</b> 启动 DevC++ 并新建一个项目，将所需的 .cpp 和 .h 文件添加进去。<br />
+<b>8)</b> 在菜单中打开"项目 -&gt; 项目选项"，找到链接器命令设置（在 DevC++ 5 Beta 8.10 中位于"参数"选项卡下），添加以下内容：<br />
 -lmingw32<br />
 -mwindows<br />
 -lSDLmain<br />
 -lSDL<br />
-Note that the order IS important! If you put -lSDL first and then -lSDLmain it won't work!<br />
+注意顺序非常重要！如果先写 -lSDL 再写 -lSDLmain，将无法正常工作！<br />
 <br />
 <img alt="" src="images/projectoptionssdl.gif" style="width: 476px; height: 341px;"><br />
 <br />
-<b>9)</b> In your cpp files, #include &lt;SDL/SDL.h&gt;<br />
-<b>10)</b> Under Linker options, turn off the console.<br />
-<b>11)</b> Under Compiler in Project Options, and under the general Compiler Options, turn on all settings for optimizations, because they really make a big difference! You can also add -s to the linker parameters to reduce the size of the *.exe files it generates, if you don't do this, the exe's will be full of debugging information, even if the debugging setting is off (as of DevC++ 5 Beta 8.10)<br />
+<b>9)</b> 在你的 cpp 文件中，添加 #include &lt;SDL/SDL.h&gt;<br />
+<b>10)</b> 在链接器选项中，关闭控制台。<br />
+<b>11)</b> 在"项目选项"的"编译器"选项卡以及通用编译器选项中，开启所有优化设置，因为这些设置真的会带来很大的性能差异！你还可以在链接器参数中添加 -s 来减小生成的 *.exe 文件大小；如果不这样做，即使关闭了调试设置，生成的 exe 文件中也会包含大量调试信息（截至 DevC++ 5 Beta 8.10）。<br />
 <br />
-If you're getting compiler errors when trying to compile your SDL project, here are some things to check:<br />
+如果在编译 SDL 项目时遇到编译错误，请检查以下几点：<br />
 <ul>
-  <li>Did you follow steps 1-6 or 1-11 correctly, in the correct order? Read every detail?</li>
-  <li>Did you #include the SDL.h header file in the code?</li>
-  <li>Is the SDL.h file in the correct folder of DevC++? (if it's in the SDL folder inside include, you have to include it with #include "SDL/SDL.h", if it's directly in the include folder, use #include "SDL.h")</li>
-  <li>Are all the other SDL header files in the correct folder of DevC++?</li>
-  <li>Are the SDL library files (libSDL.a and libSDLmain.a) correctly in the lib folder of DevC++?</li>
-  <li>Did you put -lSDLmain and -lSDL in the correct order in the Linker parameters?</li>
-  <li>Are the options -lmingw32 -mwindows -lSDLmain -lSDL correctly in the linker parameters, and not wrongly in the compiler parameters?<br />
+  <li>你是否按照正确的顺序完整执行了步骤 1-6 或 1-11？是否仔细阅读了每一个细节？</li>
+  <li>你是否在代码中 #include 了 SDL.h 头文件？</li>
+  <li>SDL.h 文件是否在 DevC++ 的正确文件夹中？（如果它在 include 内的 SDL 文件夹中，应使用 #include "SDL/SDL.h"；如果直接在 include 文件夹中，则使用 #include "SDL.h"）</li>
+  <li>所有其他 SDL 头文件是否都在 DevC++ 的正确文件夹中？</li>
+  <li>SDL 库文件（libSDL.a 和 libSDLmain.a）是否正确放置在 DevC++ 的 lib 文件夹中？</li>
+  <li>你是否在链接器参数中按正确顺序填写了 -lSDLmain 和 -lSDL？</li>
+  <li>选项 -lmingw32 -mwindows -lSDLmain -lSDL 是否正确填写在链接器参数中，而不是误填在编译器参数中？<br />
   </li>
-  <li>Did you make a main function?</li>
-  <li>Try if the FAQ on the <a href="http://bloodshed.net/">http://bloodshed.net</a>or<a href="http://www.libsdl.org/">http://www.libsdl.org</a> site answer your problem. There's info about DevC++ in the faq from libsdl.org. These sites also have search functions.  </li>
-  <li>Try searching for some keywords from the compiler or linker error with google. You might find forum posts which describe your problem.</li>
-  <li>If you have a different version of DevC++ than version 5 Beta 8.10, things might be different (I encourage using the newest version, there may be more recent information available than this tutorial). Try to find the correct way to tell the linker to add the files libSDLmain.a and libSDL.a, and give the linker the options -lmingw32 and -mwindows, and the correct folders for include and library files.</li>
-  <li>If you're trying to get your own project to work, try if QuickCG that you can download with this tutorial works correctly (open its *.dev file, compile and run it). If it does, but your own project doesn't, try giving your project the same settings as the project from QuickCG.</li>
+  <li>你是否创建了 main 函数？</li>
+  <li>尝试查看 <a href="http://bloodshed.net/">http://bloodshed.net</a> 或 <a href="http://www.libsdl.org/">http://www.libsdl.org</a> 网站上的 FAQ，看是否能解答你的问题。libsdl.org 的 FAQ 中有关于 DevC++ 的信息，这些网站也提供搜索功能。</li>
+  <li>尝试用编译器或链接器错误中的关键词进行搜索，可能会找到描述你问题的论坛帖子。</li>
+  <li>如果你使用的 DevC++ 版本不是 5 Beta 8.10，情况可能有所不同（建议使用最新版本，可能有比本教程更新的信息）。请尝试找到正确的方式让链接器添加 libSDLmain.a 和 libSDL.a 文件，并为链接器设置 -lmingw32 和 -mwindows 选项，以及正确的 include 和库文件路径。</li>
+  <li>如果你在尝试让自己的项目正常工作，可以先试试本教程附带的 QuickCG 是否能正确运行（打开其 *.dev 文件，编译并运行）。如果 QuickCG 可以运行但你自己的项目不行，请尝试为你的项目应用与 QuickCG 项目相同的设置。</li>
 </ul>
 
-Once you got it to work, you can run example code of the tutorials by opening the quickcg.dev file with DevC++ and going to main.cpp file where you can enter the code. Here's a screenshot of the main.cpp file after opening it.<br />
+一旦配置成功，你就可以用 DevC++ 打开 quickcg.dev 文件，进入 main.cpp 文件输入代码，从而运行教程中的示例代码。下图是打开后 main.cpp 文件的截图。<br />
 <br />
 <img alt="" src="images/opencodebase.gif" style="width: 423px; height: 321px;"><br />
 <br />
 
 <h2><a name="gpp" id="gpp"></a>g++<br /></h2>
-This section is for if you want to use g++ to run the examples.
+本节适用于想使用 g++ 运行示例的用户。
 <p />
-With g++ it's quite easy: place all .cpp and .h files of QuickCG in the same directory, put the example code of tutorials in the main.cpp file, and then you can compile it with the following command:
+使用 g++ 非常简单：将 QuickCG 的所有 .cpp 和 .h 文件放在同一目录下，把教程的示例代码放入 main.cpp 文件，然后使用以下命令进行编译：
 <p />
 g++ *.cpp -lSDL -O3
 <p />
-The -O3 is optional if you want compiler optimization. The -lSDL lets it link to SDL. This requires you to have SDL installed on your distro (look for sdl and sdl-devel packages or similar).
+其中 -O3 是可选的编译器优化选项，-lSDL 用于链接 SDL 库。这要求你的发行版中已安装 SDL（请查找 sdl 和 sdl-devel 等相关软件包）。
 
-<h2><a name="Using_the_Codebase_" id="Using_the_Codebase_"></a>Using QuickCG</h2>
+<h2><a name="Using_the_Codebase_" id="Using_the_Codebase_"></a>使用 QuickCG</h2>
 
-QuickCG currently exists out of the following code files and a .dev file:<br />
+QuickCG 目前由以下代码文件和一个 .dev 文件组成：<br />
 <ul>
-  <li>QuickCG.cpp: this contains all the functions of QuickCG</li>
-  <li>QuickCG.h: #include this header file in all *.cpp files where you want to use QuickCG's functions</li>
-  <li>Q3DMath.cpp: contains 3D functions (currently not used anymore in the tutorial)</li>
-  <li>Q3DMath.h: #include this if you want to use the 3D functions and classes (currently not used anymore in the tutorial)</li>
-  <li>main.cpp: in this file you can type the code of the examples of this tutorial. Leave the #includes at the top of the file intact to be able to run all examples.</li>
-  <li>QuickCG.dev: this is the project file for DevC++ that contains all necessary settings, if you don't use DevC++ you can remove this file and make your own project that uses the .cpp and .h files.<br />
+  <li>QuickCG.cpp：包含 QuickCG 的所有函数</li>
+  <li>QuickCG.h：在所有需要使用 QuickCG 函数的 *.cpp 文件中 #include 此头文件</li>
+  <li>Q3DMath.cpp：包含 3D 函数（目前教程中已不再使用）</li>
+  <li>Q3DMath.h：如需使用 3D 函数和类，请 #include 此文件（目前教程中已不再使用）</li>
+  <li>main.cpp：在此文件中输入本教程示例的代码。请保留文件顶部的 #include 语句，以便运行所有示例。</li>
+  <li>QuickCG.dev：这是 DevC++ 的项目文件，包含所有必要设置。如果你不使用 DevC++，可以删除此文件，自行创建一个使用 .cpp 和 .h 文件的项目。<br />
   </li>
 </ul>
 
-The main.cpp file file is where you can put the code of the examples of this tutorial. If no main function is mentioned in a code example, make one yourself and put the example inside the main function.<br />
+main.cpp 文件是放置本教程示例代码的地方。如果某个代码示例中没有提到 main 函数，请自行创建一个，并将示例代码放在 main 函数内部。<br />
 <br />
-There's normally a small example included in the main.cpp file:<br />
+main.cpp 文件中通常包含一个小示例：<br />
 <br />
 <center>
 <table class="codetable">
@@ -156,20 +156,20 @@ There's normally a small example included in the main.cpp file:<br />
 </table>
 </center>
 <br />
-Here's what it does:<br />
+以下是代码的功能说明：<br />
 <ul>
-  <li>The <tt>screen</tt> function will create the graphical window, with a resolution of 256*256 pixels, windowed, and with the caption "Small Test Script". You always have to use the screen function at the start of any program, or you'd be drawing pixels on a non existing window.</li>
-  <li>Next comes a double for loop, which goes through every pixel of the window: <tt>w</tt> and <tt>h</tt> are global variables that contain the width and the height of the window.</li>
-  <li>Inside the for loops is the function <tt>pset</tt>. This function will plot a pixel at location x, y with RGB color x, y, 128. This means the red color component will depend on the location x of the pixel, the green color component will vary with the location y of the pixel, and blue component will always be 128.</li>
-  <li>After the loop comes the function <tt>redraw</tt>. You always have to use this function before you'll be able to see any new pixels you've drawn. The redraw function is relatively slow, so do NOT call it after every single pixel, but only once after all pixels of the screen have been drawn.</li>
-  <li>Finally, the <tt>sleep</tt> function will let the program pause until you press any key. If the sleep function wouldn't be there, the program would close immediately and you wouldn't be able to see the result.</li>
+  <li><tt>screen</tt> 函数将创建一个图形窗口，分辨率为 256*256 像素，以窗口模式运行，标题为"Small Test Script"。任何程序都必须在开始时调用 screen 函数，否则你将在一个不存在的窗口上绘制像素。</li>
+  <li>接下来是一个双重 for 循环，遍历窗口的每一个像素：<tt>w</tt> 和 <tt>h</tt> 是全局变量，分别存储窗口的宽度和高度。</li>
+  <li>for 循环内部是 <tt>pset</tt> 函数。该函数在位置 x、y 处绘制一个 RGB 颜色为 x、y、128 的像素。这意味着红色分量取决于像素的 x 坐标，绿色分量随像素的 y 坐标变化，蓝色分量始终为 128。</li>
+  <li>循环结束后调用 <tt>redraw</tt> 函数。在调用此函数之前，你绘制的任何新像素都不会显示出来。由于 redraw 函数相对较慢，请不要在每绘制一个像素后就调用它，而应在整个屏幕绘制完成后只调用一次。</li>
+  <li>最后，<tt>sleep</tt> 函数会让程序暂停，直到你按下任意键。如果没有 sleep 函数，程序会立即关闭，你将无法看到运行结果。</li>
 </ul>
-If you compile and run this code, the output will be as follows:<br />
+编译并运行此代码后，输出结果如下：<br />
 <br />
 <img alt="" src="images/smalltestscript.jpg"
  style="width: 260px; height: 278px;"><br />
 <br />
-Now try to change the program a bit, for example, copypaste this instead into the main function (use CTRL+SHIFT+i to indent it in DevC++5):<br />
+现在尝试对程序做一些修改，例如将以下内容复制粘贴到 main 函数中（在 DevC++5 中可使用 CTRL+SHIFT+I 进行缩进）：<br />
 <br />
 <center>
 <table class="codetable">
@@ -184,11 +184,11 @@ Now try to change the program a bit, for example, copypaste this instead into th
 </table>
 </center>
 <br />
-What has changed, is that you'll now see a green sine function pattern, and a text "Hello World!", because putting text on the screen is what the <tt>print</tt> function does. The output should look as follows:<br />
+变化在于，你现在会看到一个绿色的正弦函数图案，以及文字"Hello World!"，因为 <tt>print</tt> 函数的作用就是在屏幕上显示文字。输出结果应如下所示：<br />
 <br />
 <img alt="" src="images/smalltestscript2.jpg" style="width: 262px; height: 281px;"><br />
 <br />
-Now another, easier, example:<br />
+下面是另一个更简单的示例：<br />
 <br />
 <center>
 <table class="codetable">
@@ -203,60 +203,58 @@ Now another, easier, example:<br />
 </table>
 </center>
 <br />
-The <tt>drawDisk</tt> command will draw a filled circle at the given position, with a certain radius and RGB color. The disk function is called 3 times: to draw a face, and two eyes.<br />
-The <tt>drawDine</tt> command will draw a line.<br />
-The <tt>redraw()</tt> and <tt>sleep()</tt> commands are again needed so that the new pixels will show up, and so that the program won't close immediately.<br />
-The output should look like this:<br />
+<tt>drawDisk</tt> 命令将在指定位置绘制一个填充圆，具有指定的半径和 RGB 颜色。disk 函数被调用了 3 次：分别绘制一张脸和两只眼睛。<br />
+<tt>drawDine</tt> 命令将绘制一条直线。<br />
+<tt>redraw()</tt> 和 <tt>sleep()</tt> 命令同样是必需的，前者使新绘制的像素得以显示，后者防止程序立即关闭。<br />
+输出结果应如下所示：<br />
 <br />
 <img alt="" src="images/smalltestscript3.jpg"  style="width: 262px; height: 281px;"><br />
 <br />
-A full list of all commands is below, and the next chapter is full of easy examples of all functions to learn working with QuickCG.<br />
+所有命令的完整列表见下方，下一章将通过大量简单示例介绍所有函数，帮助你学习使用 QuickCG。<br />
 
-<h2><a name="Full_Command_List_" id="Full_Command_List_"></a>Full Function List<br /></h2>
+<h2><a name="Full_Command_List_" id="Full_Command_List_"></a>完整函数列表<br /></h2>
 
-This list contains all functions, global variables, etc... from QuickCG. If functions have default parameters, these are given as well.<br />
+此列表包含 QuickCG 的所有函数、全局变量等。如果函数有默认参数，也会一并列出。<br />
 
-<h3><a name="The_Codebase_Global_Variables" id="The_Codebase_Global_Variables"></a>QuickCG Global Variables</h3>
+<h3><a name="The_Codebase_Global_Variables" id="The_Codebase_Global_Variables"></a>QuickCG 全局变量</h3>
 
-Global variables are normally not recommended for big programming projects, but the examples of this tutorial are small and it's easier to have them here.<br />
+全局变量通常不建议在大型编程项目中使用，但本教程的示例规模较小，使用全局变量会更方便。<br />
 <table style="width: 100%; text-align: left;" border="1" cellpadding="1"
  cellspacing="0">
   <tbody>
   <tr>
-    <td style="vertical-align: top;"><b>Variable</b></td>
-    <td style="vertical-align: top;"><b>Information</b></td>
+    <td style="vertical-align: top;"><b>变量</b></td>
+    <td style="vertical-align: top;"><b>说明</b></td>
   </tr>
   <tr>
     <td style="vertical-align: top; font-family: monospace;">w</td>
     <td style="vertical-align: top;"><span class="codenopre">int w;</span><br />
-The width of the graphical window, after you used the screen function. In the examples of this tutorial, w is most often used in double for loops that go through every pixel on screen.</td>
+调用 screen 函数后，图形窗口的宽度。在本教程的示例中，w 最常用于遍历屏幕上每个像素的双重 for 循环中。</td>
   </tr>
   <tr>
     <td style="vertical-align: top; font-family: monospace;">h</td>
     <td style="vertical-align: top;"><span class="codenopre">int h;</span><br />
-The height of the graphical window, after you used the screen function</td>
+调用 screen 函数后，图形窗口的高度。</td>
   </tr>
   <tr>
     <td style="vertical-align: top; font-family: monospace;">font</td>
     <td style="vertical-align: top;"><span class="codenopre">bool
 font[256][8][8];</span><br />
-This is the font used for the print function. Even though you can
-access and change the font variable from within the code, it's
-never needed to do so.</td>
+这是 print 函数使用的字体。虽然可以在代码中访问和修改 font 变量，但通常不需要这样做。</td>
   </tr>
   </tbody>
 </table>
 <br />
-<h3><a name="QuickCG_Data_Types" id="QuickCG_Data_Types"></a>QuickCG Data Types</h3>
+<h3><a name="QuickCG_Data_Types" id="QuickCG_Data_Types"></a>QuickCG 数据类型</h3>
 <table style="width: 100%; text-align: left;" border="1" cellpadding="1"
  cellspacing="0">
   <tbody>
   <tr>
     <td style="vertical-align: top;">ColorRGB</td>
-    <td style="vertical-align: top;">A simple struct containing 3 integers named r, g and b, with constructors:<br />
+    <td style="vertical-align: top;">一个包含 3 个整数（命名为 r、g、b）的简单结构体，构造函数如下：<br />
     <span class="codenopre">ColorRGB(Uint8 r, Uint8 g, Uint8 b);</span><br />
     <span class="codenopre">ColorRGB(ColorRGB8bit color);</span><br />
-    <span class="codenopre">ColorRGB();</span><br />There are also some predefined RGB colors:<br />
+    <span class="codenopre">ColorRGB();</span><br />此外还预定义了一些 RGB 颜色：<br />
     <span class="codenopre">static const ColorRGB RGB_Black  (  0,   0,   0);</span><br />
     <span class="codenopre">static const ColorRGB RGB_Red    (255,   0,   0);</span><br />
     <span class="codenopre">static const ColorRGB RGB_Green  (  0, 255,   0);</span><br />
@@ -273,712 +271,628 @@ never needed to do so.</td>
     <span class="codenopre">static const ColorRGB RGB_Teal   (  0, 128, 128);</span><br />
     <span class="codenopre">static const ColorRGB RGB_Purple   (128,   0, 128);</span><br />
     <span class="codenopre">static const ColorRGB RGB_Olive  (128, 128,   0);</span><br />
-The ColorRGB class has also got the operators "<tt>+</tt>",
-"<tt>-</tt>", "<tt>*</tt>", "<tt>/</tt>", "<tt>==</tt>" and
-"<tt>!=</tt>" defined so that you can add them, multiply with
-integers, ... to do color arithmetic more easily.</td>
+ColorRGB 类还定义了 "<tt>+</tt>"、"<tt>-</tt>"、"<tt>*</tt>"、"<tt>/</tt>"、"<tt>==</tt>" 和 "<tt>!=</tt>" 运算符，以便更方便地进行颜色加法、与整数相乘等颜色运算。</td>
   </tr>
   <tr>
     <td style="vertical-align: top;">ColorRGB8bit</td>
-    <td style="vertical-align: top;">A simple struct containing 3
-Uint8's named r, g and b, with constructors:<br />
+    <td style="vertical-align: top;">一个包含 3 个 Uint8 类型（命名为 r、g、b）的简单结构体，构造函数如下：<br />
     <span class="codenopre">ColorRGB8bit(Uint8 r, Uint8 g, Uint8 b);</span><br />
     <span class="codenopre">ColorRGB8bit(ColorRGB color);</span><br />
     <span class="codenopre">ColorRGB8bit();</span></td>
   </tr>
   <tr>
     <td style="vertical-align: top;">ColorHSL</td>
-    <td style="vertical-align: top;">A simple struct containing 3
-integers named h, s and l, with constructors:<br />
+    <td style="vertical-align: top;">一个包含 3 个整数（命名为 h、s、l）的简单结构体，构造函数如下：<br />
     <span class="codenopre">ColorHSL(Uint8 h, Uint8 s, Uint8 l);</span><br />
     <span class="codenopre">ColorHSL();</span></td>
   </tr>
   <tr>
     <td style="vertical-align: top;">ColorHSV</td>
-    <td style="vertical-align: top;">A simple struct containing 3
-integers named h, s and v, with constructors:<br />
+    <td style="vertical-align: top;">一个包含 3 个整数（命名为 h、s、v）的简单结构体，构造函数如下：<br />
     <span class="codenopre">ColorHSV(Uint8 h, Uint8 s, Uint8 v);</span><br />
     <span class="codenopre">ColorHSV();</span></td>
   </tr>
   </tbody>
 </table>
 <br />
-Normally, colors used in QuickCG are supposed to have 8 bit components: they're values from 0 to 255. They were however made integer instead of Uint8 so that you can store intermediate results of calculations in the structs without the values wrapping around. So you can write expressions like "<span class="codenopre">ColorRGB color3 = (color * opacity + color2 * (256 - opacity)) / 256;</span>" and get the result you'd expect.<br />
+通常，QuickCG 中使用的颜色应具有 8 位分量，即 0 到 255 之间的值。但这里使用整数而非 Uint8，是为了在结构体中存储计算的中间结果时不会发生数值溢出回绕。因此，你可以写出类似 "<span class="codenopre">ColorRGB color3 = (color * opacity + color2 * (256 - opacity)) / 256;</span>" 这样的表达式，并得到预期的结果。<br />
 <br />
-The ColorRGB8bit type was then added because SDL requires Uint8
-variables for color components, and is used only internally by a
-few QuickCG functions with lots of SDL code.<br />
+之所以添加 ColorRGB8bit 类型，是因为 SDL 要求颜色分量使用 Uint8 类型，该类型仅在少数含有大量 SDL 代码的 QuickCG 函数内部使用。<br />
 <br />
-<h3><a name="Basic_SDL_Data_Types" id="Basic_SDL_Data_Types"></a>Basic SDL Data Types</h3>
+<h3><a name="Basic_SDL_Data_Types" id="Basic_SDL_Data_Types"></a>SDL 基本数据类型</h3>
 <table style="width: 50%; text-align: left;" border="1" cellpadding="1"
  cellspacing="0">
   <tbody>
   <tr>
     <td style="vertical-align: top;">Uint8</td>
-    <td style="vertical-align: top;">Unsigned 8-bit integer, these are used in the tutorial for color components</td>
+    <td style="vertical-align: top;">无符号 8 位整数，本教程中用于颜色分量</td>
   </tr>
   <tr>
     <td style="vertical-align: top;">Sint8</td>
-    <td style="vertical-align: top;">Signed 8-bit integer</td>
+    <td style="vertical-align: top;">有符号 8 位整数</td>
   </tr>
   <tr>
     <td style="vertical-align: top;">Uint16</td>
-    <td style="vertical-align: top;">Unsigned 16-bit integer</td>
+    <td style="vertical-align: top;">无符号 16 位整数</td>
   </tr>
   <tr>
     <td style="vertical-align: top;">Sint16</td>
-    <td style="vertical-align: top;">Signed 16-bit integer</td>
+    <td style="vertical-align: top;">有符号 16 位整数</td>
   </tr>
   <tr>
     <td style="vertical-align: top;">Uint32</td>
-    <td style="vertical-align: top;">Unsigned 32-bit integer</td>
+    <td style="vertical-align: top;">无符号 32 位整数</td>
   </tr>
   <tr>
     <td style="vertical-align: top;">Sint32</td>
-    <td style="vertical-align: top;">Signed 32-bit integer</td>
+    <td style="vertical-align: top;">有符号 32 位整数</td>
   </tr>
   <tr>
     <td style="vertical-align: top;">Uint64</td>
-    <td style="vertical-align: top;">Unsigned 64-bit integer</td>
+    <td style="vertical-align: top;">无符号 64 位整数</td>
   </tr>
   <tr>
     <td style="vertical-align: top;">Sint64</td>
-    <td style="vertical-align: top;">Signed 64-bit integer</td>
+    <td style="vertical-align: top;">有符号 64 位整数</td>
   </tr>
   </tbody>
 </table>
 <br />
-The 64-bit type isn't supported on all platforms.<br />
+64 位类型并非在所有平台上都受支持。<br />
 <br />
-<h3><a name="The_Codebase_Functions_" id="The_Codebase_Functions_"></a>QuickCG Functions<br />
+<h3><a name="The_Codebase_Functions_" id="The_Codebase_Functions_"></a>QuickCG 函数<br />
 </h3>
 <table style="width: 100%; text-align: left;" border="1" cellpadding="1"
  cellspacing="0">
   <tbody>
   <tr>
-    <td style="vertical-align: top;"><b>Function</b></td>
+    <td style="vertical-align: top;"><b>函数</b></td>
     <td colspan="1" rowspan="1" style="vertical-align: top;">
-    <b>Information</b></td>
+    <b>说明</b></td>
   </tr>
   <tr>
     <td style="vertical-align: top; font-family: monospace;">screen</td>
     <td colspan="1" rowspan="1" style="vertical-align: top;">
     <span class="codenopre">void screen(int width, int height, bool fullscreen, char* text=" ");</span><br />
-This is probably the most important function, because it creates
-the graphical screen but also the whole SDL context. Always call this function at the beginning of
-your programs, even if you don't need a screen. The integers width and height determinate the
-resolution of your window. If fullscreen is 0, it'll be a window,
-if it's 1, the graphics will be drawn fullscreen. text can be used
-to give a title to the window. For example to create a window of
-640*480 pixels with the title "Hello", use:
+这可能是最重要的函数，因为它不仅创建图形屏幕，还初始化整个 SDL 上下文。即使不需要显示屏幕，也要在程序开始时调用此函数。整数 width 和 height 决定窗口的分辨率。如果 fullscreen 为 0，则以窗口模式运行；如果为 1，则全屏显示。text 可用于设置窗口标题。例如，要创建一个标题为"Hello"的 640*480 像素窗口，请使用：
 screen(640,480,0,"Hello");</td>
   </tr>
   <tr>
     <td style="vertical-align: top; font-family: monospace;">keyDown</td>
     <td colspan="1" rowspan="1" style="vertical-align: top;">
     <span class="codenopre">bool keyDown(int key);</span><br />
-After using the readKeys() or done() function for the current frame, this function can check
-for every key whether or not it's pressed. For example, to check if the "a" button is pressed, check if keyDown(SDLK_a)
-is true. For a full list of all the keys, see the SDL Key table below.</td>
+在当前帧调用 readKeys() 或 done() 函数之后，此函数可以检查每个按键是否被按下。例如，要检查"a"键是否被按下，可以判断 keyDown(SDLK_a) 是否为 true。所有按键的完整列表请参见下方的 SDL 按键表。</td>
   </tr>
   <tr>
     <td style="vertical-align: top; font-family: monospace;">keyPressed</td>
     <td colspan="1" rowspan="1" style="vertical-align: top;">
     <span class="codenopre">bool keyPressed(int key);</span><br />
-The same as keyDown(), but while keyDown will return true as long as the key is pressed, keyPressed will only
-return true the first time you check, and return true again only if the key has been released and pressed again. So while
-keyDown would be useful in a game for a key to walk forward, keyPressed can be used for a key that selects a weapon.</td>
+与 keyDown() 类似，但区别在于：keyDown 在按键被按住期间持续返回 true，而 keyPressed 只在第一次检测时返回 true，只有当按键被释放后再次按下时才会再次返回 true。因此，keyDown 适合用于游戏中持续向前移动的按键，而 keyPressed 则适合用于选择武器等只需触发一次的按键。</td>
   </tr>
   <tr>
     <td style="vertical-align: top; font-family: monospace;">redraw</td>
     <td colspan="1" rowspan="1" style="vertical-align: top;">
     <span class="codenopre">void redraw();</span><br />
-This redraws the screen. If you draw things like pixels, circles
-and lines, you won't see them before you called redraw(); This
-function is relatively slow though, so don't use it after every
-single pixel, but only after you've drawn the whole screen.</td>
+重新绘制屏幕。绘制像素、圆形和直线等内容后，在调用 redraw() 之前不会显示出来。此函数相对较慢，因此不要在每绘制一个像素后就调用它，而应在整个屏幕绘制完成后只调用一次。</td>
   </tr>
   <tr>
     <td style="vertical-align: top; font-family: monospace;">cls</td>
     <td colspan="1" rowspan="1" style="vertical-align: top;">
     <span class="codenopre">void cls(int R = 0, int G = 0, int B = 0);</span><br />
-This clears the screen to black again. For example if you're making
-a bouncing ball program you have to draw a circle at a new position
-every time, but if you didn't use cls(), the old circles at old
-positions will still be visible. You can also clear the screen to a
-certain RGB color.</td>
+将屏幕清除为黑色。例如，在制作弹跳球程序时，每次都需要在新位置绘制圆形，如果不使用 cls()，旧位置的圆形仍然可见。也可以将屏幕清除为指定的 RGB 颜色。</td>
   </tr>
   <tr>
     <td style="vertical-align: top; font-family: monospace;">pset</td>
     <td colspan="1" rowspan="1" style="vertical-align: top;">
     <span class="codenopre">void pset(int x, int y, ColorRGB color);</span><br />
-This function draws a pixel on the screen at position x, y (x has
-to be between 0 and w-1, y has to be between 0 and h-1), with given
-RGB color: ColorRGB color has 3 components r, g, b which are values
-between 0 and 255</td>
+在屏幕的 x、y 位置（x 必须在 0 到 w-1 之间，y 必须在 0 到 h-1 之间）绘制一个指定 RGB 颜色的像素。ColorRGB 颜色包含 3 个分量 r、g、b，其值范围均为 0 到 255。</td>
   </tr>
   <tr>
     <td style="vertical-align: top; font-family: monospace;">pget</td>
     <td colspan="1" rowspan="1" style="vertical-align: top;">
     <span class="codenopre">ColorRGB pget(int x, int y);</span><br />
-Returns the color value of the pixel at position x, y. This
-requires reading the color from the memory of the video card, and
-is quite slow. When you need this function a lot, for example if
-you're working with transparency or flood fill, it's better to use
-a buffer to hold the colors, read from this buffer, and draw this
-buffer to the screen with drawBuffer.</td>
+返回位置 x、y 处像素的颜色值。此操作需要从显卡内存中读取颜色，速度较慢。如果需要频繁调用此函数（例如处理透明度或填充操作时），最好使用缓冲区来保存颜色数据，从缓冲区中读取，并通过 drawBuffer 将缓冲区绘制到屏幕上。</td>
   </tr>
   <tr>
     <td style="vertical-align: top;"><tt>drawBuffer</tt></td>
     <td style="vertical-align: top;"><span class="codenopre">void drawBuffer(Uint32 *buffer);</span><br />
-Draws a whole buffer at once to the screen. The buffer has to be
-exactly the same size as the screen, and is a 2D array. Color
-values are in 24-bit format in one integer instead of 3 separate
-8-bit variables. If it's possible to use a buffer, it can be much
-faster than drawing each pixel separately.</td>
+一次性将整个缓冲区绘制到屏幕上。缓冲区必须与屏幕大小完全相同，是一个二维数组。颜色值以 24 位格式存储在一个整数中，而非 3 个独立的 8 位变量。如果能使用缓冲区，其速度可能比逐像素绘制快得多。</td>
   </tr>
   <tr>
     <td style="vertical-align: top;"><tt>onScreen</tt></td>
     <td style="vertical-align: top;"><span class="codenopre">bool onScreen(int x, int y);</span><br />
-Checks if the point with coordinates x, y is on the screen: inside
-the rectangle (0, 0) - ((w - 1), (h - 1)).</td>
+检查坐标为 x、y 的点是否在屏幕范围内，即是否位于矩形 (0, 0) - ((w - 1), (h - 1)) 之内。</td>
   </tr>
   <tr>
     <td style="vertical-align: top; font-family: monospace;">sleep</td>
     <td colspan="1" rowspan="1" style="vertical-align: top;">
     <span class="codenopre">void sleep();</span><br />
-When calling this function, the program will pause until you press
-any key.</td>
+调用此函数后，程序将暂停，直到你按下任意键。</td>
   </tr>
   <tr>
     <td style="vertical-align: top;"><tt>waitFrame</tt></td>
     <td style="vertical-align: top;"><span class="codenopre">void waitFrame(double oldTime, double frameDuration);<br />
-    </span> This is made to be handy in cases where you want to limit an effect to a maximum amount of frames per second. The parameter oldTime is the time of the previous frame after calling waitFrame that frame, and frameDuration is the number of seconds per frame (e.g. 0.05 seconds per frame is 20 frames per second). It waits until the minimum time since the previous frame is passed.</td>
+    </span> 此函数用于将效果限制在最大帧率以内。参数 oldTime 是上一帧调用 waitFrame 后的时间，frameDuration 是每帧的秒数（例如每帧 0.05 秒即为每秒 20 帧）。它会等待，直到距上一帧的最短时间间隔过去为止。</td>
   </tr>
   <tr>
     <td style="vertical-align: top; font-family: monospace;">done</td>
     <td colspan="1" rowspan="1" style="vertical-align: top;">
     <span class="codenopre">bool done();</span><br />
-This function returns whether or not you want to close the program,
-that is, if you press escape, or press the close button of the
-window. Use this function in a while loop as follows:
-"<tt>while(!done()) {code goes here}</tt>". Then the loop will keep
-running, until you press escape or the close button of the
-window.</td>
+此函数返回是否应关闭程序，即当你按下 Escape 键或点击窗口关闭按钮时返回 true。在 while 循环中如下使用此函数："<tt>while(!done()) {code goes here}</tt>"。循环将持续运行，直到你按下 Escape 键或点击窗口关闭按钮为止。</td>
   </tr>
   <tr>
-    <td style="vertical-align: top; font-family: monospace;">end</td>
+    <td style="vertical-align: top; font-family: monospace;">End 键</td>
     <td colspan="1" rowspan="1" style="vertical-align: top;">
     <span class="codenopre">void end();</span><br />
-Calling this function immediately ends the program.</td>
+调用此函数将立即结束程序。</td>
   </tr>
   <tr>
     <td style="vertical-align: top; font-family: monospace;">readKeys</td>
     <td colspan="1" rowspan="1" style="vertical-align: top;">
     <span class="codenopre">void readKeys();</span><br />
-This function uses SDL Events to check what keys are pressed, and
-gives the result to the global inkeys[] variable.</td>
+此函数使用 SDL 事件检测哪些按键被按下，并将结果存入全局变量 inkeys[]。</td>
   </tr>
   <tr>
     <td style="vertical-align: top;"><tt>getMouseState</tt></td>
     <td style="vertical-align: top;"><span class="codenopre">void getMouseState(int&amp; mouseX, int&amp; mouseY, bool&amp; LMB, bool&amp; RMB);<br />
-    </span> Stores the position and pressed
-buttons of the mouse in the given variables (passed by reference)
-mouseX: the x coordinate of the mouse cursor, mouseY: the y
-coordinate of the mouse cursor, LMB: true if the left mouse button
-is pressed, RMB: true if the right mouse button is
-pressed.<br />
+    </span> 将鼠标的位置和按键状态存入给定的变量（通过引用传递）：mouseX 为鼠标光标的 x 坐标，mouseY 为鼠标光标的 y 坐标，LMB 为 true 表示左键被按下，RMB 为 true 表示右键被按下。<br />
     </td>
   </tr>
   <tr>
     <td style="vertical-align: top;"><tt>getMouseState</tt></td>
     <td style="vertical-align: top;"><span class="codenopre">void getMouseState(int&amp; mouseX, int&amp; mouseY);<br />
-    </span>Stores the position of the mouse in the given variables (passed by reference) mouseX: the x coordinate of the mouse cursor, mouseY: the y coordinate of the mouse cursor.</td>
+    </span>将鼠标位置存入给定的变量（通过引用传递）：mouseX 为鼠标光标的 x 坐标，mouseY 为鼠标光标的 y 坐标。</td>
   </tr>
   <tr>
     <td style="vertical-align: top; font-family: monospace;">
 getTicks</td>
     <td colspan="1" rowspan="1" style="vertical-align: top;">
     <span class="codenopre">long getTicks();</span><br />
-This function returns the time since the program started running in milliseconds.</td>
+此函数返回程序启动以来经过的时间（以毫秒为单位）。</td>
   </tr>
   <tr>
     <td style="vertical-align: top;"><tt>max</tt></td>
     <td style="vertical-align: top;"><span class="codenopre">max(x, y)</span><br />
-Returns the maximum of x and y, works with anything: it's defined
-with preprocessor commands.<br />
+返回 x 和 y 中的较大值，适用于任意类型，通过预处理器命令定义。<br />
     </td>
   </tr>
   <tr>
     <td style="vertical-align: top;"><tt>min</tt></td>
     <td style="vertical-align: top;"><span class="codenopre">min(x, y)</span><br />
-Returns the minimum of x and y, works with anything: it's defined
-with preprocessor commands.</td>
+返回 x 和 y 中的较小值，适用于任意类型，通过预处理器命令定义。</td>
   </tr>
   <tr>
     <td style="vertical-align: top; font-family: monospace;">
 horLine</td>
     <td colspan="1" rowspan="1" style="vertical-align: top;">
     <span class="codenopre">bool horLine(int y, int x1, int x2, ColorRGB color);</span><br />
-Draw a horizontal line from position x1, y to x2, y with given
-color. It's a bit faster than using drawLine() if you need a
-horizontal line.</td>
+从位置 x1、y 到 x2、y 绘制一条指定颜色的水平线。如果需要绘制水平线，此函数比 drawLine() 稍快。</td>
   </tr>
   <tr>
     <td style="vertical-align: top; font-family: monospace;">
 verLine</td>
     <td colspan="1" rowspan="1" style="vertical-align: top;">
     <span class="codenopre">bool verLine(int x, int y1, int y2, ColorRGB color);</span><br />
-Draw a vertical line from position x1, y to x2, y with given color.
-It's a bit faster than using drawLine() if you need a vertical
-line.</td>
+从位置 x1、y 到 x2、y 绘制一条指定颜色的垂直线。如果需要绘制垂直线，此函数比 drawLine() 稍快。</td>
   </tr>
   <tr>
     <td style="vertical-align: top; font-family: monospace;">
 drawLine</td>
     <td colspan="1" rowspan="1" style="vertical-align: top;">
     <span class="codenopre">bool drawLine(int x1, int y1, int x2, int y2, ColorRGB color);</span><br />
-Draw a line from x1, y1 to x2, y2 with given color, using the
-Bresenham line drawing algorithm. Note that all coordinates must
-lie inside the screen, or the program will crash. You can use
-clipLine() in combination with drawLine() if you need to draw an
-arbitrary line, because the line function itself can't draw lines
-outside the screen and will return 0 it any of the endpoints lies
-outside the screen.</td>
+使用 Bresenham 直线绘制算法，从 x1、y1 到 x2、y2 绘制一条指定颜色的直线。注意所有坐标必须在屏幕范围内，否则程序会崩溃。如果需要绘制任意直线，可以结合使用 clipLine() 和 drawLine()，因为 drawLine 本身无法绘制超出屏幕范围的线段，当任意端点超出屏幕时将返回 0。</td>
   </tr>
   <tr>
     <td style="vertical-align: top; font-family: monospace;">drawCircle</td>
     <td colspan="1" rowspan="1" style="vertical-align: top;">
     <span class="codenopre">bool drawCircle(int xc, int yc, int radius, ColorRGB color);</span><br />
-Draw a circle with its center at xc,yc, with radius radius, and
-RGB color red, green, blue. This is an unfilled circle.</td>
+以 xc、yc 为圆心，绘制一个指定半径和 RGB 颜色的圆形。这是一个空心圆。</td>
   </tr>
   <tr>
     <td style="vertical-align: top; font-family: monospace;">drawDisk</td>
     <td colspan="1" rowspan="1" style="vertical-align: top;">
     <span class="codenopre">bool drawCisk(int xc, int yc, int radius, ColorRGB color);</span><br />
-Like circle, but this time it's filled.</td>
+与 drawCircle 类似，但绘制的是填充圆。</td>
   </tr>
   <tr>
     <td style="vertical-align: top; font-family: monospace;">drawRect</td>
     <td colspan="1" rowspan="1" style="vertical-align: top;">
     <span class="codenopre">bool drawRect(int x1, int y1, int x2, int y2, ColorRGB color);</span><br />
-Draw a rectangle with corners in x1,y1 and x2, y2, with given
-color.</td>
+以 x1、y1 和 x2、y2 为对角顶点，绘制一个指定颜色的矩形。</td>
   </tr>
   <tr>
     <td style="vertical-align: top; font-family: monospace;">clipLine</td>
     <td colspan="1" rowspan="1" style="vertical-align: top;">
     <span class="codenopre">bool clipLine(int x1, int y1, int x2, int y2, int &amp; x3, int &amp; y3, int &amp; x4, int &amp;
 y4);</span><br />
-Use this if you need to bring the endpoints of a line you're trying
-to draw into the screen. Give the function a line with coordinates
-x1,y1-x2,y2, and it'll return a line with coordinates x3,y3-x4,y4
-that are on the edges or inside the screen (that is, inside the
-rectangle 0,w-0,h). x3,y3,x4 and y4 have to be given to the
-function by reference, so for example use "<tt>clipLine(x1, y1, x2,
-y2, x3, y3, x4, y4)</tt>", where x3, y3, x4 and y4 are normal
-integers that can be changed by the function, to give the
-coordinates of the new line to those variables. The function
-returns 1 if the line is on the screen and 0 if the line isn't on
-the screen.</td>
+当需要将待绘制直线的端点裁剪到屏幕范围内时使用此函数。向函数传入坐标为 x1、y1-x2、y2 的直线，它将返回坐标为 x3、y3-x4、y4 的直线，该直线位于屏幕边缘或屏幕内部（即矩形 0、w-0、h 内）。x3、y3、x4 和 y4 需以引用方式传入，例如使用 "<tt>clipLine(x1, y1, x2, y2, x3, y3, x4, y4)</tt>"，其中 x3、y3、x4 和 y4 是可被函数修改的普通整数，用于接收新直线的坐标。若直线在屏幕上则返回 1，否则返回 0。</td>
   </tr>
   <tr>
     <td style="vertical-align: top; font-family: monospace;">RGBtoHSL</td>
     <td colspan="1" rowspan="1" style="vertical-align: top;">
     <span class="codenopre">ColorHSL RGBtoHSL(ColorRGB colorRGB);</span><br />
-Converts a color from the RGB to the HSL color model.</td>
+将颜色从 RGB 色彩模型转换为 HSL 色彩模型。</td>
   </tr>
   <tr>
     <td style="vertical-align: top; font-family: monospace;">HSLtoRGB</td>
     <td colspan="1" rowspan="1" style="vertical-align: top;">
     <span class="codenopre">ColorRGB HSLtoRGB(ColorHSL colorHSL);</span><br />
-Converts a color from the HSL to the RGB color model.</td>
+将颜色从 HSL 色彩模型转换为 RGB 色彩模型。</td>
   </tr>
   <tr>
     <td style="vertical-align: top; font-family: monospace;">RGBtoHSV</td>
     <td colspan="1" rowspan="1" style="vertical-align: top;">
     <span class="codenopre">ColorHSV RGBtoHSV(ColorRGB colorRGB);</span><br />
-Converts a color from the RGB to the HSV color model.</td>
+将颜色从 RGB 色彩模型转换为 HSV 色彩模型。</td>
   </tr>
   <tr>
     <td style="vertical-align: top; font-family: monospace;">HSVtoRGB</td>
     <td colspan="1" rowspan="1" style="vertical-align: top;">
     <span class="codenopre">ColorRGB HSVtoRGB(ColorHSV colorHSV);</span><br />
-Converts a color from the HSV to the RGB color model.</td>
+将颜色从 HSV 色彩模型转换为 RGB 色彩模型。</td>
   </tr>
   <tr>
     <td style="vertical-align: top; font-family: monospace;">RGBtoINT</td>
     <td style="vertical-align: top;"><span class="codenopre">Uint32 RGBtoINT(ColorRGB colorRGB);</span><br />
-Converts a color from RGB to a single integer for the video hardware memory structure</td>
+将颜色从 RGB 格式转换为适用于显存结构的单个整数。</td>
   </tr>
   <tr>
     <td style="vertical-align: top; font-family: monospace;">INTtoRGB</td>
     <td style="vertical-align: top;"><span class="codenopre">ColorRGB INTtoRGB(Uint32 colorINT);</span><br />
-Converts a color from a single integer to 3 bytes: r, g, and b from the ColorRGB struct.</td>
+将颜色从单个整数转换为 ColorRGB 结构体中的 3 个字节：r、g 和 b。</td>
   </tr>
   <tr>
     <td style="vertical-align: top; font-family: monospace;">loadImage</td>
     <td colspan="1" rowspan="1" style="vertical-align: top;">
     <span class="codenopre">int loadImage(std::vector<ColorRGB>&amp; out, unsigned long&amp; w, unsigned long&amp; h, const std::string&amp; filename)</span><br />
-loads a PNG image (no other image formats supported) with given filename into the std::vector. Also returns the width and height of the image. If there happens a problem during loading, the function returns "1" which means "error".<br />
+将指定文件名的 PNG 图像（不支持其他图像格式）加载到 std::vector 中，同时返回图像的宽度和高度。如果加载过程中出现问题，函数返回"1"表示"错误"。<br />
    </td>
   </tr>
   <tr>
     <td style="vertical-align: top; font-family: monospace;">loadImage</td>
-    <td style="vertical-align: top;"><span class="codenopre">int loadImage(std::vector<Uint32>&amp; out, unsigned long&amp; w, unsigned long&amp; h, const std::string&amp; filename)<br /></span>The same as the other loadImage function, but stores the color in Uint32's instead, which is the format for SDL.
+    <td style="vertical-align: top;"><span class="codenopre">int loadImage(std::vector<Uint32>&amp; out, unsigned long&amp; w, unsigned long&amp; h, const std::string&amp; filename)<br /></span>与另一个 loadImage 函数相同，但将颜色存储为 Uint32 类型，这是 SDL 所使用的格式。
   </td>
   </tr>
   <tr>
     <td style="vertical-align: top; font-family: monospace;">print</td>
     <td colspan="1" rowspan="1" style="vertical-align: top;">
-    <span class="codenopre">template&lt;typename T&gt; int print(const T&amp; val, int x = 0, int y = 0, const ColorRGB&amp; color = RGB_White, bool bg = 0, const ColorRGB&amp; color2 = RGB_Black);</span><br /> Draws a text on screen, using the standard IBM ASCII font, made out of 256 characters of 8*8 pixels each.<br /> "*text" is the text you want to output, "x" and "y" the location (in pixels) of the top left corner of the first letter, "color" the foreground color, "color2" the background, and bg whether or not the background should be visible: if bg is 0, the background is invisible, if gb is 1, it's fully opaque. The parameter forceLength is the minimum length that should be printed, if the string is shorter, it prints 0 characters behind it (useful if background is enabled and want to draw over a certain fixed length). The return value is h * x + y where x is x position of next letter, y is y position of next letter and h is height of the screen. This return value is useful to find the start location for a possible next print command that should be behind the previous text: x coordinate is then returnvalue / h, y coordinate is returnvalue % h.</td>
+    <span class="codenopre">template&lt;typename T&gt; int print(const T&amp; val, int x = 0, int y = 0, const ColorRGB&amp; color = RGB_White, bool bg = 0, const ColorRGB&amp; color2 = RGB_Black);</span><br /> 使用标准 IBM ASCII 字体在屏幕上绘制文字，该字体由 256 个 8*8 像素的字符组成。<br /> "*text" 是要输出的文字，"x" 和 "y" 是第一个字母左上角的位置（以像素为单位），"color" 是前景色，"color2" 是背景色，"bg" 控制背景是否可见：bg 为 0 时背景不可见，bg 为 1 时背景完全不透明。参数 forceLength 是最小打印长度，若字符串较短，则在其后补充打印 0 个字符（在启用背景且需要覆盖固定长度区域时很有用）。返回值为 h * x + y，其中 x 是下一个字母的 x 坐标，y 是下一个字母的 y 坐标，h 是屏幕高度。此返回值可用于确定下一个紧跟当前文字的 print 命令的起始位置：x 坐标为 returnvalue / h，y 坐标为 returnvalue % h。</td>
   </tr>
   <tr>
     <td style="vertical-align: top;"><tt>getInputString</tt></td>
-    <td style="vertical-align: top;"><span class="codenopre">void getInputString(std::string&amp; text, const std::string&amp; message = "", bool clear = false, int x = 0, int y = 0, const ColorRGB&amp; color = RGB_White, bool bg = 0, const ColorRGB&amp; color2 = RGB_Black);</span><br /> Prints the message, after the message you can enter a string, which is stored in text. The boolean "clear" determines if the text is still visible after the user pressed enter.<br />
+    <td style="vertical-align: top;"><span class="codenopre">void getInputString(std::string&amp; text, const std::string&amp; message = "", bool clear = false, int x = 0, int y = 0, const ColorRGB&amp; color = RGB_White, bool bg = 0, const ColorRGB&amp; color2 = RGB_Black);</span><br /> 打印提示信息，之后用户可以输入一个字符串，该字符串存储在 text 中。布尔值 "clear" 决定用户按下回车键后文字是否仍然可见。<br />
     </td>
   </tr>
   <tr>
     <td style="vertical-align: top;"><tt>getInput</tt></td>
-    <td style="vertical-align: top;"><span class="codenopre">template&lt;typename T&gt; T getInput(const std::string&amp; message = "", bool clear = false, int x = 0, int y = 0, const ColorRGB&amp; color = RGB_White, bool bg = 0, const ColorRGB&amp; color2 = RGB_Black);</span><br />Convert user input into arbitrary variables.<br />
+    <td style="vertical-align: top;"><span class="codenopre">template&lt;typename T&gt; T getInput(const std::string&amp; message = "", bool clear = false, int x = 0, int y = 0, const ColorRGB&amp; color = RGB_White, bool bg = 0, const ColorRGB&amp; color2 = RGB_Black);</span><br />将用户输入转换为任意类型的变量。<br />
     </td>
   </tr>
   </tbody>
 </table>
 <br />
 
-<h3><a name="C_Operators_" id="C_Operators_"></a>C++ Operators<br />
+<h3><a name="C_Operators_" id="C_Operators_"></a>C++ 运算符<br />
 </h3>
 <table style="width: 100%; text-align: left;" border="1" cellpadding="1" cellspacing="0">
   <tbody>
   <tr>
-    <td style="vertical-align: top;"><b>Operator</b></td>
-    <td style="vertical-align: top;"><b>Information</b></td>
+    <td style="vertical-align: top;"><b>运算符</b></td>
+    <td style="vertical-align: top;"><b>说明</b></td>
   </tr>
   <tr>
     <td style="vertical-align: top; font-family: monospace;">+, -, *, /</td>
-    <td style="vertical-align: top;">Add, Subtract, Multiply and Divide. Some of these are also defined for QuickCG's matrices and vectors</td>
+    <td style="vertical-align: top;">加、减、乘、除。其中部分运算符也为 QuickCG 的矩阵和向量定义了重载。</td>
   </tr>
   <tr>
     <td style="vertical-align: top; font-family: monospace;">%</td>
-    <td style="vertical-align: top;">Modulo Division</td>
+    <td style="vertical-align: top;">取模除法</td>
   </tr>
   <tr>
     <td style="vertical-align: top; font-family: monospace;">&amp;</td>
-    <td style="vertical-align: top;">Bitwise AND</td>
+    <td style="vertical-align: top;">按位与</td>
   </tr>
   <tr>
     <td style="vertical-align: top; font-family: monospace;">|</td>
-    <td style="vertical-align: top;">Bitwise OR</td>
+    <td style="vertical-align: top;">按位或</td>
   </tr>
   <tr>
     <td style="vertical-align: top; font-family: monospace;">^</td>
-    <td style="vertical-align: top;">Bitwise XOR</td>
+    <td style="vertical-align: top;">按位异或</td>
   </tr>
   <tr>
     <td style="vertical-align: top; font-family: monospace;">=</td>
-    <td style="vertical-align: top;">Set equal to</td>
+    <td style="vertical-align: top;">赋值</td>
   </tr>
   <tr>
     <td colspan="2" rowspan="1" style="vertical-align: top;">
-    <b>Operators for conditions</b></td>
+    <b>条件运算符</b></td>
   </tr>
   <tr>
     <td style="vertical-align: top; font-family: monospace;"> &amp;&amp;, ||</td>
-    <td style="vertical-align: top;">Logical AND and OR (to use in conditions)</td>
+    <td style="vertical-align: top;">逻辑与和逻辑或（用于条件判断）</td>
   </tr>
   <tr>
     <td style="vertical-align: top; font-family: monospace;">==</td>
-    <td style="vertical-align: top;">Is it equal?</td>
+    <td style="vertical-align: top;">是否相等？</td>
   </tr>
   <tr>
     <td style="vertical-align: top; font-family: monospace;">!=</td>
-    <td style="vertical-align: top;">Not equal to</td>
+    <td style="vertical-align: top;">不等于</td>
   </tr>
   <tr>
     <td style="vertical-align: top; font-family: monospace;">&gt;,&lt;, &gt;=, &lt;=</td>
-    <td style="vertical-align: top;">Greater than, Smaller than, Greater than or equal to, Smaller than or equal to</td>
+    <td style="vertical-align: top;">大于、小于、大于等于、小于等于</td>
   </tr>
   </tbody>
 </table>
 <br />
-<h3><a name="C_Functions" id="C_Functions"></a>C++ Functions</h3>
-Some of those come from the standard header file &lt;cmath&gt;, so
-they're in the namespace std. The line "using namespace std;" is
-put on top of the code though, so you don't need to to add "std::"
-in front of the functions. This tutorial focuses on the algorithms
-and the math and it's easier to recognise mathematical functions if
-there's no "std::" in front of them.<br />
+<h3><a name="C_Functions" id="C_Functions"></a>C++ 函数</h3>
+其中一些函数来自标准头文件 &lt;cmath&gt;，因此属于 std 命名空间。不过由于代码顶部已添加了 "using namespace std;" 语句，所以无需在函数前加 "std::" 前缀。本教程聚焦于算法和数学，如果数学函数前没有 "std::"，会更易于辨认。<br />
 <br />
 <table style="width: 100%; text-align: left;" border="1" cellpadding="1"
  cellspacing="0">
   <tbody>
   <tr>
-    <td style="vertical-align: top;"><b>Function</b></td>
-    <td style="vertical-align: top;"><b>Information</b></td>
+    <td style="vertical-align: top;"><b>函数</b></td>
+    <td style="vertical-align: top;"><b>说明</b></td>
   </tr>
   <tr>
     <td style="vertical-align: top; font-family: monospace;">sqrt(x)</td>
-    <td style="vertical-align: top;">The square root of x</td>
+    <td style="vertical-align: top;">x 的平方根</td>
   </tr>
   <tr>
     <td style="vertical-align: top; font-family: monospace;">cos(x), sin(x), tan(x)</td>
-    <td style="vertical-align: top;">Cosine, Sine and Tangent (in radians)</td>
+    <td style="vertical-align: top;">余弦、正弦和正切（以弧度为单位）</td>
   </tr>
   <tr>
     <td style="vertical-align: top; font-family: monospace;">acos(x), asin(x), atan(x)</td>
-    <td style="vertical-align: top;">The inverse of Cosine, Sine and Tangent</td>
+    <td style="vertical-align: top;">余弦、正弦和正切的反函数</td>
   </tr>
   <tr>
     <td style="vertical-align: top; font-family: monospace;">pow(x, y)</td>
-    <td style="vertical-align: top;">The power of one real number to another</td>
+    <td style="vertical-align: top;">一个实数的另一个实数次幂</td>
   </tr>
   <tr>
     <td style="vertical-align: top; font-family: monospace;">ln(x)</td>
-    <td style="vertical-align: top;">Natural Logarithm</td>
+    <td style="vertical-align: top;">自然对数</td>
   </tr>
   <tr>
     <td style="vertical-align: top; font-family: monospace;">exp(x)</td>
-    <td style="vertical-align: top;">The exponential of a real number</td>
+    <td style="vertical-align: top;">实数的指数函数值</td>
   </tr>
   <tr>
     <td style="vertical-align: top; font-family: monospace;">int(x), float(x), double(x)</td>
-    <td style="vertical-align: top;">Convert to integer or to floating point number. When dividing two integers through each other, the result will be an integer unless you convert one to a float.</td>
+    <td style="vertical-align: top;">转换为整数或浮点数。两个整数相除时，结果将是整数，除非将其中一个转换为浮点数。</td>
   </tr>
   <tr>
     <td style="vertical-align: top; font-family: monospace;">floor(x)</td>
-    <td style="vertical-align: top;">Returns the next lowest integer, e.g. 3.1 becomes 3.0. Only works on floating point numbers and doubles.</td>
+    <td style="vertical-align: top;">返回不大于该数的最大整数，例如 3.1 变为 3.0。仅适用于浮点数和双精度浮点数。</td>
   </tr>
   <tr>
     <td style="vertical-align: top; font-family: monospace;">
 ceil(x)</td>
-    <td style="vertical-align: top;">Returns the next highest integer, e.g. 3.1 becomes 4.0. Only works on floating point numbers and doubles.</td>
+    <td style="vertical-align: top;">返回不小于该数的最小整数，例如 3.1 变为 4.0。仅适用于浮点数和双精度浮点数。</td>
   </tr>
   <tr>
     <td style="vertical-align: top; font-family: monospace;">abs(x), fabs(x)</td>
-    <td style="vertical-align: top;">Returns the absolute value of x. The function abs is for integers, while fabs is for floating point numbers and doubles.</td>
+    <td style="vertical-align: top;">返回 x 的绝对值。abs 用于整数，fabs 用于浮点数和双精度浮点数。</td>
   </tr>
   </tbody>
 </table>
 <br />
-<h3><a name="C_Arrays_and_Pointers" id="C_Arrays_and_Pointers"></a>C++ Arrays and Pointers</h3>
-If you're not experienced with C++ these pointers might be useful:<br />
+<h3><a name="C_Arrays_and_Pointers" id="C_Arrays_and_Pointers"></a>C++ 数组与指针</h3>
+如果你对 C++ 不太熟悉，以下指针相关内容可能会有所帮助：<br />
 <br />
 <table style="width: 100%; text-align: left;" border="1" cellpadding="1"
  cellspacing="0">
   <tbody>
   <tr>
-    <td style="vertical-align: top;">Address of a variable</td>
+    <td style="vertical-align: top;">变量的地址</td>
     <td style="vertical-align: top;">
     <ul>
-    <li>Create the variable with <tt>int variableName</tt></li>
-    <li>Get its address with <tt>&amp;variableName</tt></li>
+    <li>用 <tt>int variableName</tt> 创建变量</li>
+    <li>用 <tt>&amp;variableName</tt> 获取其地址</li>
     </ul>
     </td>
   </tr>
   <tr>
-    <td style="vertical-align: top;">Creating a pointer to a variable</td>
+    <td style="vertical-align: top;">创建指向变量的指针</td>
     <td style="vertical-align: top;">
     <ul>
-    <li>Create the variable with <tt>int variableName</tt></li>
-    <li>Create the pointer with <tt>int* pointerName</tt></li>
-    <li>Set the pointer to the address of the variable with
-      <tt>pointerName = variableName</tt></li>
-    <li>You can now set variableName to 100 by using the pointerwith <tt>*pointerName = 100</tt></li>
+    <li>用 <tt>int variableName</tt> 创建变量</li>
+    <li>用 <tt>int* pointerName</tt> 创建指针</li>
+    <li>用 <tt>pointerName = variableName</tt> 将指针指向该变量的地址</li>
+    <li>现在可以通过指针用 <tt>*pointerName = 100</tt> 将 variableName 设置为 100</li>
     </ul>
     </td>
   </tr>
   <tr>
-    <td style="vertical-align: top;">Creating an 80 * 90 *100 3D array</td>
+    <td style="vertical-align: top;">创建一个 80 * 90 * 100 的三维数组</td>
     <td style="vertical-align: top;"><tt>float arrayName[80][90][100];</tt></td>
   </tr>
   <tr>
-    <td style="vertical-align: top;">Accessing element 10, 20, 30 from a 80 * 90 * 100 3D array</td>
-    <td style="vertical-align: top;"><tt>arrayName[10][20][30]</tt> or  <tt>arrayName[90 * 100 * 10 + 100 * 20 + 30]</tt></td>
+    <td style="vertical-align: top;">访问 80 * 90 * 100 三维数组中下标为 10、20、30 的元素</td>
+    <td style="vertical-align: top;"><tt>arrayName[10][20][30]</tt> 或 <tt>arrayName[90 * 100 * 10 + 100 * 20 + 30]</tt></td>
   </tr>
   <tr>
-    <td style="vertical-align: top;">Passing a variable "by address", so the function can change it</td>
+    <td style="vertical-align: top;">以"地址传递"方式传递变量，使函数能够修改它</td>
     <td style="vertical-align: top;">
     <ul>
-    <li>Create the function as <tt>void functionName(int* pointerName)</tt></li>
-    <li>Call the function with <tt>functionName(&amp;pointerName)</tt></li>
-    <li>Use the variable in the function with <tt>&amp;pointerName</tt></li>
+    <li>将函数定义为 <tt>void functionName(int* pointerName)</tt></li>
+    <li>用 <tt>functionName(&amp;pointerName)</tt> 调用该函数</li>
+    <li>在函数内用 <tt>&amp;pointerName</tt> 使用该变量</li>
     </ul>
     </td>
   </tr>
   <tr>
-    <td style="vertical-align: top;">Passing a variable "by reference", so the function can change it</td>
+    <td style="vertical-align: top;">以"引用传递"方式传递变量，使函数能够修改它</td>
     <td style="vertical-align: top;">
     <ul>
-    <li>Create the function as <tt>void functionName(int&amp; variableName)</tt></li>
-    <li>Call the function with <tt>functionName(variableName)</tt></li>
-    <li>Use the variable in the function simply with
-      <tt>variableName</tt></li>
+    <li>将函数定义为 <tt>void functionName(int&amp; variableName)</tt></li>
+    <li>用 <tt>functionName(variableName)</tt> 调用该函数</li>
+    <li>在函数内直接用 <tt>variableName</tt> 使用该变量</li>
     </ul>
     </td>
   </tr>
   <tr>
-    <td style="vertical-align: top;">Passing a variable by "const reference", so the function can read it without making a copy (which can be inefficient if you're passing a large data structure)</td>
+    <td style="vertical-align: top;">以"const 引用"方式传递变量，使函数可以读取而无需复制（传递大型数据结构时复制会很低效）</td>
     <td style="vertical-align: top;">
     <ul>
-    <li>Create the function as <tt>void functionName(const int&amp; variableName)</tt></li>
-    <li>Call the function with <tt>functionName(variableName)</tt></li>
-    <li>Use the variable in the function simply with <tt>variableName</tt></li>
+    <li>将函数定义为 <tt>void functionName(const int&amp; variableName)</tt></li>
+    <li>用 <tt>functionName(variableName)</tt> 调用该函数</li>
+    <li>在函数内直接用 <tt>variableName</tt> 使用该变量</li>
     </ul>
     </td>
   </tr>
   <tr>
-    <td style="vertical-align: top;">Passing a 1D array to a function, so the function can read and change it</td>
+    <td style="vertical-align: top;">向函数传递一维数组，使函数可以读取和修改它</td>
     <td style="vertical-align: top;">
     <ul>
-    <li>Create the function as <tt>void functionName(int* arrayName)</tt></li>
-    <li>Call the function with <tt>functionName(arrayName)</tt></li>
-    <li>Use the array in the function with
-      <tt>arrayName[index]</tt></li>
+    <li>将函数定义为 <tt>void functionName(int* arrayName)</tt></li>
+    <li>用 <tt>functionName(arrayName)</tt> 调用该函数</li>
+    <li>在函数内用 <tt>arrayName[index]</tt> 使用该数组</li>
     </ul>
     </td>
   </tr>
   <tr>
-    <td style="vertical-align: top;">Passing a 3D array to a function</td>
+    <td style="vertical-align: top;">向函数传递三维数组</td>
     <td style="vertical-align: top;">
     <ul>
-    <li>Create the function as <tt>void functionName(int* arrayName)</tt></li>
-    <li>Call the function with
-      <tt>functionname(arrayName[0][0])</tt></li>
-    <li>Use the array in the function with
-      <tt>arrayName[index]</tt></li>
-    <li>So even though it's a 3D array, you use two [][]'s to give it to the function, and can use only 1 [] inside the function.</li>
-    <li>Inside the function, treat the array as a 1D array. Access its elements by using the way given in the second option of the third row of this table.</li>
+    <li>将函数定义为 <tt>void functionName(int* arrayName)</tt></li>
+    <li>用 <tt>functionname(arrayName[0][0])</tt> 调用该函数</li>
+    <li>在函数内用 <tt>arrayName[index]</tt> 使用该数组</li>
+    <li>因此，尽管是三维数组，传递给函数时需要使用两个 [][]，而在函数内部只能使用一个 []。</li>
+    <li>在函数内部，将该数组当作一维数组处理。使用本表第三行第二种方式访问其元素。</li>
     </ul>
     </td>
   </tr>
   <tr>
     <td style="vertical-align: top;">std::vectors</td>
     <td style="vertical-align: top;">
-    For arrays with dynamic size, std::vectors&lt;Type&gt;, part of the C++ standard, are much more useful. Include the header &lt;vector&gt; to be able to use them. They have functions to resize, get the size, clear, push variables on top, and members can be accessed with [] just like with C-style arrays. Since they're a large datastructure, pass them by (const) reference to functions.
+    对于动态大小的数组，C++ 标准库中的 std::vectors&lt;Type&gt; 更加实用。包含头文件 &lt;vector&gt; 即可使用。它提供了调整大小、获取大小、清空、在末尾追加元素等函数，成员也可以像 C 风格数组一样用 [] 访问。由于它是大型数据结构，向函数传递时应使用（const）引用。
     </td>
   </tr>
   </tbody>
 </table>
 <br />
 <h3><a name="SDL_Key_List_copied_from_the_SDL"
- id="SDL_Key_List_copied_from_the_SDL"></a>SDL Key List (copied from the SDL Reference)</h3>
+ id="SDL_Key_List_copied_from_the_SDL"></a>SDL 按键列表（摘自 SDL 参考文档）</h3>
 <table class="CALSTABLE" border="1" cellpadding="1" cellspacing="0">
   <thead>
   <tr>
   <th style="width: 33%; vertical-align: top; text-align: left;">SDLKey</th>
-  <th align="left" valign="top" width="33%">ASCII value</th>
-  <th align="left" valign="top" width="33%">Common name</th>
+  <th align="left" valign="top" width="33%">ASCII 值</th>
+  <th align="left" valign="top" width="33%">常用名称</th>
   </tr>
   </thead>
   <tbody>
   <tr>
     <td align="left" valign="top" width="33%">SDLK_BACKSPACE</td>
     <td align="left" valign="top" width="33%">'\b'</td>
-    <td align="left" valign="top" width="33%">backspace</td>
+    <td align="left" valign="top" width="33%">退格键</td>
   </tr>
   <tr>
     <td align="left" valign="top" width="33%">SDLK_TAB</td>
     <td align="left" valign="top" width="33%">'\t'</td>
-    <td align="left" valign="top" width="33%">tab</td>
+    <td align="left" valign="top" width="33%">制表键</td>
   </tr>
   <tr>
     <td align="left" valign="top" width="33%">SDLK_CLEAR</td>
     <td align="left" valign="top" width="33%"><br />
     </td>
-    <td align="left" valign="top" width="33%">clear</td>
+    <td align="left" valign="top" width="33%">清除键</td>
   </tr>
   <tr>
     <td align="left" valign="top" width="33%">SDLK_RETURN</td>
     <td align="left" valign="top" width="33%">'\r'</td>
-    <td align="left" valign="top" width="33%">return</td>
+    <td align="left" valign="top" width="33%">回车键</td>
   </tr>
   <tr>
     <td align="left" valign="top" width="33%">SDLK_PAUSE</td>
     <td align="left" valign="top" width="33%"><br />
     </td>
-    <td align="left" valign="top" width="33%">pause</td>
+    <td align="left" valign="top" width="33%">暂停键</td>
   </tr>
   <tr>
     <td align="left" valign="top" width="33%">SDLK_ESCAPE</td>
     <td align="left" valign="top" width="33%">'^['</td>
-    <td align="left" valign="top" width="33%">escape</td>
+    <td align="left" valign="top" width="33%">Escape 键</td>
   </tr>
   <tr>
     <td align="left" valign="top" width="33%">SDLK_SPACE</td>
     <td align="left" valign="top" width="33%">' '</td>
-    <td align="left" valign="top" width="33%">space</td>
+    <td align="left" valign="top" width="33%">空格键</td>
   </tr>
   <tr>
     <td align="left" valign="top" width="33%">SDLK_EXCLAIM</td>
     <td align="left" valign="top" width="33%">'!'</td>
-    <td align="left" valign="top" width="33%">exclaim</td>
+    <td align="left" valign="top" width="33%">感叹号</td>
   </tr>
   <tr>
     <td align="left" valign="top" width="33%">SDLK_QUOTEDBL</td>
     <td align="left" valign="top" width="33%">'"'</td>
-    <td align="left" valign="top" width="33%">quotedbl</td>
+    <td align="left" valign="top" width="33%">双引号</td>
   </tr>
   <tr>
     <td align="left" valign="top" width="33%">SDLK_HASH</td>
     <td align="left" valign="top" width="33%">'#'</td>
-    <td align="left" valign="top" width="33%">hash</td>
+    <td align="left" valign="top" width="33%">井号</td>
   </tr>
   <tr>
     <td align="left" valign="top" width="33%">SDLK_DOLLAR</td>
     <td align="left" valign="top" width="33%">'$'</td>
-    <td align="left" valign="top" width="33%">dollar</td>
+    <td align="left" valign="top" width="33%">美元符号</td>
   </tr>
   <tr>
     <td align="left" valign="top" width="33%">SDLK_AMPERSAND</td>
     <td align="left" valign="top" width="33%">'&amp;'</td>
-    <td align="left" valign="top" width="33%">ampersand</td>
+    <td align="left" valign="top" width="33%">与号</td>
   </tr>
   <tr>
     <td align="left" valign="top" width="33%">SDLK_QUOTE</td>
     <td align="left" valign="top" width="33%">'''</td>
-    <td align="left" valign="top" width="33%">quote</td>
+    <td align="left" valign="top" width="33%">单引号</td>
   </tr>
   <tr>
     <td align="left" valign="top" width="33%">SDLK_LEFTPAREN</td>
     <td align="left" valign="top" width="33%">'('</td>
-    <td align="left" valign="top" width="33%">left parenthesis</td>
+    <td align="left" valign="top" width="33%">左括号</td>
   </tr>
   <tr>
     <td align="left" valign="top" width="33%">SDLK_RIGHTPAREN</td>
     <td align="left" valign="top" width="33%">')'</td>
-    <td align="left" valign="top" width="33%">right parenthesis</td>
+    <td align="left" valign="top" width="33%">右括号</td>
   </tr>
   <tr>
     <td align="left" valign="top" width="33%">SDLK_ASTERISK</td>
     <td align="left" valign="top" width="33%">'*'</td>
-    <td align="left" valign="top" width="33%">asterisk</td>
+    <td align="left" valign="top" width="33%">星号</td>
   </tr>
   <tr>
     <td align="left" valign="top" width="33%">SDLK_PLUS</td>
     <td align="left" valign="top" width="33%">'+'</td>
-    <td align="left" valign="top" width="33%">plus sign</td>
+    <td align="left" valign="top" width="33%">加号</td>
   </tr>
   <tr>
     <td align="left" valign="top" width="33%">SDLK_COMMA</td>
     <td align="left" valign="top" width="33%">','</td>
-    <td align="left" valign="top" width="33%">comma</td>
+    <td align="left" valign="top" width="33%">逗号</td>
   </tr>
   <tr>
     <td align="left" valign="top" width="33%">SDLK_MINUS</td>
     <td align="left" valign="top" width="33%">'-'</td>
-    <td align="left" valign="top" width="33%">minus sign</td>
+    <td align="left" valign="top" width="33%">减号</td>
   </tr>
   <tr>
     <td align="left" valign="top" width="33%">SDLK_PERIOD</td>
     <td align="left" valign="top" width="33%">'.'</td>
-    <td align="left" valign="top" width="33%">period</td>
+    <td align="left" valign="top" width="33%">句点</td>
   </tr>
   <tr>
     <td align="left" valign="top" width="33%">SDLK_SLASH</td>
     <td align="left" valign="top" width="33%">'/'</td>
-    <td align="left" valign="top" width="33%">forward slash</td>
+    <td align="left" valign="top" width="33%">正斜杠</td>
   </tr>
   <tr>
     <td align="left" valign="top" width="33%">SDLK_0</td>
@@ -1033,67 +947,67 @@ If you're not experienced with C++ these pointers might be useful:<br />
   <tr>
     <td align="left" valign="top" width="33%">SDLK_COLON</td>
     <td align="left" valign="top" width="33%">':'</td>
-    <td align="left" valign="top" width="33%">colon</td>
+    <td align="left" valign="top" width="33%">冒号</td>
   </tr>
   <tr>
     <td align="left" valign="top" width="33%">SDLK_SEMICOLON</td>
     <td align="left" valign="top" width="33%">';'</td>
-    <td align="left" valign="top" width="33%">semicolon</td>
+    <td align="left" valign="top" width="33%">分号</td>
   </tr>
   <tr>
     <td align="left" valign="top" width="33%">SDLK_LESS</td>
     <td align="left" valign="top" width="33%">'&lt;'</td>
-    <td align="left" valign="top" width="33%">less-than sign</td>
+    <td align="left" valign="top" width="33%">小于号</td>
   </tr>
   <tr>
     <td align="left" valign="top" width="33%">SDLK_EQUALS</td>
     <td align="left" valign="top" width="33%">'='</td>
-    <td align="left" valign="top" width="33%">equals sign</td>
+    <td align="left" valign="top" width="33%">等号</td>
   </tr>
   <tr>
     <td align="left" valign="top" width="33%">SDLK_GREATER</td>
     <td align="left" valign="top" width="33%">'&gt;'</td>
-    <td align="left" valign="top" width="33%">greater-than sign</td>
+    <td align="left" valign="top" width="33%">大于号</td>
   </tr>
   <tr>
     <td align="left" valign="top" width="33%">SDLK_QUESTION</td>
     <td align="left" valign="top" width="33%">'?'</td>
-    <td align="left" valign="top" width="33%">question mark</td>
+    <td align="left" valign="top" width="33%">问号</td>
   </tr>
   <tr>
     <td align="left" valign="top" width="33%">SDLK_AT</td>
     <td align="left" valign="top" width="33%">'@'</td>
-    <td align="left" valign="top" width="33%">at</td>
+    <td align="left" valign="top" width="33%">at 符号</td>
   </tr>
   <tr>
     <td align="left" valign="top" width="33%">SDLK_LEFTBRACKET</td>
     <td align="left" valign="top" width="33%">'['</td>
-    <td align="left" valign="top" width="33%">left bracket</td>
+    <td align="left" valign="top" width="33%">左方括号</td>
   </tr>
   <tr>
     <td align="left" valign="top" width="33%">SDLK_BACKSLASH</td>
     <td align="left" valign="top" width="33%">'\'</td>
-    <td align="left" valign="top" width="33%">backslash</td>
+    <td align="left" valign="top" width="33%">反斜杠</td>
   </tr>
   <tr>
     <td align="left" valign="top" width="33%">SDLK_RIGHTBRACKET</td>
     <td align="left" valign="top" width="33%">']'</td>
-    <td align="left" valign="top" width="33%">right bracket</td>
+    <td align="left" valign="top" width="33%">右方括号</td>
   </tr>
   <tr>
     <td align="left" valign="top" width="33%">SDLK_CARET</td>
     <td align="left" valign="top" width="33%">'^'</td>
-    <td align="left" valign="top" width="33%">caret</td>
+    <td align="left" valign="top" width="33%">脱字符</td>
   </tr>
   <tr>
     <td align="left" valign="top" width="33%">SDLK_UNDERSCORE</td>
     <td align="left" valign="top" width="33%">'_'</td>
-    <td align="left" valign="top" width="33%">underscore</td>
+    <td align="left" valign="top" width="33%">下划线</td>
   </tr>
   <tr>
     <td align="left" valign="top" width="33%">SDLK_BACKQUOTE</td>
     <td align="left" valign="top" width="33%">'`'</td>
-    <td align="left" valign="top" width="33%">grave</td>
+    <td align="left" valign="top" width="33%">重音符</td>
   </tr>
   <tr>
     <td align="left" valign="top" width="33%">SDLK_a</td>
@@ -1228,156 +1142,156 @@ If you're not experienced with C++ these pointers might be useful:<br />
   <tr>
     <td align="left" valign="top" width="33%">SDLK_DELETE</td>
     <td align="left" valign="top" width="33%">'^?'</td>
-    <td align="left" valign="top" width="33%">delete</td>
+    <td align="left" valign="top" width="33%">Delete 键</td>
   </tr>
   <tr>
     <td align="left" valign="top" width="33%">SDLK_KP0</td>
     <td align="left" valign="top" width="33%"><br />
     </td>
-    <td align="left" valign="top" width="33%">keypad 0</td>
+    <td align="left" valign="top" width="33%">小键盘 0</td>
   </tr>
   <tr>
     <td align="left" valign="top" width="33%">SDLK_KP1</td>
     <td align="left" valign="top" width="33%"><br />
     </td>
-    <td align="left" valign="top" width="33%">keypad 1</td>
+    <td align="left" valign="top" width="33%">小键盘 1</td>
   </tr>
   <tr>
     <td align="left" valign="top" width="33%">SDLK_KP2</td>
     <td align="left" valign="top" width="33%"><br />
     </td>
-    <td align="left" valign="top" width="33%">keypad 2</td>
+    <td align="left" valign="top" width="33%">小键盘 2</td>
   </tr>
   <tr>
     <td align="left" valign="top" width="33%">SDLK_KP3</td>
     <td align="left" valign="top" width="33%"><br />
     </td>
-    <td align="left" valign="top" width="33%">keypad 3</td>
+    <td align="left" valign="top" width="33%">小键盘 3</td>
   </tr>
   <tr>
     <td align="left" valign="top" width="33%">SDLK_KP4</td>
     <td align="left" valign="top" width="33%"><br />
     </td>
-    <td align="left" valign="top" width="33%">keypad 4</td>
+    <td align="left" valign="top" width="33%">小键盘 4</td>
   </tr>
   <tr>
     <td align="left" valign="top" width="33%">SDLK_KP5</td>
     <td align="left" valign="top" width="33%"><br />
     </td>
-    <td align="left" valign="top" width="33%">keypad 5</td>
+    <td align="left" valign="top" width="33%">小键盘 5</td>
   </tr>
   <tr>
     <td align="left" valign="top" width="33%">SDLK_KP6</td>
     <td align="left" valign="top" width="33%"><br />
     </td>
-    <td align="left" valign="top" width="33%">keypad 6</td>
+    <td align="left" valign="top" width="33%">小键盘 6</td>
   </tr>
   <tr>
     <td align="left" valign="top" width="33%">SDLK_KP7</td>
     <td align="left" valign="top" width="33%"><br />
     </td>
-    <td align="left" valign="top" width="33%">keypad 7</td>
+    <td align="left" valign="top" width="33%">小键盘 7</td>
   </tr>
   <tr>
     <td align="left" valign="top" width="33%">SDLK_KP8</td>
     <td align="left" valign="top" width="33%"><br />
     </td>
-    <td align="left" valign="top" width="33%">keypad 8</td>
+    <td align="left" valign="top" width="33%">小键盘 8</td>
   </tr>
   <tr>
     <td align="left" valign="top" width="33%">SDLK_KP9</td>
     <td align="left" valign="top" width="33%"><br />
     </td>
-    <td align="left" valign="top" width="33%">keypad 9</td>
+    <td align="left" valign="top" width="33%">小键盘 9</td>
   </tr>
   <tr>
     <td align="left" valign="top" width="33%">SDLK_KP_PERIOD</td>
     <td align="left" valign="top" width="33%">'.'</td>
-    <td align="left" valign="top" width="33%">keypad period</td>
+    <td align="left" valign="top" width="33%">小键盘句点</td>
   </tr>
   <tr>
     <td align="left" valign="top" width="33%">SDLK_KP_DIVIDE</td>
     <td align="left" valign="top" width="33%">'/'</td>
-    <td align="left" valign="top" width="33%">keypad divide</td>
+    <td align="left" valign="top" width="33%">小键盘除号</td>
   </tr>
   <tr>
     <td align="left" valign="top" width="33%">SDLK_KP_MULTIPLY</td>
     <td align="left" valign="top" width="33%">'*'</td>
-    <td align="left" valign="top" width="33%">keypad multiply</td>
+    <td align="left" valign="top" width="33%">小键盘乘号</td>
   </tr>
   <tr>
     <td align="left" valign="top" width="33%">SDLK_KP_MINUS</td>
     <td align="left" valign="top" width="33%">'-'</td>
-    <td align="left" valign="top" width="33%">keypad minus</td>
+    <td align="left" valign="top" width="33%">小键盘减号</td>
   </tr>
   <tr>
     <td align="left" valign="top" width="33%">SDLK_KP_PLUS</td>
     <td align="left" valign="top" width="33%">'+'</td>
-    <td align="left" valign="top" width="33%">keypad plus</td>
+    <td align="left" valign="top" width="33%">小键盘加号</td>
   </tr>
   <tr>
     <td align="left" valign="top" width="33%">SDLK_KP_ENTER</td>
     <td align="left" valign="top" width="33%">'\r'</td>
-    <td align="left" valign="top" width="33%">keypad enter</td>
+    <td align="left" valign="top" width="33%">小键盘回车</td>
   </tr>
   <tr>
     <td align="left" valign="top" width="33%">SDLK_KP_EQUALS</td>
     <td align="left" valign="top" width="33%">'='</td>
-    <td align="left" valign="top" width="33%">keypad equals</td>
+    <td align="left" valign="top" width="33%">小键盘等号</td>
   </tr>
   <tr>
     <td align="left" valign="top" width="33%">SDLK_UP</td>
     <td align="left" valign="top" width="33%"><br />
     </td>
-    <td align="left" valign="top" width="33%">up arrow</td>
+    <td align="left" valign="top" width="33%">上方向键</td>
   </tr>
   <tr>
     <td align="left" valign="top" width="33%">SDLK_DOWN</td>
     <td align="left" valign="top" width="33%"><br />
     </td>
-    <td align="left" valign="top" width="33%">down arrow</td>
+    <td align="left" valign="top" width="33%">下方向键</td>
   </tr>
   <tr>
     <td align="left" valign="top" width="33%">SDLK_RIGHT</td>
     <td align="left" valign="top" width="33%"><br />
     </td>
-    <td align="left" valign="top" width="33%">right arrow</td>
+    <td align="left" valign="top" width="33%">右方向键</td>
   </tr>
   <tr>
     <td align="left" valign="top" width="33%">SDLK_LEFT</td>
     <td align="left" valign="top" width="33%"><br />
     </td>
-    <td align="left" valign="top" width="33%">left arrow</td>
+    <td align="left" valign="top" width="33%">左方向键</td>
   </tr>
   <tr>
     <td align="left" valign="top" width="33%">SDLK_INSERT</td>
     <td align="left" valign="top" width="33%"><br />
     </td>
-    <td align="left" valign="top" width="33%">insert</td>
+    <td align="left" valign="top" width="33%">Insert 键</td>
   </tr>
   <tr>
     <td align="left" valign="top" width="33%">SDLK_HOME</td>
     <td align="left" valign="top" width="33%"><br />
     </td>
-    <td align="left" valign="top" width="33%">home</td>
+    <td align="left" valign="top" width="33%">Home 键</td>
   </tr>
   <tr>
     <td align="left" valign="top" width="33%">SDLK_END</td>
     <td align="left" valign="top" width="33%"><br />
     </td>
-    <td align="left" valign="top" width="33%">end</td>
+    <td align="left" valign="top" width="33%">End 键</td>
   </tr>
   <tr>
     <td align="left" valign="top" width="33%">SDLK_PAGEUP</td>
     <td align="left" valign="top" width="33%"><br />
     </td>
-    <td align="left" valign="top" width="33%">page up</td>
+    <td align="left" valign="top" width="33%">Page Up 键</td>
   </tr>
   <tr>
     <td align="left" valign="top" width="33%">SDLK_PAGEDOWN</td>
     <td align="left" valign="top" width="33%"><br />
     </td>
-    <td align="left" valign="top" width="33%">page down</td>
+    <td align="left" valign="top" width="33%">Page Down 键</td>
   </tr>
   <tr>
     <td align="left" valign="top" width="33%">SDLK_F1</td>
@@ -1473,97 +1387,97 @@ If you're not experienced with C++ these pointers might be useful:<br />
     <td align="left" valign="top" width="33%">SDLK_NUMLOCK</td>
     <td align="left" valign="top" width="33%"><br />
     </td>
-    <td align="left" valign="top" width="33%">numlock</td>
+    <td align="left" valign="top" width="33%">数字锁定键</td>
   </tr>
   <tr>
     <td align="left" valign="top" width="33%">SDLK_CAPSLOCK</td>
     <td align="left" valign="top" width="33%"><br />
     </td>
-    <td align="left" valign="top" width="33%">capslock</td>
+    <td align="left" valign="top" width="33%">大写锁定键</td>
   </tr>
   <tr>
     <td align="left" valign="top" width="33%">SDLK_SCROLLOCK</td>
     <td align="left" valign="top" width="33%"><br />
     </td>
-    <td align="left" valign="top" width="33%">scrollock</td>
+    <td align="left" valign="top" width="33%">滚动锁定键</td>
   </tr>
   <tr>
     <td align="left" valign="top" width="33%">SDLK_RSHIFT</td>
     <td align="left" valign="top" width="33%"><br />
     </td>
-    <td align="left" valign="top" width="33%">right shift</td>
+    <td align="left" valign="top" width="33%">右 Shift 键</td>
   </tr>
   <tr>
     <td align="left" valign="top" width="33%">SDLK_LSHIFT</td>
     <td align="left" valign="top" width="33%"><br />
     </td>
-    <td align="left" valign="top" width="33%">left shift</td>
+    <td align="left" valign="top" width="33%">左 Shift 键</td>
   </tr>
   <tr>
     <td align="left" valign="top" width="33%">SDLK_RCTRL</td>
     <td align="left" valign="top" width="33%"><br />
     </td>
-    <td align="left" valign="top" width="33%">right ctrl</td>
+    <td align="left" valign="top" width="33%">右 Ctrl 键</td>
   </tr>
   <tr>
     <td align="left" valign="top" width="33%">SDLK_LCTRL</td>
     <td align="left" valign="top" width="33%"><br />
     </td>
-    <td align="left" valign="top" width="33%">left ctrl</td>
+    <td align="left" valign="top" width="33%">左 Ctrl 键</td>
   </tr>
   <tr>
     <td align="left" valign="top" width="33%">SDLK_RALT</td>
     <td align="left" valign="top" width="33%"><br />
     </td>
-    <td align="left" valign="top" width="33%">right alt</td>
+    <td align="left" valign="top" width="33%">右 Alt 键</td>
   </tr>
   <tr>
     <td align="left" valign="top" width="33%">SDLK_LALT</td>
     <td align="left" valign="top" width="33%"><br />
     </td>
-    <td align="left" valign="top" width="33%">left alt</td>
+    <td align="left" valign="top" width="33%">左 Alt 键</td>
   </tr>
   <tr>
     <td align="left" valign="top" width="33%">SDLK_RMETA</td>
     <td align="left" valign="top" width="33%"><br />
     </td>
-    <td align="left" valign="top" width="33%">right meta</td>
+    <td align="left" valign="top" width="33%">右 Meta 键</td>
   </tr>
   <tr>
     <td align="left" valign="top" width="33%">SDLK_LMETA</td>
     <td align="left" valign="top" width="33%"><br />
     </td>
-    <td align="left" valign="top" width="33%">left meta</td>
+    <td align="left" valign="top" width="33%">左 Meta 键</td>
   </tr>
   <tr>
     <td align="left" valign="top" width="33%">SDLK_LSUPER</td>
     <td align="left" valign="top" width="33%"><br />
     </td>
-    <td align="left" valign="top" width="33%">left windows key</td>
+    <td align="left" valign="top" width="33%">左 Windows 键</td>
   </tr>
   <tr>
     <td align="left" valign="top" width="33%">SDLK_RSUPER</td>
     <td align="left" valign="top" width="33%"><br />
     </td>
-    <td align="left" valign="top" width="33%">right windows key</td>
+    <td align="left" valign="top" width="33%">右 Windows 键</td>
   </tr>
   <tr>
     <td align="left" valign="top" width="33%">SDLK_MODE</td>
     <td align="left" valign="top" width="33%"><br />
     </td>
-    <td align="left" valign="top" width="33%">mode shift</td>
+    <td align="left" valign="top" width="33%">模式切换键</td>
   </tr>
   <tr>
     <td align="left" valign="top" width="33%">SDLK_HELP</td>
     <td align="left" valign="top" width="33%"><br />
     </td>
-    <td align="left" valign="top" width="33%">help</td>
+    <td align="left" valign="top" width="33%">帮助键</td>
   </tr>
   <tr>
     <td align="left" valign="top" width="33%">SDLK_PRINT</td>
     <td align="left" valign="top" width="33%"><br />
     </td>
-    <td align="left" valign="top" width="33%">print-screen</td>
+    <td align="left" valign="top" width="33%">截屏键</td>
   </tr>
   <tr>
     <td align="left" valign="top" width="33%">SDLK_SYSREQ</td>
@@ -1575,25 +1489,25 @@ If you're not experienced with C++ these pointers might be useful:<br />
     <td align="left" valign="top" width="33%">SDLK_BREAK</td>
     <td align="left" valign="top" width="33%"><br />
     </td>
-    <td align="left" valign="top" width="33%">break</td>
+    <td align="left" valign="top" width="33%">Break 键</td>
   </tr>
   <tr>
     <td align="left" valign="top" width="33%">SDLK_MENU</td>
     <td align="left" valign="top" width="33%"><br />
     </td>
-    <td align="left" valign="top" width="33%">menu</td>
+    <td align="left" valign="top" width="33%">菜单键</td>
   </tr>
   <tr>
     <td align="left" valign="top" width="33%">SDLK_POWER</td>
     <td align="left" valign="top" width="33%"><br />
     </td>
-    <td align="left" valign="top" width="33%">power</td>
+    <td align="left" valign="top" width="33%">电源键</td>
   </tr>
   <tr>
     <td align="left" valign="top" width="33%">SDLK_EURO</td>
     <td align="left" valign="top" width="33%"><br />
     </td>
-    <td align="left" valign="top" width="33%">euro</td>
+    <td align="left" valign="top" width="33%">欧元符号键</td>
   </tr>
   </tbody>
 </table>
@@ -1601,66 +1515,66 @@ If you're not experienced with C++ these pointers might be useful:<br />
 <table class="CALSTABLE" border="1" cellpadding="1" cellspacing="0">
   <thead>
   <tr>
-  <th align="left" valign="top" width="50%">SDL Modifier</th>
-  <th align="left" valign="top" width="50%">Meaning</th>
+  <th align="left" valign="top" width="50%">SDL 修饰键</th>
+  <th align="left" valign="top" width="50%">含义</th>
   </tr>
   </thead>
   <tbody>
   <tr>
     <td style="width: 50%; vertical-align: top; text-align: left;"> KMOD_NONE</td>
-    <td align="left" valign="top" width="50%">No modifiers applicable</td>
+    <td align="left" valign="top" width="50%">无修饰键</td>
   </tr>
   <tr>
     <td align="left" valign="top" width="50%">KMOD_NUM</td>
-    <td align="left" valign="top" width="50%">Numlock is down</td>
+    <td align="left" valign="top" width="50%">数字锁定键已按下</td>
   </tr>
   <tr>
     <td align="left" valign="top" width="50%">KMOD_CAPS</td>
-    <td align="left" valign="top" width="50%">Capslock is down</td>
+    <td align="left" valign="top" width="50%">大写锁定键已按下</td>
   </tr>
   <tr>
     <td align="left" valign="top" width="50%">KMOD_LCTRL</td>
-    <td align="left" valign="top" width="50%">Left Control is down</td>
+    <td align="left" valign="top" width="50%">左 Ctrl 键已按下</td>
   </tr>
   <tr>
     <td align="left" valign="top" width="50%">KMOD_RCTRL</td>
-    <td align="left" valign="top" width="50%">Right Control is down</td>
+    <td align="left" valign="top" width="50%">右 Ctrl 键已按下</td>
   </tr>
   <tr>
     <td align="left" valign="top" width="50%">KMOD_RSHIFT</td>
-    <td align="left" valign="top" width="50%">Right Shift is down</td>
+    <td align="left" valign="top" width="50%">右 Shift 键已按下</td>
   </tr>
   <tr>
     <td align="left" valign="top" width="50%">KMOD_LSHIFT</td>
-    <td align="left" valign="top" width="50%">Left Shift is down</td>
+    <td align="left" valign="top" width="50%">左 Shift 键已按下</td>
   </tr>
   <tr>
     <td align="left" valign="top" width="50%">KMOD_RALT</td>
-    <td align="left" valign="top" width="50%">Right Alt is down</td>
+    <td align="left" valign="top" width="50%">右 Alt 键已按下</td>
   </tr>
   <tr>
     <td align="left" valign="top" width="50%">KMOD_LALT</td>
-    <td align="left" valign="top" width="50%">Left Alt is down</td>
+    <td align="left" valign="top" width="50%">左 Alt 键已按下</td>
   </tr>
   <tr>
     <td align="left" valign="top" width="50%">KMOD_CTRL</td>
-    <td align="left" valign="top" width="50%">A Control key is down</td>
+    <td align="left" valign="top" width="50%">某个 Ctrl 键已按下</td>
   </tr>
   <tr>
     <td align="left" valign="top" width="50%">KMOD_SHIFT</td>
-    <td align="left" valign="top" width="50%">A Shift key is down</td>
+    <td align="left" valign="top" width="50%">某个 Shift 键已按下</td>
   </tr>
   <tr>
     <td align="left" valign="top" width="50%">KMOD_ALT</td>
-    <td align="left" valign="top" width="50%">An Alt key is down</td>
+    <td align="left" valign="top" width="50%">某个 Alt 键已按下</td>
   </tr>
   </tbody>
 </table>
 <br />
 <hr />
-Last edited: 21 August 2007
+最后编辑：2007 年 8 月 21 日
 <br /><br />
-Copyright (c) 2004-2007 by Lode Vandevenne. All rights reserved.<br />
+版权所有 (c) 2004-2007 Lode Vandevenne，保留所有权利。<br />
 <script language="javascript" src="colorcode.js"></script>
 </body>
 </html>

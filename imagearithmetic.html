@@ -2,54 +2,44 @@
     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-<title>Image Arithmetic</title>
+<title>图像算术</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <meta content="text/html; charset=us-ascii" http-equiv=
 "content-type" />
 <link rel="stylesheet" type="text/css" href="stylesheet.css" />
 </head>
 <body>
-<h1>Lode's Computer Graphics Tutorial</h1>
-<h1>Image Arithmetic<br /></h1>
-<h2>Table of Contents</h2>
+<h1>Lode 的计算机图形学教程</h1>
+<h1>图像算术<br /></h1>
+<h2>目录</h2>
 <ul>
-<li><a href="imagearithmetic.html#Introduction_">Introduction</a></li>
-<li><a href="imagearithmetic.html#The_Code_">The Code</a><br /></li>
-<li><a href="imagearithmetic.html#Add">Add</a></li>
-<li><a href="imagearithmetic.html#Subtract">Subtract</a></li>
-<li><a href="imagearithmetic.html#Difference">Difference</a></li>
-<li><a href="imagearithmetic.html#Multiply">Multiply</a></li>
-<li><a href="imagearithmetic.html#Average">Average</a></li>
-<li><a href="imagearithmetic.html#Cross_Fading">Cross Fading</a></li>
-<li><a href="imagearithmetic.html#Min_and_Max">Min and Max</a></li>
-<li><a href="imagearithmetic.html#Amplitude">Amplitude</a></li>
-<li><a href="imagearithmetic.html#AND_OR_and_XOR">AND, OR and XOR</a><br /></li>
+<li><a href="imagearithmetic.html#Introduction_">简介</a></li>
+<li><a href="imagearithmetic.html#The_Code_">代码</a><br /></li>
+<li><a href="imagearithmetic.html#Add">加法</a></li>
+<li><a href="imagearithmetic.html#Subtract">减法</a></li>
+<li><a href="imagearithmetic.html#Difference">差值</a></li>
+<li><a href="imagearithmetic.html#Multiply">乘法</a></li>
+<li><a href="imagearithmetic.html#Average">平均</a></li>
+<li><a href="imagearithmetic.html#Cross_Fading">交叉淡化</a></li>
+<li><a href="imagearithmetic.html#Min_and_Max">最小值与最大值</a></li>
+<li><a href="imagearithmetic.html#Amplitude">振幅</a></li>
+<li><a href="imagearithmetic.html#AND_OR_and_XOR">AND、OR 与 XOR</a><br /></li>
 </ul>
-<a href="index.html">Back to index</a><br />
+<a href="index.html">返回目录</a><br />
 <h2><a name="Introduction_" id=
-"Introduction_"></a>Introduction<br /></h2>
-Image Arithmetic is where you take two images, do calculations on
-their color channels, and get a new resulting image that is a
-combination of the two. These operations can be done with the
-Arithmetic tool in Paint Shop Pro, or "Calculations" in
-Photoshop.<br />
+"Introduction_"></a>简介<br /></h2>
+图像算术是对两张图像的颜色通道进行计算，得到一张新的合成图像。这些操作可以在 Paint Shop Pro 的算术工具或 Photoshop 的"计算"功能中完成。<br />
 <br />
-This should be a pretty easy article with simple code and more
-looking at images.<br />
+这篇文章代码简单，更多的是观察图像效果。<br />
 <br />
-NOTE: As mentioned at the end of the Light and Color tutorial, it is best to
-do these operations in linear RGB, so gamma correction before and after the
-operations below is reccommended for real world applications.
-<h2><a name="The_Code_" id="The_Code_"></a>The Code<br /></h2>
-Here follows the code that loads in .png images and allows you to
-do the arithmetic and display them.<br />
+注意：如光与颜色教程末尾所述，最好在线性 RGB 空间中进行这些操作，因此在实际应用中建议在以下操作前后进行伽马校正。
+<h2><a name="The_Code_" id="The_Code_"></a>代码<br /></h2>
+以下是加载 .png 图像并进行算术运算及显示的代码。<br />
 <br />
-The .png images are in the /pics folder and called photo1.png,
-photo2.png and photo3.png. You can download them <a href=
-"files/photos.zip">here</a>.<br />
+.png 图像位于 /pics 文件夹中，名为 photo1.png、photo2.png 和 photo3.png。可以在<a href=
+"files/photos.zip">这里</a>下载。<br />
 <br />
-These are the source images in lower quality. They're taken while
-hiking in the Belgian Ardennes.<br />
+以下是低质量的源图像，拍摄于比利时阿登山区徒步旅行途中。<br />
 <br />
 <img alt="" src="images/photo1.jpg" style=
 "width: 320px; height: 240px;" /> <img alt="" src=
@@ -57,10 +47,7 @@ hiking in the Belgian Ardennes.<br />
 "width: 320px; height: 240px;" /><img alt="" src=
 "images/photo3.jpg" style="width: 320px; height: 240px;" /><br />
 <br />
-Here's the code, it should be very straightforward. In the double
-loop that performs the image arithmetic, currently the formulas for
-"average" are filled in, replace this part of the code by the code
-given in the next sections.<br />
+以下是代码，应该非常直观。在执行图像算术的双重循环中，目前填入的是"平均"的公式，将代码中的这部分替换为后续章节中给出的代码即可。<br />
 <br />
 <center>
 <table class="codetable">
@@ -106,16 +93,9 @@ given in the next sections.<br />
 </table>
 </center>
 <br />
-Note that you could also use "<span style="font-family: monospace;">result[y * w + x] = (image1[y * w + x] + image2[y * w + x]) / 2</span>" instead of doing it for every color
-component separately, but this notation doesn't work for all
-examples.<br />
-<h2><a name="Add" id="Add"></a>Add</h2>
-Addition is when you add the corresponding color channels of the
-images to each other. Each color component is a number between 0
-and 255, so if the sum of the two colors becomes higher than 255,
-it has to be truncated to 255 again, by taking the minimum of the
-result and 255. Copypaste this into the arithmetic loop and run it
-to see the result of the sum of the two photos.<br />
+注意也可以用 "<span style="font-family: monospace;">result[y * w + x] = (image1[y * w + x] + image2[y * w + x]) / 2</span>" 代替逐通道操作，但这种写法并不适用于所有示例。<br />
+<h2><a name="Add" id="Add"></a>加法</h2>
+加法是将两张图像对应颜色通道相加。每个颜色分量是 0 到 255 之间的数值，因此若两个颜色之和超过 255，需截断为 255，即取结果与 255 的最小值。将以下代码复制粘贴到算术循环中并运行，即可看到两张照片相加的结果。<br />
 <br />
 <center>
 <table class="codetable">
@@ -132,17 +112,11 @@ to see the result of the sum of the two photos.<br />
 <img alt="" src="images/arithadd.jpg" style=
 "width: 319px; height: 239px;" /><br />
 <br />
-The sky of the second photo is so bright, that adding the color
-components of the other image makes it so bright that the colors
-are truncated to 255 and thus extremely white. You can still
-recognize the cows in the bottom part of the image though.<br />
+第二张照片的天空非常明亮，加上另一张图像的颜色分量后亮度超限，颜色被截断为 255，因此极为白。但在图像底部仍能辨认出奶牛。<br />
 <br />
-Instead of doing this for all three the channels, you can also do
-it on only one color channel, but that would generate an excessive
-amount of screenshots here ;)<br />
-<h2><a name="Subtract" id="Subtract"></a>Subtract</h2>
-Subtraction works in a similar way, but now you have to truncate
-negative results to 0.<br />
+不必对全部三个通道都这样做，也可以只对一个颜色通道操作，但这里这样做会产生大量截图 ;)<br />
+<h2><a name="Subtract" id="Subtract"></a>减法</h2>
+减法的工作方式类似，但现在需要将负数结果截断为 0。<br />
 <br />
 <center>
 <table class="codetable">
@@ -159,20 +133,14 @@ negative results to 0.<br />
 <img alt="" src="images/arithsub.jpg" style=
 "width: 320px; height: 240px;" /><br />
 <br />
-The cow picture is the one subtracted from the horses, so the cow
-picture's colors become negative. That explains the purplish
-colors. The bright sky subtracted from the flower makes the whole
-upper part pitch black.<br />
+奶牛图片被从马的图片中减去，因此奶牛图片的颜色变为负值，这解释了偏紫的颜色。明亮的天空被减去后，花卉图片的整个上部变成纯黑。<br />
 <br />
-The order of subtraction is important, you get this if you subtract
-the second from the third instead:<br />
+减法的顺序很重要，若改为第三张减第二张，则得到如下结果：<br />
 <br />
 <img alt="" src="images/arithsub2.jpg" style=
 "width: 318px; height: 239px;" /><br />
-<h2><a name="Difference" id="Difference"></a>Difference</h2>
-Difference is almost the same as subtract, only now instead of
-truncating negative values, you take their absolute value. So you
-get the difference between the colors of both images.<br />
+<h2><a name="Difference" id="Difference"></a>差值</h2>
+差值与减法几乎相同，只是不截断负值，而是取其绝对值。这样得到的是两张图像颜色之间的差值。<br />
 <br />
 <center>
 <table class="codetable">
@@ -189,15 +157,9 @@ get the difference between the colors of both images.<br />
 <img alt="" src="images/arithdiff.jpg" style=
 "width: 320px; height: 240px;" /><br />
 <br />
-Now the places that were black in one image are filled with the
-color of the other image.<br />
-<h2><a name="Multiply" id="Multiply"></a>Multiply</h2>
-To multiply, don't multiply the color component values from 0-255
-with each other, then the maximum value would be 255 * 255 = 65025,
-and with such a big color value, you can't do much. Instead,
-convert the values to floating point numbers between 0 and 1, and
-multiply those. The result will then also always be between 0 and
-1. After multiplication, multiply it with 255 again.<br />
+现在一张图像中黑色的地方被另一张图像的颜色填充了。<br />
+<h2><a name="Multiply" id="Multiply"></a>乘法</h2>
+乘法不能直接将 0-255 的颜色分量值相乘，否则最大值会是 255 × 255 = 65025，这么大的颜色值没什么用。应该将值转换为 0 到 1 之间的浮点数再相乘，结果也始终在 0 到 1 之间。乘法完成后再乘以 255。<br />
 <br />
 <center>
 <table class="codetable">
@@ -211,20 +173,15 @@ multiply those. The result will then also always be between 0 and
 </table>
 </center>
 <br />
-Here's the cow image multiplied with the horse image:<br />
+以下是奶牛图像与马的图像相乘的结果：<br />
 <br />
 <img alt="" src="images/arithmul.jpg" style=
 "width: 318px; height: 238px;" /><br />
 <br />
-The bright sky of the cow image can be seen as value 1, and
-multiplying 1 with the horses keeps the horses, so the top part
-looks almost the same as the original horse image. The bottom part
-is the product of two darker parts, which becomes even
-darker.<br />
+奶牛图像明亮的天空可以看作值 1，1 乘以马的图像保留了马，因此上部看起来与原始马的图像几乎相同。下部是两个较暗部分的乘积，变得更暗了。<br />
 <br />
-<h2><a name="Average" id="Average"></a>Average</h2>
-The average is gotten by adding the two images, and dividing the
-result through two.<br />
+<h2><a name="Average" id="Average"></a>平均</h2>
+平均值通过将两张图像相加后除以 2 得到。<br />
 <br />
 <center>
 <table class="codetable">
@@ -241,13 +198,8 @@ result through two.<br />
 <img alt="" src="images/arithav.jpg" style=
 "width: 319px; height: 239px;" /><br />
 <br />
-<h2><a name="Cross_Fading" id="Cross_Fading"></a>Cross Fading</h2>
-Cross Fading can be achieved by using the Weighed Average, first
-the first image has a high weight and the second a low weight. But
-as time goes on, the weight of the second image is increased and
-the one of the first image decreased, resulting in a nice fade.
-Here's an example where the weight factor of the first image is
-0.75, and the one of the second 0.25:<br />
+<h2><a name="Cross_Fading" id="Cross_Fading"></a>交叉淡化</h2>
+交叉淡化可以通过加权平均实现：起初第一张图像权重高、第二张权重低，随着时间推移，第二张图像的权重增加而第一张减少，产生漂亮的淡化效果。以下是第一张图像权重为 0.75、第二张为 0.25 的示例：<br />
 <br />
 <center>
 <table class="codetable">
@@ -264,21 +216,11 @@ Here's an example where the weight factor of the first image is
 <img alt="" src="images/arithweighedav.jpg" style=
 "width: 318px; height: 239px;" /><br />
 <br />
-The horse image is now more visible than the cow image.<br />
+现在马的图像比奶牛图像更清晰可见。<br />
 <br />
-To do an actual cross fade, a modified main function has to be
-used, because the result has to be redrawn every frame and the time
-is taken into account. For that a new while loop is added, and the
-weight is the value weight that goes from 0 to 1 for the first
-image, and from 1 to 0 for the second by using "1 - weight".<br />
+要实现真正的交叉淡化，需要修改主函数，因为结果需要每帧重绘并考虑时间。为此添加一个新的 while 循环，第一张图像的权重从 0 到 1，第二张图像用"1 - weight"从 1 到 0。<br />
 <br />
-Weight itself normally goes linearly from 0 to 1, but here
-something special is done: it's calculated as the cosine of the
-time, this means that the image will constantly fade from the first
-to the second, back to the first, back the second, and so on...
-Since the cosine gives a value between -1 and +1, while we want a
-value between 0 and 1, add 1 to it and divide the result through
-2.<br />
+权重本身通常从 0 到 1 线性变化，但这里做了一些特殊处理：将其计算为时间的余弦值，这意味着图像会不断从第一张淡化到第二张，再回到第一张，如此循环……由于余弦给出 -1 到 +1 之间的值，而我们需要 0 到 1 的值，因此加 1 后除以 2。<br />
 <br />
 <center>
 <table class="codetable">
@@ -330,14 +272,13 @@ value between 0 and 1, add 1 to it and divide the result through
 </table>
 </center>
 <br />
-Here are a few frames:<br />
+以下是几帧截图：<br />
 <br />
 <img alt="" src="images/crossfade.jpg" style=
 "width: 640px; height: 119px;" /><br />
 <br />
-<h2><a name="Min_and_Max" id="Min_and_Max"></a>Min and Max</h2>
-This involves taking only value of the pixel with the lowest or
-highest value, for example taking the minimum of both:<br />
+<h2><a name="Min_and_Max" id="Min_and_Max"></a>最小值与最大值</h2>
+这涉及只取像素中最低或最高的值，例如取两者的最小值：<br />
 <br />
 <center>
 <table class="codetable">
@@ -351,18 +292,14 @@ highest value, for example taking the minimum of both:<br />
 </table>
 </center>
 <br />
-The result here is very obvious:<br />
+结果非常直观：<br />
 <br />
 <img alt="" src="images/arithmin.jpg" style=
 "width: 319px; height: 238px;" /><br />
 <br />
-Because the cow image has such a bright sky, the darker horse image
-wins there. But in the bottom part, the horse image is brighter
-than the cows, so there the cows win. So this operation has
-filtered out exactly the sky of the cows and replaces that with the
-horses.<br />
+由于奶牛图像的天空非常明亮，较暗的马的图像在那里胜出。但在底部，马的图像比奶牛更亮，所以奶牛在那里胜出。因此这个操作恰好过滤掉了奶牛的天空，用马来代替。<br />
 <br />
-Taking the max instead does of course the opposite:<br />
+取最大值则相反：<br />
 <br />
 <center>
 <table class="codetable">
@@ -379,16 +316,9 @@ Taking the max instead does of course the opposite:<br />
 <img alt="" src="images/arithmax.jpg" style=
 "width: 320px; height: 241px;" /><br />
 <br />
-<h2><a name="Amplitude" id="Amplitude"></a>Amplitude</h2>
+<h2><a name="Amplitude" id="Amplitude"></a>振幅</h2>
 <br />
-The amplitude is calculated by using the formula of the amplitude
-on the two corresponding color channels. This formula is
-sqrt(x&sup2; + y&sup2;). Because the result of this can be 1.41
-times larger than 255, it's divided through 1.41 = sqrt(2.0) at the
-end. All sorts of conversions to double and back to int have to be
-typed as well because the standard sqrt function of the current gcc
-compiler gives an ambiguity error on integers instead of converting
-it.<br />
+振幅通过对两个对应颜色通道使用振幅公式来计算，公式为 sqrt(x² + y²)。由于结果可能比 255 大 1.41 倍，最后除以 1.41 = sqrt(2.0)。还需要进行各种 double 和 int 之间的转换，因为当前 gcc 编译器的标准 sqrt 函数对整数会报歧义错误而非自动转换。<br />
 <br />
 <center>
 <table class="codetable">
@@ -405,13 +335,10 @@ it.<br />
 <img alt="" src="images/arithampl.jpg" style=
 "width: 318px; height: 238px;" /><br />
 <br />
-<h2><a name="AND_OR_and_XOR" id="AND_OR_and_XOR"></a>AND, OR and
-XOR</h2>
-What we're now going to do is apply the "&amp;", "|" and "^"
-operators on the binary values of the color values. The results on
-normal photos are like, very ugly.<br />
+<h2><a name="AND_OR_and_XOR" id="AND_OR_and_XOR"></a>AND、OR 与 XOR</h2>
+现在我们对颜色值的二进制值应用 "&amp;"、"|" 和 "^" 运算符。在普通照片上的结果相当……难看。<br />
 <br />
-Here's the AND operator:<br />
+以下是 AND 运算符：<br />
 <br />
 <center>
 <table class="codetable">
@@ -428,7 +355,7 @@ Here's the AND operator:<br />
 <img alt="" src="images/arithand.jpg" style=
 "width: 318px; height: 237px;" /><br />
 <br />
-Or would you prefer OR?<br />
+或者你更喜欢 OR？<br />
 <br />
 <center>
 <table class="codetable">
@@ -445,8 +372,7 @@ Or would you prefer OR?<br />
 <img alt="" src="images/arithor.jpg" style=
 "width: 319px; height: 240px;" /><br />
 <br />
-The result of the XOR operator also isn't immediately
-beautiful:<br />
+XOR 运算符的结果也不是立即就好看的：<br />
 <br />
 <center>
 <table class="codetable">
@@ -463,13 +389,12 @@ beautiful:<br />
 <img alt="" src="images/arithxor.jpg" style=
 "width: 318px; height: 239px;" /><br />
 <br />
-You never know when it comes in handy, maybe for encryption of
-images ;)<br />
+你永远不知道什么时候会用到它，也许可以用于图像加密 ;)<br />
 <br />
 <hr />
-Last edited: 2004
+最后编辑：2004 年
 <br /><br />
-Copyright (c) 2004-2007 by Lode Vandevenne. All rights reserved.
+版权所有 (c) 2004-2007 Lode Vandevenne，保留所有权利。
 <script language="javascript" src="colorcode.js"></script>
 </body>
 </html>
