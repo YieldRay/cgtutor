@@ -2,131 +2,65 @@
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-<title>Lode's Computer Graphics Tutorial - Template File</title>
+<title>Lode 的计算机图形学教程 - Cohen-Sutherland 裁剪</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <meta content="text/html; charset=us-ascii" http-equiv=
 "content-type" />
 <link rel="stylesheet" type="text/css" href="stylesheet.css" />
 </head>
 <body>
-<h1>Lode's Computer Graphics Tutorial</h1>
-<h1>Cohen Sutherland Clipping<br /></h1>
-<h2>Table of Contents</h2>
+<h1>Lode 的计算机图形学教程</h1>
+<h1>Cohen-Sutherland 裁剪<br /></h1>
+<h2>目录</h2>
 <ul>
-<li><a href="lineclipping.html#Introduction">Introduction</a></li>
-<li><a href="lineclipping.html#Cohen_Sutherland_Clipping_Algorithm_">Cohen
-Sutherland Clipping Algorithm</a></li>
+<li><a href="lineclipping.html#Introduction">简介</a></li>
+<li><a href="lineclipping.html#Cohen_Sutherland_Clipping_Algorithm_">Cohen-Sutherland 裁剪算法</a></li>
 </ul>
-<a href="index.html">Back to index</a><br />
-<h2><a name="Introduction" id="Introduction"></a>Introduction<br /></h2>
-When drawing a 2D line on screen, it might happen that one or both of the endpoints are outside the screen
-while a part of the line should still be visible. In that case, an efficient algorithm
-is needed to find two new endpoints that are on the edges on the screen,
-so that the part of the line that's visible can now be drawn. This way, all those points
-of the line outside the screen are clipped away and you don't need to waste
-any execution time on them.<br />
-<br />A good clipping algorithm is the Cohen-Sutherland algorithm. The function containing
-this algorithm is already included in QuickCG in the file QuickCG.cpp and is called clipLine.
-You pass the coordinates of the old line, and the coordinates of the new line by reference so that
-the function can return the coordinates of the new line by changing those parameters.<br />
+<a href="index.html">返回目录</a><br />
+<h2><a name="Introduction" id="Introduction"></a>简介<br /></h2>
+在屏幕上绘制 2D 直线时，可能出现一个或两个端点在屏幕外，而直线的一部分仍应可见的情况。此时需要一个高效的算法来找到两个位于屏幕边缘的新端点，从而绘制出可见部分。这样，直线在屏幕外的所有点都被裁剪掉，无需浪费任何执行时间。<br />
+<br />Cohen-Sutherland 算法是一种优秀的裁剪算法。包含该算法的函数已内置于 QuickCG 的 QuickCG.cpp 文件中，名为 clipLine。调用时传入旧直线的坐标，以及通过引用传入的新直线坐标，函数通过修改这些参数来返回新直线的坐标。<br />
 <br />
-Clipping is a very important aspect of 3D graphics, and so in the 3D Lines tutorial,
-this 2D Clipping function is used often.
+裁剪是 3D 图形学中非常重要的环节，因此在 3D 直线教程中会经常用到这个 2D 裁剪函数。
 <h2><a name="Cohen_Sutherland_Clipping_Algorithm_" id=
-"Cohen_Sutherland_Clipping_Algorithm_"></a>Cohen Sutherland
-Clipping Algorithm</h2>
-When drawing a 2D line, if one endpoint of the line is outside the screen, and the other
-inside, you have to clip the line so that only the part of it
-that's inside the screen remains. Even if both endpoints are
-outside the screen, it's still possible that a part of the line
-should be visible. The clipping algorithm needs to find new
-endpoints of the lines, that are inside or on the edges of the
-screen. Here are a few cases, where the black rectangle represents
-the screen, in red are the old endpoints, and in blue the ones
-after clipping:<br />
+"Cohen_Sutherland_Clipping_Algorithm_"></a>Cohen-Sutherland 裁剪算法</h2>
+绘制 2D 直线时，若直线一个端点在屏幕外、另一个在屏幕内，则需裁剪直线，使屏幕内的部分保留下来。即使两个端点都在屏幕外，直线的一部分仍可能可见。裁剪算法需要找到新的端点，使其位于屏幕内部或边缘上。下面是几种情况，黑色矩形代表屏幕，红色为原端点，蓝色为裁剪后的端点：<br />
 <br />
 <img alt="" src="images/2dlineclip.gif" style=
 "width: 502px; height: 144px;" /><br />
 <ul>
-<li>Case A: both endpoints are inside the screen, no clipping
-needed.</li>
-<li>Case B: one endpoint outside the screen, that one had to be
-clipped</li>
-<li>Case C: both endpoint are outside the screen, and no part of
-the line is visible, don't draw it at all.</li>
-<li>Case D: both endpoint are outside the screen, and a part of the
-line is visible, clip both endpoints and draw it.</li>
+<li>情况 A：两个端点都在屏幕内，无需裁剪。</li>
+<li>情况 B：一个端点在屏幕外，需裁剪该端点。</li>
+<li>情况 C：两个端点都在屏幕外，且直线没有可见部分，不绘制。</li>
+<li>情况 D：两个端点都在屏幕外，但直线有可见部分，裁剪两个端点后绘制。</li>
 </ul>
-There are tons of different cases, each endpoint can be inside the
-screen, left of it, right of it, above, below, etc... The Cohen
-Sutherland Clipping Algorithm can recognize these cases quite
-efficiently and do the clipping. The algorithm divides the 2D space
-in 9 regions:<br />
+存在大量不同情况：每个端点可能在屏幕内、左侧、右侧、上方、下方等。Cohen-Sutherland 裁剪算法能高效识别这些情况并完成裁剪。该算法将 2D 空间划分为 9 个区域：<br />
 <br />
 <img alt="" src="images/cohensutherland.gif" style=
 "width: 294px; height: 217px;" /><br />
 <br />
-The center region is the screen, and the other 8 regions are on
-different sides outside the screen. Each region is given a binary
-number, called an "outcode". The codes are chosen as follows:<br />
+中心区域是屏幕，其他 8 个区域位于屏幕外的不同方向。每个区域被赋予一个二进制数，称为"区域码"（outcode）。编码规则如下：<br />
 <ul>
-<li>If the region is above the screen, the first bit is 1</li>
-<li>If the region is below the screen, the second bit is 1</li>
-<li>If the region is to the right of the screen, the third bit is
-1</li>
-<li>If the region is to the left of the screen, the fourth bit is
-1</li>
+<li>若区域在屏幕上方，第 1 位为 1</li>
+<li>若区域在屏幕下方，第 2 位为 1</li>
+<li>若区域在屏幕右侧，第 3 位为 1</li>
+<li>若区域在屏幕左侧，第 4 位为 1</li>
 </ul>
-Obviously an area can't be to the left and the right at the same
-time, or above and below it at the same time, so the third and
-fourth bit can't be 1 together, and the first and second bit can't
-be 1 together. The screen itself has all 4 bits set to 0.<br />
+显然，一个区域不可能同时在左侧和右侧，也不可能同时在上方和下方，因此第 3 位和第 4 位不能同时为 1，第 1 位和第 2 位也不能同时为 1。屏幕本身的 4 位全为 0。<br />
 <br />
-Both endpoints of the line can lie in any of these 9 regions, and
-there are a few trivial cases:<br />
+直线的两个端点可以位于这 9 个区域中的任意一个，存在几种平凡情况：<br />
 <ul>
-<li>If both endpoints are inside or on the edges of the screen, the
-line is inside the screen or clipped, and can be drawn. This case
-is the <b>trivial accept</b>.</li>
-<li>If both endpoints are on the same side of the screen (e.g.,
-both endpoints are above the screen), certainly no part of the line
-can be visible on the screen. This case is the<b>trivial
-reject</b>, and the line doesn't have to be drawn.</li>
+<li>若两个端点都在屏幕内部或边缘上，则直线在屏幕内，可以绘制。这种情况称为<b>平凡接受</b>。</li>
+<li>若两个端点在屏幕的同一侧（例如，两个端点都在屏幕上方），则直线肯定没有可见部分。这种情况称为<b>平凡拒绝</b>，无需绘制。</li>
 </ul>
-These two cases can easily be detected thanks to the outcodes of
-the regions:<br />
+利用区域码可以轻松检测这两种情况：<br />
 <ul>
-<li>Trivial Accept: both endpoints have to be in the region with
-code 0000, so the trivial accept case only happens if <tt>code1 |
-code2 == 0</tt>, where code1 and code2 are the codes of both
-endpoints of the line, and '|' is the binary OR operator, which can
-only return 0 if both codes are 0.</li>
-<li>Trivial Reject: because of the way the codes of the regions
-were chosen, only if both endpoints of the line are on the same
-side of the region, both codes will have two corresponding bits
-that are both 1. For example, only if both endpoints are on the
-left of the screen, the fourth bit of both codes is 1. So, the
-trivial reject case is detected if <tt>code1 &amp; code2 != 0</tt>,
-where &amp; is the binary AND operation. The binary AND operation
-only returns a non zero result if two corresponding bits are
-1.</li>
+<li>平凡接受：两个端点都必须在编码为 0000 的区域内，因此只有当 <tt>code1 | code2 == 0</tt> 时才发生平凡接受，其中 code1 和 code2 是直线两端点的编码，'|' 是二进制 OR 运算符，只有当两个编码都为 0 时结果才为 0。</li>
+<li>平凡拒绝：由于区域编码的选取方式，只有当直线两端点在区域同一侧时，两个编码才会有对应位同时为 1。例如，只有当两个端点都在屏幕左侧时，两个编码的第 4 位才都为 1。因此，平凡拒绝的检测条件为 <tt>code1 &amp; code2 != 0</tt>，其中 &amp; 是二进制 AND 运算，只有当两个对应位都为 1 时才返回非零结果。</li>
 </ul>
-All other cases (i.e. no trivial reject and no trivial accept) have
-to be turned into a trivial case by doing one clip operation. The
-Cohen Sutherland algorithm is a loop, that does only one clipping
-operation at the time. It can clip one endpoint of the line, and
-only clip it to a vertical or horizontal region border. In many
-cases, it has to clip multiple times before it can finally detect
-if the line is to be accepted, or rejected. It never has to be
-clipped more than about 4 times though, so it's quite fast.<br />
+所有其他情况（即既非平凡拒绝也非平凡接受）都需要通过一次裁剪操作转化为平凡情况。Cohen-Sutherland 算法是一个循环，每次只执行一次裁剪操作。它每次只裁剪直线的一个端点，且只裁剪到垂直或水平的区域边界。在许多情况下，需要多次裁剪才能最终判断直线是接受还是拒绝，但裁剪次数不超过约 4 次，因此速度相当快。<br />
 <br />
-The function that uses the Cohen Sutherland Clipping Algorithm is
-the clipLine function from QuickCG, which is in the QuickCG.cpp
-file. It uses an auxiliary function, findRegion, that returns the
-binary code of the region a given endpoint is in. For example to
-set the second bit to 1, you have to 'OR' the code with 4 (the
-first bit represents 8, the second 4, the third 2, and the firth
-(the primary bit) represents 1).<br />
+使用 Cohen-Sutherland 裁剪算法的函数是 QuickCG 中的 clipLine 函数，位于 QuickCG.cpp 文件中。它使用一个辅助函数 findRegion，返回给定端点所在区域的二进制编码。例如，要将第 2 位设为 1，需要将编码与 4 进行"或"运算（第 1 位代表 8，第 2 位代表 4，第 3 位代表 2，第 4 位（主位）代表 1）。<br />
 <br />
 <center>
 <table class="codetable">
@@ -151,8 +85,7 @@ first bit represents 8, the second 4, the third 2, and the firth
 </table>
 </center>
 <br />
-The clipLine function loop starts with detecting if there's a
-trivial case:<br />
+clipLine 函数的循环首先检测是否存在平凡情况：<br />
 <br />
 <center>
 <table class="codetable">
@@ -175,16 +108,8 @@ trivial case:<br />
 </table>
 </center>
 <br />
-If no trivial case was detected, the line has to be clipped. Only
-one of the 4 possible clipping operations is done at the time. To
-clip, one coordinate of 1 endpoint is set to one of the borders of
-the regions, which also happen to be the coordinates of borders of
-the screen, and the other coordinate of that point is recalculated
-by filling in the equation of the line. To detect which clipping
-operation has to be performed, an endpoint that's <span style=
-"font-style: italic;">not</span> inside the screen has to be
-chosen. The code of that endpoint is called codeout, and is set to
-either code1 or code2 depending on which of those isn't zero.<br />
+若未检测到平凡情况，则需对直线进行裁剪。每次只执行 4 种可能的裁剪操作之一。裁剪时，将某个端点的一个坐标设置为区域边界（也是屏幕边界）的坐标，然后根据直线方程重新计算该点的另一个坐标。为确定需要执行哪种裁剪操作，需要选择一个<span style=
+"font-style: italic;">不在</span>屏幕内的端点。该端点的编码称为 codeout，根据 code1 或 code2 中哪个不为零来设置。<br />
 <br />
 <center>
 <table class="codetable">
@@ -220,12 +145,7 @@ either code1 or code2 depending on which of those isn't zero.<br />
 </table>
 </center>
 <br />
-The part above calculated the new coordinates of the clipped point,
-and now the coordinates have to be set to endpoint1 or endpoint2
-depending which endpoint codeout represented. This is also the end
-of the loop, after this either the line entered a trivial case, or
-it's still not a trivial case and the loop is performed again to do
-more clipping.<br />
+上面的代码计算了裁剪点的新坐标，现在需要根据 codeout 代表哪个端点，将坐标设置给 endpoint1 或 endpoint2。这也是循环的末尾，之后直线要么进入平凡情况，要么仍非平凡情况，循环继续执行更多裁剪。<br />
 <br />
 <center>
 <table class="codetable">
@@ -250,10 +170,7 @@ more clipping.<br />
 </table>
 </center>
 <br />
-After the loop and thus the clipping is done, the function sets the
-4 coordinates of the new line (which were passed to the function by
-reference) and returns whether or not we had a trivial accept or a
-trivial reject.<br />
+循环及裁剪完成后，函数设置新直线的 4 个坐标（通过引用传入），并返回是平凡接受还是平凡拒绝。<br />
 <br />
 <center>
 <table class="codetable">
@@ -280,9 +197,9 @@ trivial reject.<br />
 </center>
 <br />
 <hr />
-Last edited: 2004
+最后编辑：2004 年
 <br /><br />
-Copyright (c) 2004-2007 by Lode Vandevenne. All rights reserved.
+版权所有 (c) 2004-2007 Lode Vandevenne，保留所有权利。
 <script language="javascript" src="colorcode.js"></script>
 </body>
 </html>

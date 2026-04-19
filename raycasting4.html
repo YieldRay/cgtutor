@@ -1,93 +1,92 @@
 <!DOCTYPE html>
 <head>
 <meta charset="utf-8"/>
-<title>Raycasting IV: Directional Sprites, Doors, And More</title>
+<title>光线投射 IV：方向精灵、门与更多特性</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <meta content="text/html; charset=us-ascii" http-equiv="content-type" />
 <link rel="stylesheet" type="text/css" href="stylesheet.css" />
 </head>
 <body>
-<h1>Lode's Computer Graphics Tutorial</h1>
-<h1>Raycasting IV: Directional Sprites, Doors, And More</h1>
-<h2>Table of Contents</h2>
+<h1>Lode 的计算机图形学教程</h1>
+<h1>光线投射 IV：方向精灵、门与更多特性</h1>
+<h2>目录</h2>
 <ul>
-<li><a href="raycasting4.html#Introduction">Introduction</a></li>
-<li><a href="raycasting4.html#Looking">Vertical Camera Movement</a></li>
-<li><a href="raycasting4.html#Directional">Directional Sprites</a></li>
-<li><a href="raycasting4.html#Thin">Thin Walls</a></li>
-<li><a href="raycasting4.html#Doors">Doors</a></li>
-<li><a href="raycasting4.html#Secrets">Secret Push Walls</a></li>
-<li><a href="raycasting4.html#Shapes">Other Wall Shapes</a></li>
-<li><a href="raycasting4.html#Zbuffer">Transparent Walls, Z Buffering</a></li>
-<li><a href="raycasting4.html#Animated">Animated Textures</a></li>
-<li><a href="raycasting4.html#Fog">Fog</a></li>
-<li><a href="raycasting4.html#Enemies">Enemies</a></li>
-<li><a href="raycasting4.html#Weapons">Weapons</a></li>
-<li><a href="raycasting4.html#Mirrors">Portals and Mirrors</a></li>
-<li><a href="raycasting4.html#Raytracing">Raytracing</a></li>
+<li><a href="raycasting4.html#Introduction">简介</a></li>
+<li><a href="raycasting4.html#Looking">垂直摄像机移动</a></li>
+<li><a href="raycasting4.html#Directional">方向精灵</a></li>
+<li><a href="raycasting4.html#Thin">薄墙</a></li>
+<li><a href="raycasting4.html#Doors">门</a></li>
+<li><a href="raycasting4.html#Secrets">秘密推墙</a></li>
+<li><a href="raycasting4.html#Shapes">其他墙体形状</a></li>
+<li><a href="raycasting4.html#Zbuffer">透明墙与 Z 缓冲</a></li>
+<li><a href="raycasting4.html#Animated">动态纹理</a></li>
+<li><a href="raycasting4.html#Fog">雾效</a></li>
+<li><a href="raycasting4.html#Enemies">敌人</a></li>
+<li><a href="raycasting4.html#Weapons">武器</a></li>
+<li><a href="raycasting4.html#Mirrors">传送门与镜子</a></li>
+<li><a href="raycasting4.html#Raytracing">光线追踪</a></li>
 </ul>
-<a href="index.html">Back to index</a><br />
-<h2><a name="Introduction" id="Introduction"></a>Introduction</h2>
+<a href="index.html">返回目录</a><br />
+<h2><a name="Introduction" id="Introduction"></a>简介</h2>
 
-Raycasting IV is the latest addition the the Raycasting series, written in 2017, 12 years after the previous three parts.
+光线投射 IV 是光线投射系列的最新篇章，写于 2017 年，距前三部分已过去 12 年。
 <p/>
-For now, this part does not yet contain any example code, pictures or formulas, but high level descriptions of a few additions. This can allow to extend the code of the previous tutorials with these new principles. I hope this can be helpful in this form.
+目前，本部分尚未包含任何示例代码、图片或公式，仅对若干新增内容进行了高层次描述。读者可以据此将前几篇教程的代码扩展为这些新原理。希望以这种形式呈现仍能对大家有所帮助。
 <p/>
 
 
-<h2><a name="Looking" id="Looking"></a>Vertical Camera Movement</h2>
+<h2><a name="Looking" id="Looking"></a>垂直摄像机移动</h2>
 
-In a raycasting engine, the camera typically cannot look up or down, only forward. We can only move horizontally, and rotate, which corresponds to changing camera yaw.
+在光线投射引擎中，摄像机通常无法向上或向下看，只能向前看。我们只能水平移动和旋转，这对应于改变摄像机的偏航角（yaw）。
 <p/>
-A few more things are possible with some extensions:
+通过一些扩展，还可以实现更多功能：
 
-<h3>Changing pitch</h3>
+<h3>改变俯仰角（pitch）</h3>
 <p/>
-Pitching the camera means looking up or down.
+俯仰摄像机意味着向上或向下看。
 <p/>
-The effect described here is not perspective correct, since wall edges must remain vertical in a raycaster, but the effect looks convincing enough if the angle is not too large.
+此处描述的效果在透视上并不完全正确，因为在光线投射器中墙的边缘必须保持垂直，但只要角度不太大，效果看起来已经足够逼真。
 <p/>
-In the raycasting code, we calculate drawStart as "-lineHeight / 2 + h / 2" and drawEnd as "lineHeight / 2 + h / 2".
-This makes the vertical center of the wall exactly match the vertical center of the screen.
-To change the pitch, move everything vertically on the screen, that is, everything gets shifted up or down: add a value "pitch" to both drawStart and drawHeight, a positive value to look up, a negative value to look down.
+在光线投射代码中，我们将 drawStart 计算为"-lineHeight / 2 + h / 2"，将 drawEnd 计算为"lineHeight / 2 + h / 2"。
+这使得墙的垂直中心与屏幕的垂直中心完全对齐。
+要改变俯仰角，只需将屏幕上的所有内容垂直移动，即对 drawStart 和 drawHeight 都加上一个值"pitch"，正值表示向上看，负值表示向下看。
 <p/>
-Floors, ceilings, textures and sprites also need new handling, and are shown in the downloadable code example.
+地板、天花板、纹理和精灵也需要进行新的处理，具体内容可参见可下载的代码示例。
 
-<h3>Changing the vertical position of the camera</h3>
+<h3>改变摄像机的垂直位置</h3>
 
-Changing the vertical position of the camera is quite similar to changing pitch, but needs to take the distance
-of the wall into account.
+改变摄像机的垂直位置与改变俯仰角非常相似，但需要将墙的距离考虑在内。
 <p/>
-Since jumping changes the vertical position, let's call the vertical position "jump".
-For the current vertical stripe, now we must add jump / perpWallDist to drawStart and drawEnd.
-To change both pitch and jump, add pitch + jump / perpWallDist.
+由于跳跃会改变垂直位置，我们将垂直位置称为"jump"。
+对于当前的垂直条带，现在需要将 jump / perpWallDist 加到 drawStart 和 drawEnd 上。
+若要同时改变俯仰角和跳跃，则加上 pitch + jump / perpWallDist。
 <p/>
-Floors, ceilings, textures and sprites again also need new handling, and are shown in the downloadable code example.
+地板、天花板、纹理和精灵同样需要进行新的处理，具体内容可参见可下载的代码示例。
 <p/>
-<h3>Code for pitch and vertical position</h3>
+<h3>俯仰角与垂直位置的代码</h3>
 <p/>
-The attached file raycaster_pitch.cpp contains everything from raycaster_floor.cpp and raycaster_sprites.cpp, but with both pitch and jumping patched into it. The variables pitch and posZ are new, you can search for all their usages in the code to find all the changes required for these features.
+附带的文件 raycaster_pitch.cpp 包含了 raycaster_floor.cpp 和 raycaster_sprites.cpp 的全部内容，并在其中加入了俯仰角和跳跃功能。变量 pitch 和 posZ 是新增的，你可以在代码中搜索它们的所有用法，从而找到这些功能所需的全部改动。
 <p/>
 <a href="files/raycaster_pitch.cpp">raycaster_pitch.cpp</a><br />
 <p/>
-A thank you goes to Michael Elliott for improving the formulas for changing vertical position.
+感谢 Michael Elliott 改进了改变垂直位置的公式。
 
-<h3>Changing roll</h3>
+<h3>改变滚转角（roll）</h3>
 
-In theory roll can also be changed. Then instead of having vertical stripes, the stripes are rotated with some angle and drawn rotated in the screen. The raycasting itself is identical, the only difference is how we draw the stripes on screen. For a 90 degree tilt this is easy, now we work with horizontal instead of vertical scanlines. For other angles, however, there will be an issue: when you draw each rotated stripe on the screen, you must make sure all screen pixels are filled, and it is likely they won't. Maybe making the lines thicker, e.g. repeating the same pixel on screen twice below each other, and then overlapping the duplicates with next lines will work, but I did not try it myself.
+理论上滚转角也可以改变。此时不再是垂直条带，而是将条带旋转某个角度后绘制到屏幕上。光线投射本身完全相同，唯一的区别在于如何将条带绘制到屏幕上。对于 90 度倾斜，这很简单，此时我们使用水平扫描线而非垂直扫描线。但对于其他角度，会出现一个问题：当你在屏幕上绘制每条旋转后的条带时，必须确保所有屏幕像素都被填充，而实际上很可能无法做到。也许将线条加粗（例如在屏幕上将同一像素重复绘制两次，然后让相邻线条的重复部分相互覆盖）可以解决问题，但我自己并未尝试过。
 
 
-<h2><a name="Directional" id="Directional"></a>Directional Sprites</h2>
+<h2><a name="Directional" id="Directional"></a>方向精灵</h2>
 
-The previous tutorial introduced sprites. Those sprites had only 1 texture, and no matter from which angle the player looks at them, you always see the sprite from the same face, as if it is always looking towards you. This can be ok for enemies if you assume they always look at you, and for simple objects that look the same from all sides like round lamps, pillars and barrels or for objects put into an alcove so you can only see them from 1 side.
+前一篇教程介绍了精灵。那些精灵只有 1 张纹理，无论玩家从哪个角度看，始终看到的是精灵的同一面，就好像它一直朝向你一样。对于敌人来说，如果假设它们总是面向你，这样做是可以的；对于从各个方向看起来都一样的简单物体（如圆形灯具、柱子、桶），或者放在壁龛里只能从 1 个方向看到的物体，这样也没问题。
 <p/>
-But if you want to be able to sneak onto enemies from behind, or have more complex objects that look different from different sides such as a chair or a tree that doesn't always look the same from each side, some better 3D illusion is needed. A raycaster cannot render such objects in true 3D, but we can step up things by rendering it differently when looked at from different angles. A typical amount of angles to support is 8 different angles. The object now needs 8 textures, 1 for 8 possible directions. If you design the object in a 3D program, you can save renderings from 8 angles with it. Or use good pixel art skills to draw an object seen from 8 angles.
+但如果你想从背后偷袭敌人，或者需要更复杂的物体（如椅子或树，从不同方向看起来不同），就需要更好的 3D 视觉效果。光线投射器无法以真正的 3D 方式渲染这类物体，但我们可以通过在不同角度渲染不同外观来提升效果。通常支持 8 个不同角度。此时物体需要 8 张纹理，对应 8 个可能的方向。如果你在 3D 软件中设计物体，可以从 8 个角度保存渲染图；或者用熟练的像素画技巧，手绘从 8 个角度看到的物体。
 <p/>
-Then when rendering the sprite, you must choose which of the 8 angles to draw. This depends on the location of the player versus the location of the object in the 2D map. Calculate the differences dx and dy between player x,y coordinate and object x,y coordinate. Then take the atan2 of dx and dy to get the angle. Then round it to the nearest of the 8 supported angles, that is the index of the texture to choose.
+在渲染精灵时，必须选择绘制哪个角度的图像。这取决于玩家在 2D 地图中的位置与物体位置的关系。计算玩家 x、y 坐标与物体 x、y 坐标之间的差值 dx 和 dy，然后对 dx 和 dy 取 atan2 得到角度，再将其四舍五入到最近的 8 个支持角度之一，即为要选择的纹理索引。
 
-<h2><a name="Thin" id="Thin"></a>Thin Walls</h2>
+<h2><a name="Thin" id="Thin"></a>薄墙</h2>
 
-So far, the raycasting engine has focused on thick, square shaped walls filling up an entire cell of the 2D top down grid. For example here are three such walls as seen from above:
+到目前为止，光线投射引擎一直专注于厚实的正方形墙体，这些墙体占据 2D 俯视网格的整个单元格。例如，以下是从上方看到的三面这样的墙：
 <p/>
 <pre>
 +------+------+------+
@@ -97,7 +96,7 @@ So far, the raycasting engine has focused on thick, square shaped walls filling 
 +------+------+------+
 </pre>
 <p/>
-It is possible to make other shapes than a square, such as a thin wall halfway between the squares, such as the middle wall here:
+除正方形外，还可以制作其他形状，例如位于正方形之间中间位置的薄墙，如下图中间那面墙：
 <p/>
 <pre>
 +------+      +------+
@@ -107,7 +106,7 @@ It is possible to make other shapes than a square, such as a thin wall halfway b
 +------+      +------+
 </pre>
 
-Again, that was rendered from above, from first person view of that thin wall would look something like this:
+同样，上图是从上方渲染的，从第一人称视角看这面薄墙大概是这样的：
 
 <pre>
  _______      _______
@@ -118,7 +117,7 @@ Again, that was rendered from above, from first person view of that thin wall wo
 |______|/    \|______|
 </pre>
 
-And if there were a free-standing thin wall, without the two thick walls next to it, it could look like this from an angle (with some distant walls === to complete the picture):
+如果是一面独立的薄墙，旁边没有两面厚墙，从某个角度看可能是这样的（用一些远处的墙 === 来补全画面）：
 
 <pre>
       /|
@@ -132,7 +131,7 @@ And if there were a free-standing thin wall, without the two thick walls next to
       \|
 </pre>
 
-Which is quite different than how a free-standing thick square wall look from first person:
+这与从第一人称视角看独立的厚方形墙有很大不同：
 
 <pre>
    /|-._
@@ -147,11 +146,11 @@ Which is quite different than how a free-standing thick square wall look from fi
 </pre>
 
 <p/>
-How to do it: Raycasting is 2D math, where a ray from the camera intersects a 2D shape, such as the square walls from the previous tutorials. While for the square walls we were doing such 2D intersection between the ray and the 4 sides of the square, now instead calculate only one intersection with a line segment halfway inside the square. In a sense it's simpler because it's only 1 instead of 4 line segments. There are two types to take into account: those in east-west direction, and those in north-south direction.
+实现方法：光线投射是 2D 数学，摄像机发出的光线与 2D 形状相交，例如前几篇教程中的方形墙。对于方形墙，我们计算光线与正方形 4 条边的 2D 交点；而现在，改为只计算与正方形内部中间位置的一条线段的交点。从某种意义上说，这更简单，因为只有 1 条线段而不是 4 条。需要考虑两种类型：东西方向的和南北方向的。
 <p/>
-With tiles like this, either the ray will hit the thin wall inside, or it will not and go past it. If the ray does not hit the thin wall, then we don't do anything with this tile and continue the ray using DDA steps to the next tile.
+对于这类格子，光线要么会击中内部的薄墙，要么不会并继续穿过。如果光线没有击中薄墙，则对该格子不做任何处理，继续使用 DDA 步进到下一个格子。
 <p/>
-The thin wall doesn't have to be in the center, you can make other variants, such as shifted at other positions than the center:
+薄墙不必在中间，你可以制作其他变体，例如偏移到非中心的其他位置：
 <p/>
 <pre>
 +------+      +------+
@@ -168,17 +167,17 @@ The thin wall doesn't have to be in the center, you can make other variants, suc
 </pre>
 
 
-<h2><a name="Doors" id="Doors"></a>Doors</h2>
+<h2><a name="Doors" id="Doors"></a>门</h2>
 
-Doors can be done similarly as the thin wall. However, this time we also want to render the sides of the door (optionally), and have the ability for open/closing animation. Rather than a single line segment - or | like the thin walls, now we have a H shape, where the two vertical bars of the H represent the two sides of the door.
+门的实现方式与薄墙类似。不过，这次我们还希望渲染门的侧面（可选），并支持开关动画。与薄墙的单条线段（- 或 |）不同，现在我们有一个 H 形，H 的两条竖线代表门的两侧。
 <p/>
-For the opening/closing animation, a timer is needed. A simple way, is to have an extra 2D map, containing a floating point timer for every single cell, and yet another map containing an integer with possible codes 0 (closed), 1 (opening), 2 (open), 3 (closing). Only those for doors will actually be used of course, this just makes it easy to address. A much more optimized game like Wolfenstein 3D did not work like that but had, as far as I know, 64 timers with individual doors pointing to them, and so didn't support more than 64 doors in the whole map.
+开关动画需要一个计时器。一种简单的方法是额外维护一张 2D 地图，为每个单元格存储一个浮点计时器，再用另一张地图存储整数状态码，可能的值为 0（关闭）、1（正在打开）、2（打开）、3（正在关闭）。当然，只有门的格子才会真正用到这些数据，这样做只是便于寻址。像《德军总部 3D》这样高度优化的游戏并非如此工作，据我所知，它有 64 个计时器，每扇门指向其中一个，因此整张地图最多只支持 64 扇门。
 <p/>
-Then read a key such as space to detect player opening a door. Calculate if the square in front of the player is a door and its coordinates. Then activate its timer: update the special integer code to become 1 (opening) if it was closed, or 3 (closing) if it was open. The floating point timer value can be 0 (closed), 1 (fully open), or anything in between (e.g. 0.5 means it's halfway open). But don't update this one yet when the player presses space.
+然后监听空格键等按键，检测玩家是否在开门。计算玩家前方的格子是否是门及其坐标。然后激活其计时器：若门处于关闭状态则将特殊整数码更新为 1（正在打开），若处于打开状态则更新为 3（正在关闭）。浮点计时器的值可以为 0（关闭）、1（完全打开），或介于两者之间（例如 0.5 表示门开了一半）。但玩家按下空格键时不要立即更新该值。
 <p/>
-Then every frame, go through all the tiles, and for every tile that is a door and has special integer code 1 (opening) or 3 (closing), update the floating point value: calculate the time in seconds between this and last frame. Based on the time difference, add (if opening) or subtract (if closing) a small value from the floating point value. If smaller than 0, cap at 0 and set special code to 0 (closed). If larger than 1, cap at 1 and set special code to 2 (open).
+然后每帧遍历所有格子，对于每个是门且特殊整数码为 1（正在打开）或 3（正在关闭）的格子，更新浮点值：计算本帧与上一帧之间的时间差（秒）。根据时间差，对浮点值加上（若正在打开）或减去（若正在关闭）一个小量。若小于 0，则截断为 0 并将特殊码设为 0（关闭）；若大于 1，则截断为 1 并将特殊码设为 2（打开）。
 <p/>
-Finally, for drawing the door, use the timer value to determine line segment length, which is 1.0 - timer. For example if the timer is 0.5, the situation looks like this:
+最后，绘制门时，用计时器值确定线段长度，即 1.0 - timer。例如，若计时器为 0.5，情形如下：
 <p/>
 <pre>
 +------+      +------+
@@ -189,34 +188,34 @@ Finally, for drawing the door, use the timer value to determine line segment len
 </pre>
 
 <p/>
-Intersect with this dynamically smaller line segment (using the timer for its length), and also subtract the timer value from the texture X- coordinate so that the texture itself slides too.
+与这条动态缩短的线段求交（用计时器值确定其长度），同时从纹理 X 坐标中减去计时器值，使纹理本身也随之滑动。
 
 
-<h2><a name="Secrets" id="Secrets"></a>Secret Push Walls</h2>
+<h2><a name="Secrets" id="Secrets"></a>秘密推墙</h2>
 
-Secret push walls, as seen in Wolfenstein 3D, also move, similarly to doors. Except this time we are not moving a thin wall and its texture left or right, instead we are moving an entire block. We can reuse the same timer here. And, just like in Wolfenstein 3D, we are constrained to rendering something inside of the current grid square, so the secret cannot truly move out of the box, we have to fake it by moving only the visible sides of the wall.
+《德军总部 3D》中的秘密推墙也会移动，与门类似。不同的是，这次我们移动的不是薄墙及其纹理向左或向右滑动，而是移动整个方块。这里可以复用相同的计时器。而且，就像在《德军总部 3D》中一样，我们被限制在当前网格方块内渲染内容，因此秘密墙无法真正移出方块，只能通过移动墙的可见面来模拟这一效果。
 <p/>
-To understand how the 2D square walls from the previous tuturials are truly drawn, this here shows the reality, in top down view (not first person):
+为了理解前几篇教程中的 2D 方形墙是如何真正绘制的，以下从俯视角度（而非第一人称）展示其实际情况：
 
 <pre>
-Intended shape:
+预期形状：
 +------+
 |      |
 |      |
 |      |
 +------+
 
-Actual shape:
+实际形状：
        +
        |
        |
        |
 +------+
 
-         * we stand here
+         * 我们站在这里
 </pre>
 
-As you can see, we only see the two sides of the square that are on our side, the back ones don't exist. The reason I show this because it helps understand how Wolfenstein 3D "cheats" for drawing the secrets. It goes something like this if you have a free-standing secret rather than one properly put between other walls in Wolfenstein 3D (except it's possibly even glitchier IIRC):
+如你所见，我们只能看到正方形朝向我们一侧的两条边，背面的边并不存在。我展示这个是因为它有助于理解《德军总部 3D》在绘制秘密墙时如何"作弊"。如果秘密墙是独立放置的，而不是正确地夹在其他墙之间，在《德军总部 3D》中大概是这样的（实际上可能更有问题，如我没记错的话）：
 
 
 
@@ -229,7 +228,7 @@ t=0s
        |
 +------+
 
-         * we stand here
+         * 我们站在这里
 
 t=0.5s
 
@@ -239,7 +238,7 @@ t=0.5s
 +-------
      |
 
-         * we stand here
+         * 我们站在这里
 t=1s
 
    +
@@ -248,7 +247,7 @@ t=1s
    |
    |
 
-         * we stand here
+         * 我们站在这里
 t=1.5s
 
   +
@@ -257,7 +256,7 @@ t=1.5s
   |
   |
 
-         * we stand here
+         * 我们站在这里
 t=2s
 
 +-------
@@ -266,12 +265,12 @@ t=2s
 |
 |
 
-         * we stand here
+         * 我们站在这里
 
 
 </pre>
 
-And that is why a secret should be put between two other walls. The drawing below shows what the illusion above then looks like for us, with the back walls removed again, as only the front is what we see (shown in top down view, not first person):
+这就是为什么秘密墙应该放在另外两面墙之间。下图展示了上述视觉效果在我们眼中的样子，背面的墙再次被移除，因为我们只能看到正面（以俯视角度展示，而非第一人称）：
 
 <pre>
 
@@ -282,7 +281,7 @@ t=0s
        |      |
 +------+------+------+
 
-          * we stand here
+          * 我们站在这里
 
 t=0.5s
 
@@ -291,7 +290,7 @@ t=0.5s
        |------|
 +------+      +------+
 
-          * we stand here
+          * 我们站在这里
 
 t=1s
 
@@ -300,7 +299,7 @@ t=1s
        |      |
 +------+      +------+
 
-          * we stand here
+          * 我们站在这里
 
 t=1.5s
 
@@ -309,7 +308,7 @@ t=1.5s
        |      |
 +------+      +------+
 
-          * we stand here
+          * 我们站在这里
 
 t=2s
 
@@ -319,20 +318,20 @@ t=2s
        |      |
 +------+      +------+
 
-          * we stand here
+          * 我们站在这里
 </pre>
 
-Now it looks good. We will do something similar to Wolfenstein 3D, except we will draw only 1 thin wall instead of 2 to avoid seeing a wrong one. So we still need to ensure to put the secret between other walls, if we don't, then when the player activates the secret it will look as if our solid square suddenly turned into a moving thin wall (you can fix that too if you want, by rendering a solid block that becomes thinner on this tile and in addition rendering a matching solid block becoming thicker on the next tile, this will be a bit more work and some more messing with timers and special codes).
+现在看起来不错了。我们将做一些类似于《德军总部 3D》的事情，只是为了避免看到错误的墙，我们只绘制 1 面薄墙而不是 2 面。因此，我们仍然需要确保将秘密墙放在其他墙之间；如果不这样做，当玩家激活秘密墙时，看起来就像我们的实心方块突然变成了一面移动的薄墙（如果你愿意，也可以修复这个问题：在当前格子渲染一个逐渐变薄的实心方块，同时在下一个格子渲染一个逐渐变厚的匹配实心方块，这需要多一些工作，以及更多地处理计时器和特殊码）。
 <p/>
-To implement it: you can reuse the same timer buffer and special code buffer as from the doors. Put some special value like 4 (0-3 were already for doors) in this buffer to indicate a secret wall. When the player presses space in front of the secret wall, it becomes a moving secret wall, in 4 possible directions depending on from which side the player pushed. So give e.g. special codes 5-8 for that. When it is moving, similar as for the door, update the timer every frame, and use that timer to give the correct 2D intersection coordinates to a thin line segment. Now it does't move sideways but backwards. Depending on if the special code is 5, 6, 7 or 8, draw one of 4 possible thin walls, from North, East, West or South side.
+实现方法：可以复用门所用的计时器缓冲区和特殊码缓冲区。在缓冲区中放入特殊值（如 4，0-3 已用于门）来表示秘密墙。当玩家在秘密墙前按下空格键时，它变为正在移动的秘密墙，根据玩家从哪一侧推动，可以向 4 个方向移动。因此，给这 4 种情况分配特殊码 5-8。当秘密墙移动时，与门类似，每帧更新计时器，并用计时器为薄线段提供正确的 2D 交点坐标。此时它不是向侧面移动，而是向后移动。根据特殊码是 5、6、7 还是 8，分别从北、东、西、南侧绘制 4 种可能的薄墙之一。
 <p/>
-A secret has to move across multiple walls, e.g. 2, otherwise it will not allow the player to pass. We could make the secret keep moving forever until it hits a fixed wall. How to do this: Once the timer of the secret on this tile reached the end, clear this tile, remove its wall, it becomes empty space. If the next tile (using the correct one given our distance) is free, turn that tile into a secret instead. Set its special code to the same one we had here, 5-8, and begin its timer. And so on...
+秘密墙必须移动跨越多个格子（例如 2 个），否则玩家无法通过。我们可以让秘密墙一直移动，直到撞上固定的墙为止。实现方法：一旦当前格子上秘密墙的计时器到达终点，清除该格子，移除其墙体，使其成为空白空间。如果下一个格子（根据我们的方向选取正确的那个）是空的，则将该格子变为秘密墙，将其特殊码设置为与之前相同的值（5-8），并启动其计时器。如此循环……
 <p/>
-<h2><a name="Shapes" id="Shapes"></a>Other Wall Shapes</h2>
+<h2><a name="Shapes" id="Shapes"></a>其他墙体形状</h2>
 <p/>
-If you really dig the 2D intersection math, you can also make other wall shapes. All these shapes are shown top-down here, while in the game you see them from first person perspective from the side. All drawings show two regular square grid walls to show the grid, with the special shape in the middle.
+如果你真的喜欢 2D 求交数学，还可以制作其他墙体形状。以下所有形状均以俯视图展示，而在游戏中你是从侧面以第一人称视角看到它们的。所有图示都用两面普通方形网格墙来显示网格，特殊形状位于中间。
 <p/>
-<h3>Idea 1: half-sized or smaller walls.</h3>
+<h3>想法 1：半尺寸或更小的墙。</h3>
 <p/>
 <pre>
 +------+------+------+
@@ -348,9 +347,9 @@ If you really dig the 2D intersection math, you can also make other wall shapes.
 +------+      +------+
 </pre>
 
-These can be implemented in a way similar as the big ones, except the intersection happens with smaller sides. If the ray does not hit the small part, it continues to the next tile in the DDA.
+这些可以用与大墙类似的方式实现，只是求交发生在更小的边上。如果光线没有击中小的部分，则在 DDA 中继续到下一个格子。
 
-<h3>Idea 2: fence from vertical bars.</h3>
+<h3>想法 2：由竖条组成的栅栏。</h3>
 <p/>
 <pre>
 +------+      +------+
@@ -360,7 +359,7 @@ These can be implemented in a way similar as the big ones, except the intersecti
 +------+      +------+
 </pre>
 <p/>
-This is similar to the thin wall, except we have not 1 big line segment, but multiple small ones. Do the intersection with each of the small ones individually. If none is hit, then the ray continues throug the fence to a further wall in the distance. Make a matching texture for this, and you have a neat type of see-through wall that doesn't need a Z-buffer. A somewhat similar idea is a slit:
+这与薄墙类似，只是我们不是 1 条大线段，而是多条小线段。分别对每条小线段进行求交。如果一条都没有击中，光线就穿过栅栏继续到远处的墙。为此制作一张匹配的纹理，你就得到了一种不需要 Z 缓冲的整洁透视墙类型。一个有些类似的想法是细缝：
 <p/>
 <pre>
 +------+      +------+
@@ -370,7 +369,7 @@ This is similar to the thin wall, except we have not 1 big line segment, but mul
 +------+      +------+
 </pre>
 <p/>
-<h3>Idea 3: 45-degree angled walls.</h3>
+<h3>想法 3：45 度斜墙。</h3>
 <p/>
 <pre>
 +------+      +------+
@@ -392,9 +391,9 @@ This is similar to the thin wall, except we have not 1 big line segment, but mul
 +------+      +------+
 </pre>
 <p/>
-Such wall allows for non-orthogonal walls. There is 1 extra complication here: so far we always had only north-south and east-west walls, and we gave two different brightnesses to distinguish the two. We now need to choose two more brightness variants for those two possible directions of 45-degree walls. When rendering this texture, apply some in-between shading.
+这种墙允许非正交墙的存在。这里有 1 个额外的复杂性：到目前为止，我们只有南北方向和东西方向的墙，并用两种不同的亮度来区分它们。现在，对于 45 度墙的两个可能方向，我们需要再选择两种亮度变体。渲染该纹理时，应用一些中间值的着色。
 <p/>
-<h3>Idea 4: round pillars</h3>
+<h3>想法 4：圆形柱子</h3>
 <p/>
 <pre>
 +------+ .--. +------+
@@ -416,11 +415,11 @@ Such wall allows for non-orthogonal walls. There is 1 extra complication here: s
 +------+-'    +------+
 </pre>
 <p/>
-For this, a 2D intersection between line and circle (or circle segment for the 1 quarter example above) is done, the formula can be found e.g. on Wikipedia. Then, to choose the texture coordinate, calculate the angle between the intersection point and the center of the circle using atan2. For the shading, even more shades than for the 45-degree slanted walls are needed now, the more the smoother the circle effect looks. Remember, to make a color darker, multiple its R, G and B coefficients with some floating point number in range 0.0-1.0, the closer to 0 the darker.
+为此，需要进行直线与圆（或圆弧，如上面四分之一圆的示例）的 2D 求交，公式可以在维基百科等地方找到。然后，为了选择纹理坐标，用 atan2 计算交点与圆心之间的角度。对于着色，现在需要比 45 度斜墙更多的亮度级别，级别越多，圆形效果看起来越平滑。记住，要使颜色变暗，将其 R、G、B 系数乘以 0.0-1.0 范围内的某个浮点数，越接近 0 越暗。
 
-<h2><a name="Zbuffer" id="Zbuffer"></a>Transparent Walls, Z buffering</h2>
+<h2><a name="Zbuffer" id="Zbuffer"></a>透明墙与 Z 缓冲</h2>
 
-Similar to sprite textures from Raycasting III, transparent walls can have such textures too, best done for thin walls, as with thick walls it would look weird because we don't render their insides, which a transparent texture would reveal.
+与光线投射 III 中的精灵纹理类似，透明墙也可以拥有这类纹理，最适合用于薄墙，因为厚墙的内部不会被渲染，而透明纹理会将其暴露出来，看起来会很奇怪。
 
 <p/>
 <pre>
@@ -431,99 +430,99 @@ Similar to sprite textures from Raycasting III, transparent walls can have such 
 +------+      +------+
 </pre>
 <p/>
-For this, while casting the ray, we will hit this transparent wall. Rememember its distance from the player. Then continue casting the ray to next tiles as usual. If we encounter more thin walls, remember those as well. Finally stop when hitting a regular non-transparent wall, as usual. Then draw the stripes we remembered in reverse order: first the regular wall, then the earlier ones in reverse order. This is very similar to the painter's technique used for the sprites in Raycasting III, where they were sorted them from farthest to closest.
+为此，在投射光线时，我们会击中这面透明墙。记住它与玩家的距离。然后像往常一样继续将光线投射到下一个格子。如果遇到更多薄墙，也一并记住。最后，像往常一样在击中普通非透明墙时停止。然后以相反的顺序绘制我们记住的条带：先绘制普通墙，再以相反顺序绘制之前的那些。这与光线投射 III 中用于精灵的画家算法非常相似，那里是从最远到最近排序的。
 <p/>
-To take into account sprites that can be in-between transparent walls, we need to use the ZBuffer from raycasting III as well. For the sorting, though, a merge is needed: sprites were sorted beforehand, but the transparent walls are only known for this particular stripe we are raycasting. We already have them in the correct order though (in reverse order as mentioned),. So in O(N) time, you can merge the transparent walls in between the sprites. Search the internet for a merge algorithm if desired.
+为了考虑可能位于透明墙之间的精灵，我们还需要使用光线投射 III 中的 Z 缓冲。但对于排序，需要进行合并：精灵是事先排好序的，但透明墙只对当前正在投射的这条特定条带才知道。不过我们已经以正确的顺序拥有它们了（如前所述，以相反顺序）。因此，可以在 O(N) 时间内将透明墙合并到精灵之间。如有需要，可以在网上搜索合并算法。
 <p/>
-To circumvent the sorting altogether, both the sprites case and the thin wall case can also use a 2D ZBuffer instead, that is simpler, just uses a bit more memory.
+为了完全避免排序，精灵和薄墙的情况也可以改用 2D Z 缓冲，这更简单，只是多用一点内存。
 <p/>
-So instead of having storage for each vertical sprite in a 1D buffer, store a distance for every pixel of the screen in a 2D buffer. Whenever drawing a non-transparent pixel of a sprite, transparent thin wall, as well as any regular wall, store the draw distance in the Z buffer. Only draw if the distance is not bigger than what is already stored in the Z buffer, that means a closer object was already drawn at this pixel. Then walls, transparent walls and sprites can be drawn in any order you want, the closest ones will always be the final ones written to the pixel.
+具体做法：不再为每个垂直精灵在 1D 缓冲区中存储数据，而是在 2D 缓冲区中为屏幕的每个像素存储一个距离。每当绘制精灵的非透明像素、透明薄墙以及任何普通墙时，将绘制距离存入 Z 缓冲区。只有当距离不大于 Z 缓冲区中已存储的值时才进行绘制，这意味着该像素处已经绘制了更近的物体。这样，墙、透明墙和精灵可以以任意顺序绘制，最近的那些始终是最后写入像素的。
 <p/>
-Don't forget at the begnning of every frame to clear the Z buffer again (set all values to a very high or infinite value).
+不要忘记在每帧开始时清空 Z 缓冲区（将所有值设为非常大或无穷大的值）。
 <p/>
-The 2D Z buffer is not easily compatible with the semi-translucency however, so if you'd like that, go for the sorting scheme mentioned above. You can still do something like it by remembering multiple distances and the sprite or wall it belonged too and then rendering in correct order per pixel or stripe at the end, it's a bit more complex and slower, you could remember some limited amount (e.g. 4 to see up to through 4 translucent things), or make it unbounded (probably slower).
+然而，2D Z 缓冲与半透明效果并不容易兼容，所以如果你需要半透明，请使用上述排序方案。你仍然可以通过记住多个距离及其所属的精灵或墙，然后在最后按每像素或每条带的正确顺序渲染来实现类似效果，这稍微复杂一些，也更慢，你可以记住有限数量（例如 4 个，以便透过最多 4 个半透明物体看），或者不设上限（可能更慢）。
 <p/>
-If there are no sprites, we could also support transparent walls without any Z buffer, since while ray casting we go through them in inverse order, then just invert the order at the end and draw them one by one. However, that is not compatible with having sprites, as there may still be sprites in between there. So the most universal way is to use a ZBuffer for everything.
+如果没有精灵，我们也可以在没有 Z 缓冲的情况下支持透明墙，因为在光线投射时我们以逆序穿过它们，然后在最后反转顺序逐一绘制。但是，这与有精灵的情况不兼容，因为那里面可能还有精灵。所以最通用的方法是对所有内容都使用 Z 缓冲。
 
-<h2><a name="Animated" id="Animated"></a>Animated Textures</h2>
+<h2><a name="Animated" id="Animated"></a>动态纹理</h2>
 
-Animated textures are time-dependent. If you have multiple frames for 1 texture, then determine which frame to choose based on time. Use the time in (milli)seconds, not the amount of frames rendered, to ensure it's consistent no matter what frame rate.
+动态纹理是时间相关的。如果一张纹理有多帧，则根据时间决定选择哪一帧。使用（毫）秒为单位的时间，而非已渲染的帧数，以确保无论帧率如何都保持一致。
 <p/>
-A different way to animate is to have only 1 texture, but move it around. It could for example be moving in a constant direction, or wave around in X and/or Y direction using sine functions. This is nice for a water or lava texture on the floor. Here, then, we use time to choose the relative coordinates of the texture, rather than the texture itself. That is, when hitting the wall/floor/ceiling and calculating the texture coordinate, after that add the dynamic value to it, and use modulo to make the texture tile (for the modulo, you cannot easily use the % operator or fmod function of C/C++ as they behave wrongly for our purpose on negative numbers, so when using integers, mask with texture size - 1, assuming it's a power of two, or better looking, using floating point numbers to allow pixels themselves to move smoothly, add texture size if smaller than 0, or subtract texture size if higher than texture size), then render.
+另一种动画方式是只有 1 张纹理，但让它移动。例如，可以沿固定方向移动，或使用正弦函数在 X 和/或 Y 方向上波动。这对于地板上的水面或熔岩纹理效果很好。这里，我们用时间来选择纹理的相对坐标，而不是纹理本身。也就是说，当光线击中墙/地板/天花板并计算纹理坐标时，在此之后加上动态值，并使用取模运算使纹理平铺（对于取模，在 C/C++ 中不能直接使用 % 运算符或 fmod 函数，因为它们对负数的处理不符合我们的需求；使用整数时，与纹理尺寸 - 1 进行按位与运算（假设尺寸是 2 的幂）；或者，为了更好的效果，使用浮点数让像素本身平滑移动，若小于 0 则加上纹理尺寸，若大于纹理尺寸则减去纹理尺寸），然后渲染。
 
-<h2><a name="Fog" id="Fog"></a>Fog</h2>
+<h2><a name="Fog" id="Fog"></a>雾效</h2>
 
-Fog is relatively easy to add and looks nice: mix the pixel colors being drawn with a fog color. The bigger the distance of the stripe, the more the fog color dominates. Use a weighed average to mix the colors. E.g. to have 75% fog, then there is 25% color, so use (1 - 0.75) * color_r + 0.75 * fog_r for red, and idem for green and blue. The further away the stripe, the bigger the fog percentage and smaller the color percentage.
+雾效相对容易添加，效果也不错：将正在绘制的像素颜色与雾的颜色混合。条带距离越远，雾的颜色越占主导。使用加权平均来混合颜色。例如，要实现 75% 的雾，则颜色占 25%，红色通道使用 (1 - 0.75) * color_r + 0.75 * fog_r，绿色和蓝色同理。条带越远，雾的比例越大，颜色的比例越小。
 <p/>
-Black as fog color works for emulating night with limited viewing distance, white or grey looks like daylight fog, green can give a poison cloud look, red a firey look, etc... You can also make the fog local by storing amounts of fog in a 2D map and only rendering it when the player is on such fog tiles. This is of course not true volumetric fog, that is, the player can look right through a fog location when standing on a non-fog tile, but it already gives nice local effect and the issue can be hidden by having the fog in local rooms obscured by hallways in between.
+黑色雾适合模拟能见度有限的夜晚，白色或灰色看起来像白天的雾，绿色可以呈现毒云效果，红色则有火焰感，等等。你也可以通过在 2D 地图中存储雾的浓度，并仅在玩家位于此类雾格时才渲染，来实现局部雾效。当然，这不是真正的体积雾，也就是说，当玩家站在非雾格上时，可以直接看穿雾的位置，但它已经能产生不错的局部效果，而且这个问题可以通过在局部房间之间设置走廊来遮挡雾效来掩盖。
 
-<h2><a name="Enemies" id="Enemies"></a>Enemies</h2>
+<h2><a name="Enemies" id="Enemies"></a>敌人</h2>
 
-To make a true raycasting game, enemies or NPCs are needed. These are rendered very similarly to sprites, but they can move around freely. So unlike sprites, they are best not stored as a 2D grid map, but as their own individual entities. They must also be able to move smoothly, so are able to stand on any location, not just in the exact centers of grid tiles, so they need floating point coordinates. So other than being at 0.5 positions, rendering them is otherwise exactly the same as for sprites, with the same Z buffer and sorting principles (or no sorting if using the simpler 2D zbuffer), they just are gotten from a different list than the regular sprites, the list of enemies.
+要制作一个真正的光线投射游戏，需要敌人或 NPC。它们的渲染方式与精灵非常相似，但可以自由移动。因此，与精灵不同，它们最好不要存储为 2D 网格地图，而是作为各自独立的实体。它们还必须能够平滑移动，因此可以站在任何位置，而不仅仅是网格格子的正中心，所以它们需要浮点坐标。除了不必处于 0.5 位置之外，渲染它们与渲染精灵完全相同，使用相同的 Z 缓冲和排序原则（如果使用更简单的 2D Z 缓冲则无需排序），只是它们来自与普通精灵不同的列表——敌人列表。
 <p/>
-If you would like to use directional sprites for enemies, then two angles must be taken into account to determine which texture to choose to render: the angle between player and enemy on the 2D map, and, the looking direction of the enemy (note that looking direction of player does not matter).
+如果你想对敌人使用方向精灵，则需要考虑两个角度来确定要渲染哪张纹理：玩家与敌人在 2D 地图上的夹角，以及敌人的朝向（注意玩家的朝向无关紧要）。
 <p/>
-Enemies also need AI that makes them move around, several states (such as waiting, alert, dead, ...), mechanics such as hit points, and so on. This tutorial is about graphics so will not delve into this. It is where the engine starts to be a game rather than a graphics engine though, so it is a very worthy subject to look into. We will still delve a little bit more in gameplay aspects with the next section about weapons.
+敌人还需要 AI 来控制其移动，需要多种状态（如等待、警觉、死亡……），以及生命值等机制。本教程关注图形学，因此不会深入探讨这些内容。不过，这正是引擎从图形引擎变为游戏的地方，是一个非常值得研究的主题。在下一节关于武器的内容中，我们还会稍微深入一些游戏玩法方面的内容。
 <p/>
-Enemies likely need animated textures, such as when walking around, shooting, etc... See the animated texture section for this. Depending on the state of the enemy, different animations and texture sets are chosen.
+敌人可能需要动态纹理，例如行走、射击等时的动画。请参阅动态纹理章节。根据敌人的状态，会选择不同的动画和纹理集。
 <br />
 
-<h2><a name="Weapons" id="Weapons"></a>Weapons</h2>
+<h2><a name="Weapons" id="Weapons"></a>武器</h2>
 
-To further make it like a real game weapons may be desired. There are a few types of weapons possible in a raycasting engine:
+为了让游戏更像真正的游戏，可能需要武器。在光线投射引擎中，有几种可能的武器类型：
 
 <ul>
-<li>Direct-hit weapons</li>
-<li>Projectile weapons</li>
-<li>Melee weapons</li>
+<li>直接命中武器</li>
+<li>投射物武器</li>
+<li>近战武器</li>
 </ul>
 <p/>
-For direct hit weapons, you can reuse the raycasting code to detect if your weapon hits an enemy. To do this, some refactoring of the code from the earlier tutorials is needed: extract out the part of the code that calculates the intersections of a ray from a starting point until it hits a wall (or multiple walls if you support transparent walls). Also extract out the part that calculates if a sprite is in view. When shooting a direct hit weapon, do this raycasting calculation for the center stripe of the screen (as you point the gun at the center), and get the closest thing, wall or sprite, that was hit. If it is a sprite, and that sprite is an enemy, then it gets hit and receives the hit event (so it can lose hit points, have its AI respond to it if needed, ...).
+对于直接命中武器，可以复用光线投射代码来检测武器是否击中敌人。为此，需要对前几篇教程的代码进行一些重构：提取出计算从起点出发的光线与墙壁（如果支持透明墙则是多面墙）相交的代码部分，以及计算精灵是否在视野内的代码部分。射击直接命中武器时，对屏幕中心条带进行光线投射计算（因为你将枪瞄准中心），并获取被击中的最近物体（墙或精灵）。如果是精灵，且该精灵是敌人，则它被击中并接收命中事件（从而可以减少生命值，让 AI 做出响应等）。
 <p/>
-For projectile weapons, shooting the weapon causes a projectile to spawn. Similar to an enemy, this projectile is a sprite, drawn like a sprite, that moves around according to some rules, this time not according to an AI, but a simple movement in a constant direction with some constant speed. At some point it hits something or disappears, so the object list (and if used, sorting) must be updated. If it hits an enemy (which can be detected by having its distance from the enemy smaller than some floating point value), the enemy loses receives the hit event. You can make projectiles that bounce on walls, change direction, guided missiles that track enemies, and so on, too.
+对于投射物武器，射击时会生成一个投射物。与敌人类似，该投射物是一个精灵，像精灵一样绘制，根据某些规则移动，这次不是根据 AI，而是以固定速度沿固定方向简单移动。在某个时刻它击中某物或消失，因此必须更新对象列表（以及如果使用了排序的话）。如果它击中敌人（可以通过检测与敌人的距离是否小于某个浮点值来判断），则敌人接收命中事件。你还可以制作在墙上弹跳、改变方向、追踪敌人的制导导弹等投射物。
 <p/>
-For melee weapons, this can be as simple as calculating how close you are to an object in front of you, that is, for every object, calculates its distance and angle from you, if correct angle (in front of you) and close enough, it's hit. For a longer melee weapon, like a polearm, you may need to use raycasting like for a direct hit weapon instead, or else it might work through walls. This is very much the same, except if the closest distance is too far, it has no effect.
+对于近战武器，可以简单到计算你与前方物体的距离，即对每个物体计算其与你的距离和角度，如果角度正确（在你前方）且足够近，则命中。对于较长的近战武器（如长矛），你可能需要像直接命中武器一样使用光线投射，否则它可能会穿墙攻击。这与直接命中武器基本相同，只是如果最近距离太远，则没有效果。
 <br />
 
-<h2><a name="Mirrors" id="Mirrors"></a>Portals and Mirrors</h2>
+<h2><a name="Mirrors" id="Mirrors"></a>传送门与镜子</h2>
 
-It is possible to create portals that you can see through, by having the ray, when it hits the portal, continue tracing at a different location, the destination of the protal, and then the raytracing continues just as usual from there. To make it functional, when the player walks up to it, the player too can teleport to the destination. The sorting of sprites by distance is no longer relevant here, so make sure to use a 2D Z-buffer now, or store sprite sort orders per portal (probably more complicated than it's worth).
+可以创建可以透过看的传送门：当光线击中传送门时，让其在不同位置（传送门的目的地）继续追踪，然后光线追踪从那里像往常一样继续。为了使其可用，当玩家走近传送门时，玩家也可以传送到目的地。按距离对精灵排序在这里不再适用，因此请确保使用 2D Z 缓冲，或者为每个传送门单独存储精灵排序顺序（可能比它的价值更复杂）。
 <p/>
-Mirrors can be done in a very similar way, here the ray changes X or Y direction depending on which direction the mirror is in.
+镜子可以用非常相似的方式实现，这里光线根据镜子的朝向改变 X 或 Y 方向。
 <p/>
-In both cases, putting a transparent texture in front of it can improve the effect or reduce some visual confusion, such as some borders around the portal or mirror or add some imperfections.
+在两种情况下，在其前面放置一张透明纹理可以改善效果或减少一些视觉混乱，例如在传送门或镜子周围添加一些边框，或增加一些瑕疵感。
 
-<h2><a name="Collision" id="Collision"></a>Collision Detection</h2>
+<h2><a name="Collision" id="Collision"></a>碰撞检测</h2>
 
-The raycasting programs in this tutorial have very primitive collision detection when moving: all it does is check if the spot you move to has a wall or not. If there would be two diagonally adjecent walls touching only by the corner, if you aim your movement just right this could allow moving through the wall at that spot.
+本教程中的光线投射程序在移动时的碰撞检测非常简陋：它所做的只是检查你移动到的位置是否有墙。如果有两面对角相邻、仅在角点接触的墙，只要移动方向恰好对准，就可能穿墙而过。
 <p/>
-A possible solution for this is to use the raycaster itself for collision detection: rather than only check if the destination point of the movement is wall, raycast a line from the player position to the next position. If it reaches the point, the player can move there. If the ray hits a wall before that point, that's the final point where the player movement can end up.
+一个可能的解决方案是使用光线投射器本身进行碰撞检测：不只检查移动目标点是否有墙，而是从玩家位置向下一个位置投射一条光线。如果光线到达了目标点，则玩家可以移动到那里。如果光线在到达目标点之前击中了墙，则那就是玩家移动可以到达的最终位置。
 <p/>
-To avoid awkwardly close to the wall camera views, the player movement is best stopped a bit before the collision point, rather than at the wall itself, so the ray can be extended a bit further to test for distance to wall.
+为了避免摄像机视角过于贴近墙壁，玩家的移动最好在碰撞点稍前停止，而不是在墙体本身处停止，因此光线可以延伸得稍微远一点，以测试与墙的距离。
 
 
-<h2><a name="Raytracing" id="Raytracing"></a>Raytracing</h2>
+<h2><a name="Raytracing" id="Raytracing"></a>光线追踪</h2>
 
-Raytracing is an extension to 2D and 3D of what Raycasting is in 1D and 2D. That is, for raycasting, we cast 1 ray per 1D vertical stripe and do 2D intersection math with objects. In raytracing, instead you cast 1 ray per pixel of the entire 2D screen, and do 3D intersection math with objects.
+光线追踪是光线投射从 1D 到 2D 的扩展在 2D 到 3D 上的延伸。也就是说，光线投射中，我们对每条 1D 垂直条带投射 1 条光线，并与物体进行 2D 求交运算；而在光线追踪中，我们对整个 2D 屏幕的每个像素投射 1 条光线，并与物体进行 3D 求交运算。
 <p/>
-To have a form of the raytracing very similar to the raycasting engine here, you could have a 3D map existing out of voxels, where every voxel is a cube with a texture on the 6 sides. This is very similar to the raycasting square walls with textures on 4 sides. The ray goes through the 3D voxels very similarly to how we go through 2D squares. When a voxel is hit, calculate the 2D coordinate on the side of the cube to get the texture coordinate, then give this pixel the color matching that texture pixel.
+要实现一种与这里的光线投射引擎非常相似的光线追踪形式，可以使用由体素（voxel）组成的 3D 地图，每个体素是一个在 6 个面上都有纹理的正方体。这与有 4 个面纹理的光线投射方形墙非常相似。光线穿越 3D 体素的方式与我们穿越 2D 方格的方式非常相似。当体素被击中时，计算正方体侧面的 2D 坐标以获取纹理坐标，然后为该像素赋予与纹理像素匹配的颜色。
 <p/>
-However, raytracing usually does not use such voxel map at all, but instead there is a list of objects, such as spheres, triangles, etc... Then we have to calculate for each of those objects, whether our ray intersects them. Then for the closest object, calculate the texture coordinate and draw that as our pixel.
+然而，光线追踪通常根本不使用这样的体素地图，而是有一个物体列表，例如球体、三角形等。然后需要对每个物体计算光线是否与其相交，再对最近的物体计算纹理坐标并将其作为我们的像素绘制出来。
 <p/>
-There can be many triangles, for complex polygonal models, and in theory we have to intersect with every single one. To speed things up, we can avoid having to calculate all, by such techniques as dividing the space in big voxels, remember which objects are in which voxel, and only intersect with those, or binary space partitioning, and other techniques. Also, for objects existing out of polygons, have a bounding box, and only calculate individual polygons if the ray goes through the bounding box.
+对于复杂的多边形模型，可能有很多三角形，理论上需要与每一个都求交。为了加速，可以通过以下技术避免计算所有三角形：将空间划分为大体素，记录哪些物体在哪个体素中，只与这些物体求交；或者使用二叉空间分割（BSP）以及其他技术。此外，对于由多边形组成的物体，设置包围盒，只有当光线穿过包围盒时才计算单个多边形。
 <p/>
-For translucency in raytracing, keep the ray going after hitting translucent objects and remember each you encounter. Then render them in reverse order, similar to the translucent sprites from Raycasting III.
+对于光线追踪中的半透明效果，在击中半透明物体后让光线继续前进，并记住遇到的每一个。然后以相反顺序渲染它们，类似于光线投射 III 中的半透明精灵。
 <p/>
-For mirrors and refraction, change the ray direction according to optical formulas as it hits such surfaces.
+对于镜子和折射，根据光学公式在光线击中这类表面时改变光线方向。
 <p/>
-For light sources, after our ray hit an object, then draw a ray from that point to all lights. If the ray is not blocked by something between the starting point and the light, add the color of that light to this point, with brightness depending on distance, and e.g. using shading such as Gouraud shading or Phong shading instead of simple flat shading on polygons for good looking effect.
+对于光源，在光线击中物体后，从该点向所有光源发射一条光线。如果光线没有被起点与光源之间的物体遮挡，则将该光源的颜色加到该点上，亮度取决于距离，并且可以使用 Gouraud 着色或 Phong 着色等着色方法代替简单的多边形平面着色，以获得更好的视觉效果。
 <p/>
-There are much more complex raytracing techniques to support, for example, indirect lighting. We can also raytrace the other way around, starting from light sources rather than from the camera, or start from both and meet in the middle. Look for global illumination and The Rendering Equation.
+还有更复杂的光线追踪技术需要支持，例如间接照明。我们也可以反向追踪，从光源而非摄像机出发，或者从两端同时出发并在中间相遇。可以查阅全局光照和渲染方程相关资料。
 
 <hr />
-Last edited: 2020
+最后编辑：2020 年
 <br /><br />
-Copyright (c) 2004-2020 by Lode Vandevenne. All rights reserved.
+版权所有 (c) 2004-2020 Lode Vandevenne，保留所有权利。
 <script language="javascript" src="colorcode.js"></script>
 </body>
 </html>

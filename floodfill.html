@@ -2,93 +2,52 @@
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-<title>Flood Fill</title>
+<title>泛洪填充</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <meta content="text/html; charset=us-ascii" http-equiv=
 "content-type" />
 <link rel="stylesheet" type="text/css" href="stylesheet.css" />
 </head>
 <body>
-<h1>Lode's Computer Graphics Tutorial</h1>
-<h1>Flood Fill</h1>
-<h2>Table of Contents</h2>
+<h1>Lode 的计算机图形学教程</h1>
+<h1>泛洪填充</h1>
+<h2>目录</h2>
 <ul>
-<li><a href="floodfill.html#Introduction_">Introduction</a></li>
-<li><a href="floodfill.html#Test_Program_">Test Program</a></li>
-<li><a href="floodfill.html#4-Way_Recursive_Method_floodFill4">4-Way Recursive Method (floodFill4)</a></li>
-<li><a href="floodfill.html#8-Way_Recursive_Method_floodFill8">8-Way Recursive Method (floodFill8)</a></li>
-<li><a href="floodfill.html#4-Way_Method_With_Stack">4-Way Method With Stack (floodFill4Stack)</a></li>
-<li><a href="floodfill.html#8-Way_Method_With_Stack">8-Way Method With Stack (floodFill8Stack)</a></li>
-<li><a href="floodfill.html#Recursive_Scanline_Floodfill_Algorithm">Recursive
-Scanline Floodfill Algorithm (floodFillScanline)</a></li>
-<li><a href="floodfill.html#Scanline_Floodfill_Algorithm_With_Stack">Scanline
-Floodfill Algorithm With Stack
-(floodFillScanlineStack)</a><br /></li>
+<li><a href="floodfill.html#Introduction_">简介</a></li>
+<li><a href="floodfill.html#Test_Program_">测试程序</a></li>
+<li><a href="floodfill.html#4-Way_Recursive_Method_floodFill4">4 向递归方法（floodFill4）</a></li>
+<li><a href="floodfill.html#8-Way_Recursive_Method_floodFill8">8 向递归方法（floodFill8）</a></li>
+<li><a href="floodfill.html#4-Way_Method_With_Stack">带栈的 4 向方法（floodFill4Stack）</a></li>
+<li><a href="floodfill.html#8-Way_Method_With_Stack">带栈的 8 向方法（floodFill8Stack）</a></li>
+<li><a href="floodfill.html#Recursive_Scanline_Floodfill_Algorithm">递归扫描线泛洪填充算法（floodFillScanline）</a></li>
+<li><a href="floodfill.html#Scanline_Floodfill_Algorithm_With_Stack">带栈的扫描线泛洪填充算法（floodFillScanlineStack）</a><br /></li>
 </ul>
-<a href="index.html">Back to index</a><br />
+<a href="index.html">返回索引</a><br />
 <h2><a name="Introduction_" id=
-"Introduction_"></a>Introduction<br /></h2>
-The purpose of Flood Fill is to color an entire area of connected
-pixels with the same color. It's the Bucket Tool in many painting
-programs. Here's an example: the original image is on the left.
-Then a floodfill was started inside the large shape, and the
-algorithm gave all pixels inside the shape the new color, leaving
-its borders and the pixels outside intact.<br />
+"Introduction_"></a>简介<br /></h2>
+泛洪填充的目的是将一片相连像素区域全部填充为同一颜色。它就是许多绘图程序中的"油漆桶"工具。下面是一个示例：左侧为原始图像。对大形状内部执行泛洪填充后，算法将形状内所有像素设置为新颜色，而边框及外部像素保持不变。<br />
 <br />
 <img alt="" src="images/floodfill.gif" style=
 "width: 539px; height: 280px;" /><br />
 <br />
-The Flood Fill algorithm is also sometimes called Seed Fill: you
-plant a seed (the pixel where you start), and, recursively, more
-and more seeds are planted around the original seed if those pixels
-have the correct color. Each new seed is responsible for coloring
-the pixel at its position, and testing for new pixels around it
-that have to be colored.<br />
+泛洪填充算法有时也称为种子填充：你种下一粒种子（即起始像素），如果周围像素颜色符合条件，则递归地在原始种子周围不断种下更多种子。每粒新种子负责为其所在位置的像素着色，并检测周围需要着色的新像素。<br />
 <br />
-There exist many different floodfill algorithm, 3 of them are
-discussed here (4-way, 8-way and scanline based), and two versions of each: a
-version with recursion, and a version with a stack. All these algorithms are
-some form of depth first search (but the scanline based ones are more specialized).<br />
+泛洪填充算法有很多种，本文讨论其中 3 种（4 向、8 向和基于扫描线），每种各有两个版本：递归版本和使用栈的版本。所有这些算法都是某种形式的深度优先搜索（但基于扫描线的版本更为专用）。<br />
 <br />
-There also exists the so called Boundary Fill, this is very similar
-to Flood Fill, but will color an area with pixels of a certain
-color as boundary. The algorithms for boundary fill are very
-similar apart from the conditions in the tests for planting new
-seeds.<br />
+还有一种称为边界填充的算法，它与泛洪填充非常相似，但会以特定颜色的像素作为边界来填充区域。边界填充的算法与泛洪填充非常类似，区别仅在于种植新种子时的判断条件。<br />
 <br />
-You can download the full source code of this tutorial <a href=
-"files/floodfill.cpp">here</a>.<br />
-<h2><a name="Test_Program_" id="Test_Program_"></a>Test
-Program<br /></h2>
-To test the different flood fill algorithms, we need a test program
-that allows you to create shapes to fill. The test program is a
-small version of the painting program described in the "Painting"
-tutorial. It also includes a benchmark that allows you to compare
-two different floodfill algorithms and shows the time in
-milliseconds it took each of them to fill an area 50 times.<br />
+你可以在<a href=
+"files/floodfill.cpp">此处</a>下载本教程的完整源代码。<br />
+<h2><a name="Test_Program_" id="Test_Program_"></a>测试程序<br /></h2>
+为了测试不同的泛洪填充算法，我们需要一个可以绘制形状并进行填充的测试程序。该测试程序是"绘图"教程中所述绘图程序的简化版。它还包含一个基准测试，可以对比两种不同的泛洪填充算法，并显示各自填充某区域 50 次所花费的毫秒数。<br />
 <br />
-Because floodfilling requires reading pixels, we use a buffer to
-contain the pixels (called screenBuffer[h][w]) instead of reading
-and writing pixels directly to the screen. All colors used here are
-integer values, instead of using the ColorRGB struct.<br />
+由于泛洪填充需要读取像素，我们使用一个缓冲区（称为 screenBuffer[h][w]）来存储像素，而不是直接对屏幕进行读写操作。这里所有颜色均使用整数值表示，而不使用 ColorRGB 结构体。<br />
 <br />
-The code given here includes the full test program except the
-floodfill algorithms (which are explained in the rest of this
-tutorial) and the paint_drawLine function, which is an exact copy
-of the drawLine function from QuickCG.cpp but draws to screenBuffer
-instead of directly to the screen. The full source, including all
-these functions, can be downloaded here: <a href="files/floodfill.cpp">floodfill.cpp</a>.<br />
+此处给出的代码包含完整的测试程序，但不含泛洪填充算法（将在本教程后续部分说明）以及 paint_drawLine 函数——该函数与 QuickCG.cpp 中的 drawLine 函数完全相同，只是将输出目标改为 screenBuffer 而非直接写入屏幕。包含所有这些函数的完整源代码可在此处下载：<a href="files/floodfill.cpp">floodfill.cpp</a>。<br />
 <br />
-Here are the initializations of all the floodFill functions we'll
-be making, the stack used by some of the functions, the auxiliary
-functions, and the graphics buffer.<br />
+以下是我们将要实现的所有 floodFill 函数的声明、部分函数使用的栈、辅助函数以及图形缓冲区的初始化代码。<br />
 <br />
-The size of the stack defined here is pretty big (166777216), you
-can easily make it much smaller, the only case where it has to be
-this big is when you want to try the worse of the floodfill
-functions on a very large screen. The best floodfill algorithm
-doesn't require a big stack at all, unless you're working at huge
-resolutions.<br />
+此处定义的栈容量相当大（166777216），你可以轻松将其调小。只有在大分辨率屏幕上测试性能较差的泛洪填充函数时，才需要这么大的栈。最优的泛洪填充算法根本不需要很大的栈，除非你在极高分辨率下工作。<br />
 <br />
 <center>
 <table class="codetable">
@@ -122,26 +81,13 @@ std::vector<Uint32> screenBuffer(screenH * screenW);</span></pre>
 </table>
 </center>
 <br />
-Here's the main function of the test program, it can do 3 different
-mouse actions:
+以下是测试程序的主函数，它支持 3 种不同的鼠标操作：
 <ul>
-<li>If you press the left mouse button, it draws a line between the
-current and previous position, so that you can draw shapes, as
-explained in the "Painting" tutorial. This allows you to make areas
-to fill.</li>
-<li>If you press the right mouse button, it'll floodFill at that
-position with a color defined by the coordinates of that position.
-This allows you to floodfill with many different colors without
-needing a color selector. You can change the floodfill function
-used to any of the other 5 functions.</li>
-<li>If you press both mouse buttons at the same time, the screen is
-cleared to white again.</li>
+<li>按下鼠标左键时，在当前位置与上一位置之间绘制一条直线，从而绘制形状，如"绘图"教程中所述。这样你就可以创建待填充的区域。</li>
+<li>按下鼠标右键时，以该位置坐标决定的颜色在该位置执行泛洪填充。这样无需颜色选择器即可用多种颜色进行填充。你可以将使用的泛洪填充函数切换为其他 5 个函数中的任意一个。</li>
+<li>同时按下两个鼠标按键时，屏幕将重新清除为白色。</li>
 </ul>
-The benchmark code does 2 floodfill algorithms of your choice 50
-times, remembers the time it took them, displays the resulting
-times, and sleeps until you press a key. Start the benchmark by
-pressing space, it'll perform the floodfills at the current mouse
-position.<br />
+基准测试代码会对你选择的 2 种泛洪填充算法各执行 50 次，记录各自耗时，显示结果，然后等待你按下任意键。按空格键启动基准测试，它将在当前鼠标位置执行泛洪填充。<br />
 <br />
 <center>
 <table class="codetable">
@@ -211,22 +157,13 @@ position.<br />
 </table>
 </center>
 <br />
-Here are the stack functions, only used by 3 of the floodFill
-functions. A stack is a memory structure where you can push new
-values on top, or pop them again off it to read them. You can only
-access the top value of a stack, and to read the top value, you
-have to pop it, thereby removing it.<br />
+以下是栈操作函数，仅被 3 个 floodFill 函数使用。栈是一种内存结构，你可以将新值压入栈顶，或弹出栈顶值来读取它。你只能访问栈顶的值，而读取栈顶值时必须弹出它，即同时将其移除。<br />
 <br />
-To keep it simple, we store both coordinates separately on the stack, so
-push and pop two values each time.
+为简单起见，我们将两个坐标分别存入栈中，因此每次压栈和弹栈各操作两个值。
 <br />
-The pop function takes x and y passed by reference, so that this
-function can change the x and y given in its parameters. The pop
-function returns true if it successfully got a value from the top of
-the stack, or false if the stack was empty.<br />
+pop 函数以引用方式接收 x 和 y，从而可以修改参数中传入的 x 和 y。若成功从栈顶取到值，pop 函数返回 true；若栈为空则返回 false。<br />
 <br />
-We use C++'s std::vector data structure as stack, since it has built-in
-support for it.
+我们使用 C++ 的 std::vector 数据结构作为栈，因为它内置了对栈操作的支持。
 <br />
 <center>
 <table class="codetable">
@@ -254,12 +191,7 @@ bool pop(std::vector&lt;int>&amp; stack, int&amp; x, int&amp; y)
 </table>
 </center>
 <br />
-Here's one of the auxiliary functions, clearScreenBuffer. It sets
-the whole screenBuffer to the given color. The other function,
-paint_drawLine isn't given here because it's quite big and almost
-the same as the drawLine function in quickCG.cpp, except that it
-sets pixels of screenBuffer to the given color, instead of using
-pset.<br />
+以下是辅助函数之一 clearScreenBuffer，它将整个 screenBuffer 设置为指定颜色。另一个函数 paint_drawLine 不在此处给出，因为它篇幅较长，且与 quickCG.cpp 中的 drawLine 函数几乎相同，区别仅在于它将 screenBuffer 的像素设置为指定颜色，而不使用 pset。<br />
 <br />
 <center>
 <table class="codetable">
@@ -279,36 +211,17 @@ pset.<br />
 </table>
 </center>
 <br />
-Apart from these functions, the test program of course needs you to
-define the 6 floodFill functions too, but these are given
-below.<br />
-<h2><a name="4-Way_Recursive_Method_floodFill4"></a>4-Way Recursive
-Method (floodFill4)</h2>
-This is the most simple algorithm to make, but also the slowest.
-Also, since it uses a recursive function, the recursion stack may
-overflow making it crash when filling larger areas.<br />
+除了这些函数之外，测试程序当然还需要你定义 6 个 floodFill 函数，这些函数将在下文给出。<br />
+<h2><a name="4-Way_Recursive_Method_floodFill4"></a>4 向递归方法（floodFill4）</h2>
+这是最简单的算法，但也是最慢的。此外，由于它使用递归函数，在填充较大区域时递归栈可能溢出，导致程序崩溃。<br />
 <br />
-You call the function with in its parameters: the start position
-(where you clicked for the floodfill to start), the oldColor (the
-color of the area you're overdrawing) and the newColor (the color
-these pixels should get). The recursion works like this: at the
-start position, you "plant a seed". Each seed gives the pixel at
-its position the new color, and then plants a new seed at its 4
-neighbors. Each of these new seeds will draw a pixel again and
-plant even more seeds, but only if fulfills the following
-conditions:<br />
+调用函数时需传入以下参数：起始位置（即你点击以启动泛洪填充的位置）、oldColor（被覆盖区域的颜色）以及 newColor（这些像素应获得的新颜色）。递归过程如下：在起始位置"种下一粒种子"。每粒种子将其所在位置的像素设置为新颜色，然后在其 4 个邻居处各种下一粒新种子。每粒新种子同样会绘制一个像素并继续种下更多种子，但前提是满足以下条件：<br />
 <ul>
-<li>The pixel is inside the screen: edges of the screen also count
-as edges of the area to be filled.<br /></li>
-<li>The pixel has oldColor: if it hasn't, it's either a border of
-the area we're filling, or a pixel that has already been given the
-newColor.</li>
-<li>The pixel doesn't have newColor: this condition is only needed
-if oldColor is the same as oldColor, otherwise it'll keep running
-forever since newly drawn pixels will again have oldColor and thus
-seeds will be planted again and again forever.</li>
+<li>像素位于屏幕内：屏幕边缘也视为待填充区域的边界。<br /></li>
+<li>像素颜色为 oldColor：若不是，则说明该像素要么是填充区域的边界，要么已被赋予 newColor。</li>
+<li>像素颜色不为 newColor：仅当 oldColor 与 newColor 相同时才需要此条件，否则程序将无限运行，因为新绘制的像素颜色仍为 oldColor，导致种子被反复种植。</li>
 </ul>
-This is very easy to program:<br />
+这个算法非常容易编写：<br />
 <br />
 <center>
 <table class="codetable">
@@ -334,38 +247,21 @@ void floodFill4(Uint32* screenBuffer, int w, int h,
 </table>
 </center>
 <br />
-The function will keep calling itself more and more until
-eventually all pixels are filled. The order in which you call the
-floodFill4 functions for the neighbors doesn't really matter. In
-the example above it first tries the neighbor to the right, so the
-algorithm will first draw a line going to the right, until it meets
-an edge. Then the last called floodFill4 function returns to the
-pre-last one, which tests the neighbor to the left. Since that one
-has been drawn alraedy, it tests the one down. That one isn't drawn
-yet, and if it isn't an edge, the algorithm will continue there,
-testing to the right again, and so on...<br />
+该函数会不断递归调用自身，直到所有像素都被填充。调用各邻居的 floodFill4 函数的顺序并不重要。在上面的示例中，它首先尝试右侧邻居，因此算法会先向右绘制一条线，直到遇到边界。然后最后调用的 floodFill4 函数返回到倒数第二个，后者检测左侧邻居。由于左侧已经绘制过，它接着检测下方邻居。下方尚未绘制，如果不是边界，算法就会继续在那里向右检测，如此循环……<br />
 <br />
-Note how the color is represented as an integer, instead of using
-the slower ColorRGB struct.<br />
+请注意颜色用整数表示，而不使用速度较慢的 ColorRGB 结构体。<br />
 <br />
-This screenshot shows the floodFill4 algorithm while it's still
-busy:<br />
+此截图显示了 floodFill4 算法仍在执行中的状态：<br />
 <br />
 <img alt="" src="images/floodfill4busy.gif" style=
 "width: 261px; height: 282px;" /><br />
-<h2><a name="8-Way_Recursive_Method_floodFill8"></a>8-Way Recursive
-Method (floodFill8)</h2>
-This algorithm is pretty similar to the previous one, except it
-doesn't test 4 neighbors, but 8. This means, that this version of
-the floodfill algorithm will leak through sloped edges of 1 pixel
-thick:<br />
+<h2><a name="8-Way_Recursive_Method_floodFill8"></a>8 向递归方法（floodFill8）</h2>
+该算法与前一个非常相似，区别在于它检测的不是 4 个邻居，而是 8 个。这意味着此版本的泛洪填充算法会穿透宽度为 1 像素的斜边：<br />
 <br />
 <img alt="" src="images/floodfill8leak.gif" style=
 "width: 64px; height: 66px;" /><br />
 <br />
-Both red pixels are now a neighbor of each other, so the algorithm
-wil continue behind the sloped black line. The code is very similar
-to the 4-way one:<br />
+两个红色像素互为邻居，因此算法会穿过斜向黑线继续填充。代码与 4 向版本非常相似：<br />
 <br />
 <center>
 <table class="codetable">
@@ -395,32 +291,18 @@ void floodFill8(Uint32* screenBuffer, int w, int h,
 </table>
 </center>
 <br />
-Unlike the 4-way version, the 8-way version can fill thin lines,
-for example the edge of a shape:<br />
+与 4 向版本不同，8 向版本可以填充细线，例如形状的边缘：<br />
 <br />
 <img alt="" src="images/floodfill8.gif" style=
 "width: 541px; height: 281px;" /><br />
 <br />
-The floodFill4 algorithm (the way the bucket tool of painting
-programs work) would only have colored a few pixels of the black
-curve, the pixels which only touch a corner aren't considered
-neighbors in that case.<br />
+floodFill4 算法（即绘图程序中油漆桶工具的工作方式）只会为黑色曲线的少数几个像素着色，仅通过角点接触的像素在该情况下不被视为邻居。<br />
 <br />
-However, you can't use floodFill8 to fill the inside of the shapes
-because it'll leak through the sides.<br />
-<h2><a name="4-Way_Method_With_Stack"></a>4-Way Method With Stack
-(floodFill4Stack)</h2>
-This algorithm does exactly the same as the one with recursion,
-only it uses a while loop that loops until the stack is empty, and
-you push new positions to the stack instead of starting another
-recursion. So the only difference is that we're using our own stack
-routines now, instead of the ones used for recursive functions.
-This means we can control the size of the stack, and properly stop
-the floodfill algorithm if the stack overflows, instead of just
-letting the program crash. There are also a few other minor
-differences in the implementation.<br />
+但是，你不能使用 floodFill8 来填充形状内部，因为它会从侧面漏出。<br />
+<h2><a name="4-Way_Method_With_Stack"></a>带栈的 4 向方法（floodFill4Stack）</h2>
+该算法与递归版本的功能完全相同，只是它使用一个 while 循环，循环直到栈为空，并将新位置压入栈中，而不是发起新的递归调用。因此唯一的区别在于我们现在使用自己的栈操作，而不是递归函数所使用的调用栈。这意味着我们可以控制栈的大小，并在栈溢出时正确地停止泛洪填充算法，而不是让程序直接崩溃。实现上还有一些其他细微差异。<br />
 <br />
-The stack routines were described in the Test Program chapter.<br />
+栈操作函数已在"测试程序"章节中描述。<br />
 <br />
 <center>
 <table class="codetable">
@@ -455,11 +337,9 @@ void floodFill4Stack(Uint32* screenBuffer, int w, int h,
 </table>
 </center>
 <br />
-This algorithm goes a bit faster, or at least is more robust, than the recursive version.<br />
-<h2><a name="8-Way_Method_With_Stack"></a>8-Way Method With Stack
-(floodFill8Stack)</h2>
-This is the 8-way version of the previous function, and only
-differs because it has 4 extra neighbor coordintes to check:<br />
+该算法比递归版本稍快，至少更加健壮。<br />
+<h2><a name="8-Way_Method_With_Stack"></a>带栈的 8 向方法（floodFill8Stack）</h2>
+这是前一个函数的 8 向版本，区别仅在于需要额外检测 4 个邻居坐标：<br />
 <br />
 <center>
 <table class="codetable">
@@ -494,27 +374,18 @@ void floodFill8Stack(int x, int y, int newColor, int oldColor)
 </center>
 <br />
 <h2><a name="Recursive_Scanline_Floodfill_Algorithm" id=
-"Recursive_Scanline_Floodfill_Algorithm"></a>Recursive Scanline
-Floodfill Algorithm (floodFillScanline)</h2>
+"Recursive_Scanline_Floodfill_Algorithm"></a>递归扫描线泛洪填充算法（floodFillScanline）</h2>
 
-This algorithm is based on the following steps:<br />
+该算法基于以下步骤：<br />
 <ul>
-<li>Start by filling the current scanline from one end to the other</li>
-<li>While filling the current scanline, test for the ends of spans above and below</li>
-<li>For each new free span, plant a seed</li>
-<li>Repeat until there are no more seeds<br /></li>
+<li>从一端到另一端填充当前扫描线</li>
+<li>在填充当前扫描线的同时，检测上方和下方扫描段的端点</li>
+<li>对每个新的空闲扫描段种下一粒种子</li>
+<li>重复上述步骤，直到没有更多种子<br /></li>
 </ul>
-Like the original floodFill4 and floodFill8 algorithms, this one is
-recursive, but now each recursion will fill a whole scanline
-instead of a single pixel, so much less recursions and stack depth
-are needed. The implementation given below first draws the current
-scanline, and then tests for scanlines above and below and
-plants the new seeds by recursively calling itself again.<br />
+与原始的 floodFill4 和 floodFill8 算法一样，该算法也是递归的，但现在每次递归会填充整条扫描线而不是单个像素，因此所需的递归次数和栈深度大幅减少。下面给出的实现首先绘制当前扫描线，然后检测上方和下方的扫描线，并通过再次递归调用自身来种下新种子。<br />
 <br />
-This algorithm gives the same result as the floodFill4 algorithm,
-not as the floodFill8 one. If you want, you can modify it to work
-like the floodFill8 one by making it test for spans above and below
-one pixel left and right too.<br />
+该算法给出与 floodFill4 算法相同的结果，而非 floodFill8 的结果。如有需要，你可以修改它，让其同时检测上下方各向左和向右偏移一个像素的扫描段，从而实现类似 floodFill8 的效果。<br />
 <br />
 <center>
 <table class="codetable">
@@ -590,31 +461,15 @@ void floodFillScanline(int x, int y, int newColor, int oldColor)
 </table>
 </center>
 <br />
-This screenshot shows the scanline floodfill algorithm while it's busy:<br />
+此截图显示了扫描线泛洪填充算法正在执行中的状态：<br />
 <br />
 <img alt="" src="images/floodfillscanlinebusy.gif" style=
 "width: 261px; height: 280px;" /><br />
 <br />
-Note that, since our memory buffer works per scanline, it is faster to work with
-horizontal scanlines (as we did here) than with vertical stripes. This because the CPU caches
-parts of the 2D screenBuffer array, and when working with horizontal lines
-you're only changing the x-coordinate of that array, and the data
-it's working with is then much more closely packed to each other in
-the memory structure, than when you're changing it in the
-y-direction. When the data is further apart, the chance is higher
-that not everything needed is cached, making it slower.
+请注意，由于我们的内存缓冲区按扫描线组织，处理水平扫描线（如本文所做）比处理垂直条带更快。这是因为 CPU 会缓存二维 screenBuffer 数组的部分内容，处理水平线时只改变数组的 x 坐标，相关数据在内存结构中排列更加紧密；而沿 y 方向变化时，数据间距更大，所需内容未全部命中缓存的概率更高，从而导致速度变慢。
 <br />
-<h2><a name="Scanline_Floodfill_Algorithm_With_Stack" id="Scanline_Floodfill_Algorithm_With_Stack"></a>Scanline Floodfill
-Algorithm With Stack (floodFillScanlineStack)</h2>
-This is very similar to the previous algorithm, except again our
-own stack routines are used instead of recursion. This
-implementation also uses two boolean variables, "spanAbove" and
-"spanBelow" to remember if pixels tested above or below are
-part of a new span, or one already pushed to the stack. In the
-implementation with recursion this wasn't needed, because there the
-spans above and below were drawn first, causing all its
-pixels to get the newColor already so that other pixels of it
-couldn't be detected anymore.<br />
+<h2><a name="Scanline_Floodfill_Algorithm_With_Stack" id="Scanline_Floodfill_Algorithm_With_Stack"></a>带栈的扫描线泛洪填充算法（floodFillScanlineStack）</h2>
+这与前一个算法非常相似，区别同样在于使用自定义栈操作代替递归。该实现还使用了两个布尔变量 "spanAbove" 和 "spanBelow"，用于记录上方或下方检测到的像素是属于新的扫描段，还是已经压入栈的扫描段。在递归实现中不需要这两个变量，因为那里上下方的扫描段会先被绘制，使其所有像素已获得 newColor，从而其余像素不会再被检测到。<br />
 <br />
 <center>
 <table class="codetable">
@@ -667,19 +522,16 @@ void floodFillScanlineStack(int x, int y, int newColor, int oldColor)
 </table>
 </center>
 <br />
-Here's the result of a benchmark between the floodFill4Stack and
-the floodFillScanlineStack function: it took floodFill4Stack 239
-milliseconds to fill the shape 50 times, while it took
-floodFillScanlineStack only 34 milliseconds, on an Athlon 1700 CPU in 2004
+以下是 floodFill4Stack 与 floodFillScanlineStack 函数之间的基准测试结果：在 2004 年的 Athlon 1700 CPU 上，floodFill4Stack 填充该形状 50 次耗时 239 毫秒，而 floodFillScanlineStack 仅耗时 34 毫秒。
 <br />
 <br />
 <img alt="" src="images/floodfillbenchmark.gif" style=
 "width: 260px; height: 279px;" /><br />
 <br />
 <hr />
-Last edited: 2018
+最后编辑：2018 年
 <br /><br />
-Copyright (c) 2004-2018 by Lode Vandevenne. All rights reserved.
+版权所有（c）2004-2018 Lode Vandevenne。保留所有权利。
 <script language="javascript" src="colorcode.js"></script>
 </body>
 </html>

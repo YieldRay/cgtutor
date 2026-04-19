@@ -2,128 +2,63 @@
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-<title>The Julia and Mandelbrot Set</title>
+<title>Julia 集与 Mandelbrot 集</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <meta content="text/html; charset=us-ascii" http-equiv=
 "content-type" />
 <link rel="stylesheet" type="text/css" href="stylesheet.css" />
 <body>
-<h1>Lode's Computer Graphics Tutorial</h1>
-<h1>Julia and Mandelbrot Sets</h1>
-<h2>Table of Contents<br /></h2>
+<h1>Lode 的计算机图形学教程</h1>
+<h1>Julia 集与 Mandelbrot 集</h1>
+<h2>目录<br /></h2>
 <ul>
-<li><a href="juliamandelbrot.html#Introduction">Introduction</a></li>
-<li><a href="juliamandelbrot.html#Julia_Set">Julia Set</a></li>
-<li><a href="juliamandelbrot.html#Julia_Explorer">Julia Set Explorer</a></li>
-<li><a href="juliamandelbrot.html#Mandelbrot_Set_">Mandelbrot Set</a></li>
-<li><a href="juliamandelbrot.html#Mandelbrot_Explorer">Mandelbrot Set Explorer</a></li>
+<li><a href="juliamandelbrot.html#Introduction">简介</a></li>
+<li><a href="juliamandelbrot.html#Julia_Set">Julia 集</a></li>
+<li><a href="juliamandelbrot.html#Julia_Explorer">Julia 集探索器</a></li>
+<li><a href="juliamandelbrot.html#Mandelbrot_Set_">Mandelbrot 集</a></li>
+<li><a href="juliamandelbrot.html#Mandelbrot_Explorer">Mandelbrot 集探索器</a></li>
 </ul>
-<a href="index.html">Back to Index</a>
-<h2><a name="Introduction" id="Introduction"></a>Introduction</h2>
-The Julia Set and Mandelbrot Set are those quite well known sets on
-the complex plane that create those pretty infinitely detailed
-images. They're so pretty, that there is even art created with
-them. The Mandelbrot Set isn't a real fractals by definition, but
-it's semi self similar and still shows infinite detail, so it's
-usually called a fractal as well.<br />
+<a href="index.html">返回目录</a>
+<h2><a name="Introduction" id="Introduction"></a>简介</h2>
+Julia 集和 Mandelbrot 集是复平面上相当著名的集合，能生成那些美丽的无限细节图像。它们如此漂亮，甚至有人用它们创作艺术品。从定义上说，Mandelbrot 集并不是真正的分形，但它具有半自相似性，仍然展示出无限细节，因此通常也被称为分形。<br />
 <br />
-Research on Julia Sets was done in 1917 by Gaston Julia himself,
-but he didn't have a computer available to actually draw it. The
-topic didn't gain much interest, until in the 1970s, Benout
-Mandelbrot drew Julia Sets on a computer, and discovered the
-Mandelbrot set.<br />
+Julia 集的研究由 Gaston Julia 本人于 1917 年完成，但他当时没有计算机来实际绘制它。这个话题没有引起太多关注，直到 1970 年代，Benoît Mandelbrot 在计算机上绘制了 Julia 集，并发现了 Mandelbrot 集。<br />
 <br />
-This tutorial will only cover the basics of the theory (there's
-much more to tell about the Julia and Mandelbrot sets), and the
-code to draw them. Apart from that, more code is included of some
-pretty handy fractal viewers where you can zoom and move around on
-the fly.<br />
-<h2><a name="Julia_Set" id="Julia_Set"></a>Julia Set</h2>
-This chapter first tries to explain a bit of the mathematical
-formulas behind Julia Sets, more specifically, Quadratic Julia
-Sets. Knowledge about complex numbers is required, so if you need
-it you can read the appendix about complex numbers.
-<p>So how to generate such a beautiful fractal? In short:
-<span style="font-style: italic;">for every pixel, iterate znew =
-zold&sup2; + c on the complex plane until it leaves the circle
-around the origin with radius 2. The number of iterations it the
-color of the pixel.</span><br /></p>
-<p>The screen will be representing a part of the complex plane,
-inside the circle with radius 2 around the origin. For a pixel, the
-x coordinate will represent the real part of its complex
-coordinates, and the y coordinate will be the imaginary part.</p>
-<p>For a julia set, for each pixel apply an iterated complex
-function. This function is newz = oldz&sup2; + c, with z and c both
-being complex numbers. Z is initially the coordinates of the pixel,
-and will then constantly be updated through every iteration: each
-iteration, the "newz" of the previous iteration is now used as
-"oldz".<br /></p>
-<p>If you keep iterating this function, depending on the initial
-condition (the pixel), z will either go to infinity, or remain in
-the circle with radius 2 around the origin of the complex plane
-forever. The points that remain in the circle forever, are the ones
-that belong to the Julia Set. So keep iterating the function until
-the distance of z to the origin (0,0) is greater than 2. Also give
-a maximum number of iterations, for example 256, or the computer
-would be stuck in an endless loop.<br /></p>
-<p>The color value of the pixel will then become the number of
-times we had to iterate the function before the distance of z to
-the origin got larger than 2. The constant c in the formula can be
-anything really, as long as it's also inside the circle with radius
-2. Different values of c give different Julia Sets. Some Julia Sets
-are connected, others aren't. The Mandelbrot Set is the collection
-of all&nbsp; points c that generate a connected Julia
-Set.<br /></p>
-Here's an example of the calculations:
-<p>First, you can choose a constant c for the function, which one
-you choose will determinate the shape of the fractal. Let's take c
-= (-0.5,0.5) in this example, so -0.5 is the real part and 0.5 the
-imaginary part.<br /></p>
-<p>Imagine we're currently calculating the color of pixel (256,192)
-on a 256*256 screen. First, we transform the coordinates so it lies
-between -1 and 1 (if you zoom or move around in the fractal a
-different transformation is required): the coordinates become
-(1,0.5) so p = 1 + 0.5i.</p>
-<p>Now we apply the function for the first time:</p>
-<tt>z = p&sup2; +
+本教程只涵盖理论基础（关于 Julia 集和 Mandelbrot 集还有很多内容可以讲），以及绘制它们的代码。此外还包含一些非常实用的分形查看器代码，可以实时缩放和移动。<br />
+<h2><a name="Julia_Set" id="Julia_Set"></a>Julia 集</h2>
+本章首先尝试解释 Julia 集背后的一些数学公式，具体来说是二次 Julia 集。需要具备复数知识，如有需要可以阅读关于复数的附录。
+<p>那么如何生成如此美丽的分形？简而言之：<span style="font-style: italic;">对每个像素，在复平面上迭代 znew = zold² + c，直到它离开以原点为圆心、半径为 2 的圆。迭代次数即为像素的颜色。</span><br /></p>
+<p>屏幕将代表复平面的一部分，在以原点为圆心、半径为 2 的圆内。对于一个像素，x 坐标代表其复坐标的实部，y 坐标代表虚部。</p>
+<p>对于 Julia 集，对每个像素应用一个迭代复函数。该函数为 newz = oldz² + c，z 和 c 都是复数。z 最初是像素的坐标，然后在每次迭代中不断更新：每次迭代，上一次迭代的"newz"作为"oldz"使用。<br /></p>
+<p>持续迭代该函数，根据初始条件（像素），z 要么趋向无穷，要么永远留在以复平面原点为圆心、半径为 2 的圆内。永远留在圆内的点就属于 Julia 集。因此持续迭代函数，直到 z 到原点 (0,0) 的距离大于 2。还需设置最大迭代次数（例如 256），否则计算机会陷入无限循环。<br /></p>
+<p>像素的颜色值将等于在 z 到原点的距离大于 2 之前需要迭代的次数。公式中的常数 c 可以是任意值，只要它也在半径为 2 的圆内。不同的 c 值会产生不同的 Julia 集。有些 Julia 集是连通的，有些不是。Mandelbrot 集是所有能生成连通 Julia 集的点 c 的集合。<br /></p>
+以下是计算示例：
+<p>首先可以为函数选择常数 c，选择哪个值将决定分形的形状。本例取 c = (-0.5, 0.5)，即实部为 -0.5，虚部为 0.5。<br /></p>
+<p>假设我们正在计算 256×256 屏幕上像素 (256, 192) 的颜色。首先将坐标变换到 -1 到 1 之间（如果在分形中缩放或移动则需要不同的变换）：坐标变为 (1, 0.5)，即 p = 1 + 0.5i。</p>
+<p>现在第一次应用函数：</p>
+<tt>z = p² +
 c</tt><br />
-<tt>&nbsp; = (1 + 0.5i)&sup2; -
+<tt>&nbsp; = (1 + 0.5i)² -
 0.5 + 0.5i</tt><br />
 <tt>&nbsp; = 1 + 2*0.5i +
-0.25*i&sup2; - 0.5 + 0.5i</tt><br />
+0.25*i² - 0.5 + 0.5i</tt><br />
 <tt>&nbsp; = 0.5 + 1.5i -
 0.25</tt><br />
 <tt>&nbsp; = 0.25 +
 1.5i</tt><br />
-<p>So z = (0.25,1.5), and the distance of z to the origin =
-sqrt(0.25*0.25 + 1.5*1.5) = 1.52069... is still smaller than
-2.<br /></p>
-<p>Now you take this calculated z and put it in the function again
-to calculate the next z, so now we get<br /></p>
-<tt>z = (0.25 + 1.5i)&sup2; - 0.5
+<p>所以 z = (0.25, 1.5)，z 到原点的距离 = sqrt(0.25*0.25 + 1.5*1.5) = 1.52069...，仍小于 2。<br /></p>
+<p>现在将计算出的 z 再次代入函数计算下一个 z：<br /></p>
+<tt>z = (0.25 + 1.5i)² - 0.5
 + 0.5i</tt><br />
 <tt>&nbsp; = 0.0625 + 2*0.375i -
 2.25 - 0.5 + 0.5i</tt><br />
 <tt>&nbsp; = -2.6875 +
 1.25i</tt><br />
 <br />
-The distance is now 8.78515625, so we're outside the circle with
-radius 2, and we now know the point is outside the julia set. The
-number of iterations was now only 2, so the pixel gets color value
-2 and we're done.&nbsp; Some start values give more than 256
-iterations, and depending on how much maximal iterations you've
-set, you can then stop or keep continuing.<br />
-<p>The more iterations, the more detailed the Julia set will look
-when zooming in deeply, but the more calculations are needed. The
-higher the precision of the numbers, the longer you can zoom in
-without encountering blocky pixels.<br /></p>
-Here's the source code of a program that'll draw a Julia Set. Put
-this in the main.cpp file, inside the "<span style=
-"font-family: monospace;">int main(int argc, char *argv[])</span>"
-function. The comments in it are made blue and explain most of the
-code. The code doesn't use complex numbers but normal floating
-point numbers, the real and imaginary part are simply calculated
-separately, like you'd do by hand.<br />
+距离现在为 8.78515625，超出了半径为 2 的圆，因此该点在 Julia 集之外。迭代次数仅为 2，所以像素的颜色值为 2，计算完成。某些初始值会给出超过 256 次迭代，根据设置的最大迭代次数，可以选择停止或继续。<br />
+<p>迭代次数越多，深度缩放时 Julia 集看起来越详细，但需要的计算量也越多。数值精度越高，可以缩放的深度越大而不会出现像素化。<br /></p>
+以下是绘制 Julia 集的程序源代码。将其放入 main.cpp 文件的 "<span style=
+"font-family: monospace;">int main(int argc, char *argv[])</span>" 函数中。代码中的蓝色注释解释了大部分代码。代码不使用复数，而是使用普通浮点数，实部和虚部简单地分别计算，就像手工计算一样。<br />
 <br />
 <center>
 <table class="codetable">
@@ -180,35 +115,16 @@ separately, like you'd do by hand.<br />
 </table>
 </center>
 <br />
-The parameter of the number of iterations is used for the "Hue" of
-the HSV color model. The advantage of Hue is that it's circular, so
-no matter how many maximum iterations there are, the Hue based
-color palette will always keep generating nice continuous
-values.<br />
+迭代次数参数用于 HSV 颜色模型的"色相"。色相的优点是它是循环的，因此无论最大迭代次数是多少，基于色相的调色板都能生成漂亮的连续值。<br />
 <br />
-The result looks like this:<br />
+结果如下：<br />
 <br />
 <img alt="" src="images/juliaset.gif" style=
 "width: 405px; height: 323px;" /><br />
-<h2><a name="Julia_Explorer" id="Julia_Explorer"></a>Julia
-Explorer</h2>
-You can change the values "zoom", "moveX" and "moveY" in the above
-code to zoom in at certain positions, but much better would be if
-you could do this in realtime while the program is running, for
-example by pressing the arrow keys to move, and the keypad + and -
-keys to zoom in/out. Even better would be if you could use the
-keypad arrow keys to change the values of cRe and cIm to change the
-shape of the Julia Set in realtime.<br />
+<h2><a name="Julia_Explorer" id="Julia_Explorer"></a>Julia 集探索器</h2>
+你可以修改上面代码中的"zoom"、"moveX"和"moveY"值来缩放到特定位置，但更好的做法是在程序运行时实时操作，例如用方向键移动，用小键盘 + 和 - 键缩放。更好的是还能用小键盘方向键实时改变 cRe 和 cIm 的值来改变 Julia 集的形状。<br />
 <br />
-Programming something that can do that is pretty simple, just use
-the SDL keys to change the values of those variables and draw the
-Julia Set every time again in a loop! The following code does all
-that and&nbsp; also shows the values of all those variables on
-screen, so that you know exactly at what coordinates of the Julia
-Set the nice things are. It'll also let you change the value
-"maxIterations" etc... The comments in the code should explain it
-all again. There isn't any new computer graphics code, just input
-keys that change parameters:<br />
+编写能做到这些的程序非常简单，只需使用 SDL 按键来改变这些变量的值，并在循环中重新绘制 Julia 集即可！以下代码实现了所有这些功能，还在屏幕上显示所有变量的值，这样你就能确切知道 Julia 集中漂亮部分的坐标。还可以修改"maxIterations"等值……代码中的注释会再次解释一切。没有新的计算机图形学代码，只是改变参数的输入按键：<br />
 <br />
 <center>
 <table class="codetable">
@@ -312,48 +228,31 @@ keys that change parameters:<br />
 </table>
 </center>
 <br />
-Now you can explore all the details of every possible Julia Set!
-Find a nice shape with the keypad numbers, then move with the arrow
-keys to a border or interesting spot of the julia set, and start
-zooming in to see more detail. If you've zoomed in, you may want to
-press the numpad "*" button to see more detail.<br />
+现在你可以探索每种可能的 Julia 集的所有细节！用小键盘数字找到漂亮的形状，然后用方向键移动到 Julia 集的边界或有趣的位置，开始缩放以查看更多细节。缩放后可以按小键盘"*"键查看更多细节。<br />
 <br />
-Note: in the current version of gcc, the pow function doesn't work
-if you mix floats and doubles, so make sure either everything is
-double, or everything is float.<br />
+注意：在当前版本的 gcc 中，如果混用 float 和 double，pow 函数无法正常工作，因此请确保全部使用 double 或全部使用 float。<br />
 <br />
-Here are some screenshots:<br />
+以下是一些截图：<br />
 <br />
-A few different shapes:<br />
+几种不同的形状：<br />
 <img alt="" src="images/julia1.jpg" style=
 "width: 319px; height: 239px;" /> <img alt="" src=
 "images/julia2.jpg" style="width: 319px; height: 239px;" /><br />
 <br />
-Zooming in:<br />
+缩放：<br />
 <img alt="" src="images/julia3.jpg" style=
 "width: 318px; height: 238px;" /><br />
 <br />
-Increasing the number of iterations:<br />
+增加迭代次数：<br />
 <img alt="" src="images/julia4.jpg" style=
 "width: 317px; height: 238px;" /><br />
 <br />
-<h2><a name="Mandelbrot_Set_" id="Mandelbrot_Set_"></a>Mandelbrot
-Set<br /></h2>
-When zooming in, you'll keep seeing the same details over and over
-in a Julia Set - it's a fractal after all. The Mandelbrot set isn't
-completely self similar, it's only semi self similar, so in a
-Mandelbrot set much more surprises can turn up when zooming
-in.<br />
+<h2><a name="Mandelbrot_Set_" id="Mandelbrot_Set_"></a>Mandelbrot 集<br /></h2>
+缩放时，在 Julia 集中会不断看到相同的细节——毕竟它是分形。Mandelbrot 集不是完全自相似的，只是半自相似，因此在 Mandelbrot 集中缩放时会出现更多惊喜。<br />
 <br />
-The mandelbrot set represents every complex point c for which the
-Julia Set will be connected, or every Julia Set that contains the
-origin. To generate a mandelbrot set you use the same iterative
-function as the Julia Set, only this time c will represent the
-position of the pixel, and z will start at (0,0)<br />
+Mandelbrot 集代表所有能使 Julia 集连通的复数点 c，即所有包含原点的 Julia 集。生成 Mandelbrot 集时使用与 Julia 集相同的迭代函数，只是这次 c 代表像素的位置，z 从 (0,0) 开始。<br />
 <br />
-The following code is very similar to the Julia Set drawer, only
-it'll output a Mandelbrot Set with rainbow palette instead. The
-changed parts are indicated in bold.<br />
+以下代码与 Julia 集绘制器非常相似，只是输出带彩虹调色板的 Mandelbrot 集。修改的部分用粗体标出。<br />
 <br />
 <center>
 <table class="codetable">
@@ -407,14 +306,13 @@ changed parts are indicated in bold.<br />
 </table>
 </center>
 <br />
-Isn't that pretty:<br />
+是不是很漂亮：<br />
 <br />
 <img alt="" src="images/mandelbrotset.jpg" style=
 "width: 405px; height: 323px;" /><br />
 <h2><a name="Mandelbrot_Explorer" id=
-"Mandelbrot_Explorer"></a>Mandelbrot Explorer</h2>
-Here's again the full code of a program that allows you to move
-around and zoom in the Mandelbrot Set.<br />
+"Mandelbrot_Explorer"></a>Mandelbrot 集探索器</h2>
+以下是允许你在 Mandelbrot 集中移动和缩放的完整程序代码。<br />
 <br />
 <center>
 <table class="codetable">
@@ -508,70 +406,53 @@ around and zoom in the Mandelbrot Set.<br />
 </table>
 </center>
 <br />
-By moving around and zooming you can get very pretty pictures here.
-The parameter values were left on the pictures so you can see the
-coordinates, the zoom level and number of maximum iterations to
-generate those pictures:<br />
+通过移动和缩放可以得到非常漂亮的图像。图片上保留了参数值，以便你看到生成这些图片所需的坐标、缩放级别和最大迭代次数：<br />
 <br />
-This part of the Mandelbrot Set is called the Seahorse
-Valley:<br />
+Mandelbrot 集的这部分称为海马谷（Seahorse Valley）：<br />
 <img alt="" src="images/mandelbrotseahorse.jpg" style=
 "width: 319px; height: 238px;" /> <img alt="" src=
 "images/mandelbrot1.jpg" style=
 "width: 319px; height: 238px;" /><br />
 <br />
-A deeper zoom to the size of the Seahorse Valley (zoomed in 1779
-times):<br />
+深度缩放至海马谷的大小（放大 1779 倍）：<br />
 <img alt="" src="images/mandelbrot2.jpg" style=
 "width: 319px; height: 240px;" /><br />
 <br />
-A detail on the other side of the set:<br />
+集合另一侧的细节：<br />
 <img alt="" src="images/mandelbrot3.jpg" style=
 "width: 319px; height: 239px;" /><br />
 <br />
-A few "minibrots", the first zoomed in only 8463 times, the second
-zoomed in 419622325484 times! Such minibrots only become visible if
-you allow enough iterations.<br />
+几个"小 Mandelbrot"（minibrot），第一个只放大了 8463 倍，第二个放大了 419622325484 倍！这样的小 Mandelbrot 只有在允许足够多次迭代时才会可见。<br />
 <img alt="" src="images/mandelbrot4.jpg" style=
 "width: 319px; height: 240px;" /> <img alt="" src=
 "images/mandelbrot5.jpg" style=
 "width: 319px; height: 239px;" /><br />
 <br />
-This is the effect of using more iterations: on the right is the
-same picture on the left, but with twice as much maximum
-iterations:<br />
+这是使用更多迭代次数的效果：右图与左图相同，但最大迭代次数是左图的两倍：<br />
 <img alt="" src="images/mandelbrot6.jpg" style=
 "width: 320px; height: 239px;" /> <img alt="" src=
 "images/mandelbrot7.jpg" style=
 "width: 319px; height: 240px;" /><br />
 <br />
-This is a deep zoom with a very high number of iterations in the
-side of the elephant valley. The elephant valley is the pointy
-shape on the X-axis, on right side of the mandelbrot.<br />
+这是在象谷（elephant valley）侧面进行的深度缩放，使用了非常高的迭代次数。象谷是 Mandelbrot 集右侧 X 轴上的尖锐形状。<br />
 <img alt="" src="images/mandelbrot9.jpg" style=
 "width: 319px; height: 240px;" /><br />
 <br />
-This picture is added more recently, because it's pretty
-pretty:<br />
+这张图片是后来添加的，因为它非常漂亮：<br />
 <br />
 <img alt="" src="images/mandelbrotpretty.png" style=
 "width: 320px; height: 240px;" /><br />
 <br />
-And here's a picture that's zoomed in so much, that the numerical
-limit of 64-bit floating point numbers was reached. It starts
-looking blocky. It's zoomed in more than 10^18 times though, for
-deeper detail, processors with higher precision, or emulation of
-infinite precision numbers is required:<br />
+这张图片放大倍数极大，已达到 64 位浮点数的数值极限，开始出现像素化。它放大了超过 10^18 倍，要查看更深的细节，需要更高精度的处理器或模拟无限精度数值：<br />
 <img alt="" src="images/mandelbrot8.jpg" style=
 "width: 319px; height: 239px;" /><br />
 <br />
-If you like, <a href="images/highresmandel.png">here's</a> the link
-to a Mandelbrot Set of 1280*1024 pixels.<br />
+如果你喜欢，<a href="images/highresmandel.png">这里</a>有一张 1280×1024 像素的 Mandelbrot 集图片。<br />
 <br />
 <hr />
-Last edited: 2004
+最后编辑：2004 年
 <br /><br />
-Copyright (c) 2004-2007 by Lode Vandevenne. All rights reserved.
+版权所有 (c) 2004-2007 Lode Vandevenne，保留所有权利。
 <br />
 <script language="javascript" src="colorcode.js"></script>
 </body>

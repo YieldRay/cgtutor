@@ -2,39 +2,31 @@
     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-<title>Painting</title>
+<title>绘画</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <meta content="text/html; charset=us-ascii" http-equiv=
 "content-type" />
 <link rel="stylesheet" type="text/css" href="stylesheet.css" />
 </head>
 <body>
-<h1>Lode's Computer Graphics Tutorial</h1>
-<h1>Painting<br /></h1>
-<h2>Table of Contents</h2>
+<h1>Lode 的计算机图形学教程</h1>
+<h1>绘画<br /></h1>
+<h2>目录</h2>
 <ul>
-<li><a href="painting.html#Introduction_">Introduction</a></li>
-<li><a href="painting.html#Mouse">Mouse</a></li>
-<li><a href="painting.html#Color">Color<br /></a></li>
-<li><a href="painting.html#Size">Size</a></li>
-<li><a href="painting.html#Opacity">Opacity</a></li>
+<li><a href="painting.html#Introduction_">简介</a></li>
+<li><a href="painting.html#Mouse">鼠标</a></li>
+<li><a href="painting.html#Color">颜色<br /></a></li>
+<li><a href="painting.html#Size">大小</a></li>
+<li><a href="painting.html#Opacity">不透明度</a></li>
 </ul>
-<a href="index.html">Back to index</a><br />
+<a href="index.html">返回索引</a><br />
 <h2><a name="Introduction_" id=
-"Introduction_"></a>Introduction<br /></h2>
-This tutorial will describe a program that allows you to paint with
-various brushes like in professional painting programs.<br />
+"Introduction_"></a>简介<br /></h2>
+本教程将介绍一个程序，该程序允许你像专业绘画程序一样使用各种笔刷进行绘画。<br />
 <br />
-You can download the source of the final program, which supports
-opacity, <a href="files/paint_opacity.cpp">here</a>.<br />
-<h2><a name="Mouse" id="Mouse"></a>Mouse</h2>
-The best input device for painting (apart from a tablet) is of
-course the mouse, so we use that one for painting. The following
-very straightforward program checks the position of the mouse every
-frame, and, if the left mouse button is pressed, draws a black
-pixel there, if the right button is pressed, draws a white pixel
-there. If both buttons are pressed together, it'll clear the screen
-to white.<br />
+你可以在<a href="files/paint_opacity.cpp">这里</a>下载最终程序的源代码，该程序支持不透明度。<br />
+<h2><a name="Mouse" id="Mouse"></a>鼠标</h2>
+绘画时最好的输入设备（除了数位板之外）当然是鼠标，因此我们使用鼠标进行绘画。下面这个非常简单直接的程序每帧都会检测鼠标的位置，如果按下鼠标左键，则在该位置绘制一个黑色像素；如果按下鼠标右键，则绘制一个白色像素。如果同时按下两个按键，则将屏幕清除为白色。<br />
 <br />
 <center>
 <table class="codetable">
@@ -60,21 +52,12 @@ to white.<br />
 </table>
 </center>
 <br />
-The small screen size is only chosen to have a small enough
-screenshot here. This program has a problem though! If you move the
-mouse faster than the speed of the program can handle, not all
-pixels are overdrawn and you get dot patterns instead:<br />
+选择较小的屏幕尺寸只是为了在此处截图时足够小。不过这个程序有一个问题！如果你移动鼠标的速度超过了程序能处理的速度，就不是所有像素都会被覆盖，你会得到点状图案：<br />
 <br />
 <img alt="" src="images/paintdot.gif" style=
 "width: 260px; height: 279px;" /><br />
 <br />
-To overcome this problem, painting programs don't draw a pixel at
-the current mouse position, but the draw a line between the current
-and the previous position. That way it looks as if all pixels the
-mouse pointer encountered are overdrawn, and the lines are short
-enough to look curvy. The extension of the program is very easy,
-oldMouseX and oldMouseY represent the mouse position of the
-previous frame, and instead of pset, drawLine is used:<br />
+为了解决这个问题，绘画程序不在当前鼠标位置绘制像素，而是在当前位置和上一位置之间绘制一条线。这样看起来就好像鼠标指针经过的所有像素都被覆盖了，而且这些线段足够短，看起来是曲线形状的。对程序的扩展非常简单，oldMouseX 和 oldMouseY 表示上一帧的鼠标位置，并使用 drawLine 替代 pset：<br />
 <br />
 <center>
 <table class="codetable">
@@ -103,35 +86,19 @@ previous frame, and instead of pset, drawLine is used:<br />
 </table>
 </center>
 <br />
-Now you can draw as fast as you want, the curves are now fully
-connected instead of just some dots:<br />
+现在你可以随心所欲地快速绘画，曲线现在完全连续，而不只是一些散点：<br />
 <br />
 <img alt="" src="images/paintline.gif" style=
 "width: 260px; height: 279px;" /><br />
 <br />
-<h2><a name="Color" id="Color"></a>Color</h2>
-It's always nicer to be able to draw in color, so we can extend the
-painting program with a color picker. The color picker will use the
-HSVtoRGB function, see the Color tutorial for more details. This
-function allows you to display the colors in the Hue Saturation
-Value format, which is easier to use when choosing a color.<br />
+<h2><a name="Color" id="Color"></a>颜色</h2>
+能够进行彩色绘画总是更好的，因此我们可以为绘画程序添加一个颜色选择器。颜色选择器将使用 HSVtoRGB 函数，详情请参阅颜色教程。该函数允许你以色相饱和度明度（Hue Saturation Value）格式显示颜色，在选择颜色时更加方便。<br />
 <br />
-The program works basically the same as the previous one, but an
-extra function is added to draw the color picker, there are colors
-defined, and there's a test to see if the mouse is on top of the
-color picker, if so clicking the mouse buttons selects a color
-rather than painting.<br />
+该程序的工作方式基本上与上一个相同，但添加了一个额外的函数来绘制颜色选择器，定义了一些颜色，并且加入了检测鼠标是否位于颜色选择器上方的逻辑，如果是，则点击鼠标按键会选择颜色而不是进行绘画。<br />
 <br />
-The main function starts again with setting up the screen, clearing
-it to white, and defining the variables. Now, 2 colors are defined:
-the Foreground Color (fore), and the Background Color (back). The
-foreground color is used for the left mouse button, and the
-background color for the right mouse button, and when clearing the
-screen by pressing both buttons.<br />
+主函数同样从设置屏幕、将其清除为白色以及定义变量开始。现在定义了 2 种颜色：前景色（fore）和背景色（back）。前景色用于鼠标左键，背景色用于鼠标右键以及同时按下两个按键时清除屏幕。<br />
 <br />
-There's also a brightness defined, this value is used for the color
-picker itself and doesn't affect the foreground and background
-color values.<br />
+还定义了一个亮度值，该值仅用于颜色选择器本身，不影响前景色和背景色的值。<br />
 <br />
 <center>
 <table class="codetable">
@@ -154,26 +121,15 @@ int main(int argc, char *argv[])
 </table>
 </center>
 <br />
-Then the main loop starts, first it sets the mouse position values
-of the current and previous frame (for the lines). Then it tests if
-the mouse Y position is larger than 64: if it's larger, the mouse
-is in the drawing area, if it's smaller, the mouse is in the
-toolbar area (the top 64 lines of the window).<br />
+然后主循环开始，首先设置当前帧和上一帧的鼠标位置值（用于绘制线段）。然后检测鼠标的 Y 坐标是否大于 64：如果大于，则鼠标位于绘画区域；如果小于，则鼠标位于工具栏区域（窗口顶部的 64 行）。<br />
 <br />
-If in the drawing area, the same is done as before but now with the
-colors instead of just black and white.<br />
+如果在绘画区域，则与之前的操作相同，但现在使用的是颜色而不只是黑色和白色。<br />
 <br />
-If in the toolbar area, the mouse checks in what part of the
-toolbar area the mouse is: if mouseX is smaller than 128, the mouse
-is in the color picker, and a color value is given to the
-foreground or background color with the HSVtoRGB function.<br />
+如果在工具栏区域，则检测鼠标位于工具栏的哪个部分：如果 mouseX 小于 128，则鼠标位于颜色选择器上，并通过 HSVtoRGB 函数将颜色值赋给前景色或背景色。<br />
 <br />
-If mouseX is between 128 and 144, the mouse is on the color picker
-brightness area, which changes the brightness of the color
-picker.<br />
+如果 mouseX 在 128 到 144 之间，则鼠标位于颜色选择器的亮度区域，可以改变颜色选择器的亮度。<br />
 <br />
-Finally, a gray background for the toolbar area is drawn, and the
-drawToolbar function is called.<br />
+最后，绘制工具栏区域的灰色背景，并调用 drawToolbar 函数。<br />
 <br />
 <center>
 <table class="codetable">
@@ -215,9 +171,7 @@ drawToolbar function is called.<br />
 </table>
 </center>
 <br />
-The drawColorPicker function simply draws a Hue Saturation pattern
-with the current brightness, and draws the brightness
-selector.<br />
+drawColorPicker 函数简单地以当前亮度绘制色相饱和度图案，并绘制亮度选择器。<br />
 <br />
 <center>
 <table class="codetable">
@@ -243,78 +197,35 @@ selector.<br />
 </table>
 </center>
 <br />
-Here's what the program looks like and what you can do with
-it:<br />
+以下是程序的外观以及你可以用它做的事情：<br />
 <br />
 <img alt="" src="images/paintingcolor.jpg" style=
 "width: 262px; height: 281px;" /><br />
 <br />
-To use the program: select a color for the left or right mouse
-button by clicking on the Hue Saturation area in the top left with
-the corresponding button. Change the brightness of the Hue
-Saturation area by clicking on the greyscale area (the black to
-white gradient). This doesn't change the color of your mouse
-buttons, only the color of the color picker, so you can now select
-a darker or brighter color.<br />
+使用方法：用对应的鼠标按键点击左上角的色相饱和度区域，为左键或右键选择颜色。通过点击灰度区域（从黑到白的渐变）来改变色相饱和度区域的亮度。这不会改变鼠标按键对应的颜色，只会改变颜色选择器的颜色，这样你就可以选择更深或更亮的颜色。<br />
 <br />
-Click on the area below the toolbar with left or right mouse button
-to draw with the corresponding color, or press both buttons to
-clear the color of the whole screen to the right mouse button color
-(background color).<br />
+用鼠标左键或右键点击工具栏下方的区域，以对应颜色进行绘画；或者同时按下两个按键，将整个屏幕清除为鼠标右键对应的颜色（背景色）。<br />
 <br />
-This image shows a few different brightness values of the color
-picker:<br />
+下图展示了颜色选择器的几种不同亮度值：<br />
 <br />
 <img alt="" src="images/paintingpicker.jpg" style=
 "width: 256px; height: 193px;" /><br />
 <br />
-<h2><a name="Size" id="Size"></a>Size</h2>
-It's quite hard to draw with a brush with a size of only 1 pixel
-all the time, especially if you need to color big areas. So it'd be
-handy to be able to change the size of the brush. If the brush size
-is larger than 1, it can have a certain shape, in this case a
-filled circle.<br />
+<h2><a name="Size" id="Size"></a>大小</h2>
+始终使用只有 1 像素大小的笔刷绘画是相当困难的，特别是当你需要给大面积区域上色时。因此，能够改变笔刷的大小会非常方便。如果笔刷大小大于 1，它可以具有特定形状，在本例中为实心圆。<br />
 <br />
-With larger brush sizes we can't use the "line" function to connect
-two points anymore, because this function draws a line with
-thickness one. Instead, we'll use a totally different method, which
-tries to be very similar to the way Paint Shop Pro works. In this
-method, the shape of the brush is redrawn only after so many
-pixels, if this amount of pixels is small enough the shape of the
-brush will overlap itself often enough to look like a single
-stroke, if the amount is larger, you'll see more clearly how the
-shape is repeated. In Paint Shop Pro you can control this amount of
-pixels with "Step", step = 100 means the brush is repeated only
-once for its own size, while if you make it smaller it's repeated
-more often. For example the following is 3 times a horizontal line
-drawn in Paint Shop Pro with a step of 100, 50 and 10 respectively,
-with a brush size of 25:<br />
+使用较大的笔刷尺寸时，我们不能再使用"line"函数来连接两点，因为该函数绘制的线条粗细为 1。取而代之，我们将使用一种完全不同的方法，该方法尽量模拟 Paint Shop Pro 的工作方式。在这种方法中，笔刷形状每隔一定像素才重新绘制一次，如果这个像素数足够小，笔刷形状就会频繁地叠加，看起来像一个连续的笔触；如果像素数较大，则可以更清楚地看到形状是如何重复的。在 Paint Shop Pro 中，你可以通过"Step"（步长）来控制这个像素数，step = 100 表示笔刷仅重复一次自身大小的距离，而如果你将其设置得更小，则重复得更频繁。例如，以下是在 Paint Shop Pro 中分别以步长 100、50 和 10 绘制的 3 条水平线，笔刷大小为 25：<br />
 <br />
 <img alt="" src="images/paintbrushstep.gif" style=
 "width: 399px; height: 158px;" /><br />
 <br />
-When the brush size is 1, it's better to stick with the line
-drawing, that gives better looking results than drawing filled
-circles with diameter 1. The code is a bit long because it tries to
-be as accurate as possible and there are some fishy things with the
-"step".<br />
+当笔刷大小为 1 时，最好坚持使用线段绘制，这比绘制直径为 1 的实心圆效果更好。代码稍微有些长，因为它尽量做到尽可能精确，而且"step"（步长）的处理上有一些复杂之处。<br />
 <br />
-The code begins with initializing the functions and variables. The
-function drawToolbar will draw both the color picker, and settings
-of size and step. The function drawBrush replaces the simple
-drawLine of the previous version, it'll draw filled circles between
-the old and current position with the step distance between each
-filled circle. The function distance2D is included because now and
-then a 2D distance needs to be calculated.<br />
+代码首先初始化函数和变量。函数 drawToolbar 将绘制颜色选择器以及大小和步长的设置。函数 drawBrush 替代了上一版本中简单的 drawLine，它将在旧位置和当前位置之间绘制实心圆，每个实心圆之间的距离由步长决定。函数 distance2D 被引入是因为有时需要计算二维距离。<br />
 <br />
-The variable brightness is for the color picker, size and step are
-the new parameters for the brush.<br />
+变量 brightness 用于颜色选择器，size 和 step 是笔刷的新参数。<br />
 <br />
-Inside the main function, it initializes the mouse positions and
-color, and the boolean "initiate", which is true only if you just
-started pressing the mouse button. It's used to make sure that when
-you just click the button, the brush will be drawn there for sure,
-no matter what the distance to the previous position is.<br />
+在主函数内部，初始化鼠标位置和颜色，以及布尔值"initiate"，该值仅在你刚开始按下鼠标按键时为真。它用于确保当你刚点击按键时，无论与上一位置的距离是多少，笔刷都一定会在该处绘制。<br />
 <br />
 <center>
 <table class="codetable">
@@ -343,21 +254,11 @@ int main(int argc, char *argv[])
 </table>
 </center>
 <br />
-Then the main loop starts, first it gets the current mouse state.
-If no mouse buttons are being pressed, initiate can be set to 1 so
-that next time you press a mouse button it knows that it was newly
-pressed.<br />
+然后主循环开始，首先获取当前鼠标状态。如果没有按下任何鼠标按键，则可以将 initiate 设置为 1，这样下次按下鼠标按键时程序就知道这是一次新的按键操作。<br />
 <br />
-If you press a mouse button, and the mouse Y position is larger
-than 64 (so that you're in the drawing area, not on the toolbar),
-the draw engine starts: if initiate is true, it simply draws the
-brush at the current mouse position, sets the old position to the
-current position, and sets initiate to 0 because when you keep
-holding the mouse button, the next frame, the mouse isn't "just
-pressed" anymore.<br />
+如果按下鼠标按键，且鼠标的 Y 坐标大于 64（即位于绘画区域而非工具栏），则绘制引擎启动：如果 initiate 为真，则直接在当前鼠标位置绘制笔刷，将旧位置设置为当前位置，并将 initiate 设置为 0，因为当你持续按住鼠标按键时，下一帧鼠标就不再是"刚刚按下"的状态了。<br />
 <br />
-When the distance between the previous and current drawing position
-is large enough, the drawBrush function can be called.<br />
+当上一绘制位置与当前绘制位置之间的距离足够大时，可以调用 drawBrush 函数。<br />
 <br />
 <center>
 <table class="codetable">
@@ -389,10 +290,7 @@ is large enough, the drawBrush function can be called.<br />
 </table>
 </center>
 <br />
-The next part of the loop checks if you're in the toolbar area and
-if so lets you pick the color, the brightness, and, if you click on
-the Size or Step indicators, asks you to enter a new value with the
-getInput function.<br />
+循环的下一部分检测你是否位于工具栏区域，如果是，则允许你选择颜色、亮度，以及如果你点击大小或步长指示器，则通过 getInput 函数要求你输入新值。<br />
 <br />
 <center>
 <table class="codetable">
@@ -425,8 +323,7 @@ getInput function.<br />
 </table>
 </center>
 <br />
-Finally, the main loop draws the toolbar and redraws the
-screen.<br />
+最后，主循环绘制工具栏并重新绘制屏幕。<br />
 <br />
 <center>
 <table class="codetable">
@@ -444,24 +341,11 @@ screen.<br />
 </table>
 </center>
 <br />
-This is the drawBrush function that replaces the drawLine function.
-The first two parameters, x1 and y1, are passed by reference,
-because they're a sort of return value: they'll be set to the
-coordinates of the last filled circle drawn, so that you can use
-that as position to compare the distance of the next brush
-positions to.<br />
+这是替代 drawLine 函数的 drawBrush 函数。前两个参数 x1 和 y1 是通过引用传递的，因为它们是一种返回值：它们将被设置为最后一个绘制的实心圆的坐标，以便你可以将其作为位置来比较下一个笔刷位置的距离。<br />
 <br />
-If initiate is true, it draws that one disk at the mouse position,
-and since the distance is 0, it won't draw any of the next
-disks.<br />
+如果 initiate 为真，则在鼠标位置绘制一个圆盘，由于距离为 0，不会绘制后续的圆盘。<br />
 <br />
-In a while loop, it draws all the disks until the distance is
-shorter than dictated by step. If the brush size is 1, it uses
-drawLine instead because this looks nicer. The while loop also ends
-if the coordinates managed to jump over the end position, which
-will let the distance increase again and end up in an infinite
-loop. For that it uses the function "inBetween". This function
-returns false if the point x is not between x1 and x2.<br />
+在 while 循环中，持续绘制所有圆盘，直到距离小于步长所规定的值。如果笔刷大小为 1，则使用 drawLine 替代，因为这样看起来更好。如果坐标跳过了终点位置，while 循环也会结束，否则距离会再次增大，导致无限循环。为此使用了"inBetween"函数，如果点 x 不在 x1 和 x2 之间，该函数返回 false。<br />
 <br />
 <center>
 <table class="codetable">
@@ -497,9 +381,7 @@ returns false if the point x is not between x1 and x2.<br />
 </table>
 </center>
 <br />
-The function drawToolbar again prints the color picker, and now
-also prints the size and step value. The distance2D function simply
-uses the distance formula.<br />
+函数 drawToolbar 再次绘制颜色选择器，现在还打印大小和步长值。distance2D 函数简单地使用距离公式。<br />
 <br />
 <center>
 <table class="codetable">
@@ -542,38 +424,19 @@ bool inBetween(int x1, int y1, int x2, int y2, int x3, int y3)
 </table>
 </center>
 <br />
-Here's something drawn with it:<br />
+以下是用它绘制的作品：<br />
 <br />
 <img alt="" src="images/paintingsize.jpg" style=
 "width: 390px; height: 409px;" /><br />
 <br />
-<h2><a name="Opacity" id="Opacity"></a>Opacity</h2>
-Opacity can be used to make the brush transparent. Opacity is the
-opposite of transparency, in that opacity tells how opaque the
-brush is while transparency tells how transparent the brush is. An
-opacity of 0 means the brush is invisible (you can't paint with
-it), 128 means it's half translucent, and 255 means it's opaque
-(you can't see any pixels through it).<br />
+<h2><a name="Opacity" id="Opacity"></a>不透明度</h2>
+不透明度可以用来使笔刷变透明。不透明度与透明度相反，不透明度表示笔刷有多不透明，而透明度表示笔刷有多透明。不透明度为 0 表示笔刷不可见（无法用它绘画），128 表示半透明，255 表示完全不透明（无法透过它看到任何像素）。<br />
 <br />
-For transparency, i.e. you can see the old pixels through what you
-draw, you need to be able to read the old pixels, and for this it
-goes much quicker if we draw to buffer and read the pixels from
-there. Also, the drawLine, drawDisk, etc... functions can't be used
-anymore since they don't support transparency. They'll all have to
-be remade. The new versions of these functions get the prefix
-paint_, for example drawLine becomes paint_drawLine. The function
-paint_pset draws a pixel like the old pset function, but with
-transparency. The drawLine, drawDisk, horLine, ... functions are
-exactly the same except that they call paint_pset and
-paint_horLine, so these functions aren't given here.<br />
+要实现透明效果（即可以透过绘制的内容看到旧像素），需要能够读取旧像素，为此如果我们将内容绘制到缓冲区并从那里读取像素，速度会快得多。此外，drawLine、drawDisk 等函数无法再使用，因为它们不支持透明度，必须全部重新实现。这些函数的新版本添加了前缀 paint_，例如 drawLine 变为 paint_drawLine。函数 paint_pset 与旧的 pset 函数类似地绘制像素，但支持透明度。drawLine、drawDisk、horLine 等函数除了调用 paint_pset 和 paint_horLine 之外完全相同，因此这里不再列出这些函数。<br />
 <br />
-This program is quite big, you can download the full source
-<a href="files/paint_opacity.cpp">here</a>.<br />
+这个程序相当大，你可以在<a href="files/paint_opacity.cpp">这里</a>下载完整源代码。<br />
 <br />
-Here you can see the declarations of the new functions,
-clearScreenBuffer is used instead of cls() because the buffer needs
-to be cleared instead of the actual screen now. The value opacity
-is used for the opacity of the brush.<br />
+在这里你可以看到新函数的声明，使用 clearScreenBuffer 替代 cls()，因为现在需要清除缓冲区而不是实际屏幕。值 opacity 用于笔刷的不透明度。<br />
 <br />
 <center>
 <table class="codetable">
@@ -615,14 +478,7 @@ int main(int argc, char *argv[])
 </table>
 </center>
 <br />
-In the main loop, almost nothing changes, apart from the fact that
-it uses "drawBuffer", and the Opacity selector in the toolbar. The
-"opacityNoWrap" variable is used because opacity is a Uint8 and
-thus values will wrap around, if you type a value that's too high
-or too low, and it's nicer to let it set the maximum or minimum
-instead in these cases. Another change is that it'll redraw the
-screen and the buffer only every 20 milliseconds so that it goes
-faster at higher resolutions.<br />
+在主循环中，几乎没有变化，除了使用"drawBuffer"以及工具栏中的不透明度选择器。使用"opacityNoWrap"变量是因为 opacity 是 Uint8 类型，因此如果你输入过高或过低的值会产生溢出回绕，在这些情况下让它设置为最大值或最小值更为合理。另一个变化是每 20 毫秒才重新绘制一次屏幕和缓冲区，这样在较高分辨率下运行速度更快。<br />
 <br />
 <center>
 <table class="codetable">
@@ -694,18 +550,9 @@ faster at higher resolutions.<br />
 </table>
 </center>
 <br />
-The drawBrush function is almost the same as before, the only
-difference is that it uses paint_drawDisk and paint_drawLine, with
-the opacity parameter. The functions paint_drawLine, paint_horLine
-and paint_drawDisk aren't given here either, all these functions
-can be found in the downloadable c++ file.<br />
+drawBrush 函数与之前几乎相同，唯一的区别是它使用了带有 opacity 参数的 paint_drawDisk 和 paint_drawLine。函数 paint_drawLine、paint_horLine 和 paint_drawDisk 在这里也不列出，所有这些函数都可以在可下载的 c++ 文件中找到。<br />
 <br />
-The paint_pset function adds a new pixel to the screenBuffer, it
-uses the weighed average of the new and old pixel value with
-"opacity" and "256 - opacity" to do the transparency. Since the
-screenBuffer uses a single integer instead of 3 bytes for the
-color, the RGBtoINT function is used to convert the color to
-integer.<br />
+paint_pset 函数向 screenBuffer 添加新像素，它使用"opacity"和"256 - opacity"对新旧像素值进行加权平均来实现透明效果。由于 screenBuffer 使用单个整数而不是 3 个字节来表示颜色，因此使用 RGBtoINT 函数将颜色转换为整数。<br />
 <br />
 <center>
 <table class="codetable">
@@ -723,8 +570,7 @@ integer.<br />
 </table>
 </center>
 <br />
-The clearScreenBuffer function simply sets all pixels of the buffer
-to the given color.<br />
+clearScreenBuffer 函数简单地将缓冲区的所有像素设置为给定颜色。<br />
 <br />
 <center>
 <table class="codetable">
@@ -743,28 +589,20 @@ to the given color.<br />
 </table>
 </center>
 <br />
-The drawToolbar function is almost the same except that it also
-prints the Opacity, so isn't given here either.<br />
+drawToolbar 函数几乎相同，只是还打印了不透明度，因此这里也不列出。<br />
 <br />
-Here's one of the things you can do with transparent brushes:<br />
+以下是使用透明笔刷可以实现的效果之一：<br />
 <br />
 <img alt="" src="images/paintingopacity.jpg" style="width: 388px; height: 408px;" /><br />
 <br />
-Note that, because the brush overdraws itself a few times (if step
-is small), it'll appear more opaque than it is according to its
-setting. To overcome this, you could make an extra buffer that,
-while you draw, remembers where you had already drawn with the
-brush and doesn't overdraw these locations anymore. In Paint Shop
-Pro this is possible by disabling the "Build up brush"
-setting.<br />
+请注意，由于笔刷会多次覆盖自身（如果步长较小），它看起来会比设置值更不透明。为了解决这个问题，你可以创建一个额外的缓冲区，在绘画时记录已经用笔刷绘制过的位置，不再对这些位置进行重复覆盖。在 Paint Shop Pro 中，可以通过禁用"Build up brush"（积累笔刷）设置来实现这一点。<br />
 <br />
-This tutorial might be expanded with a section about "Hardness"
-later.<br />
+本教程后续可能会扩展一个关于"硬度"的章节。<br />
 <br />
 <hr />
-Last edited: 2004
+最后编辑：2004 年
 <br /><br />
-Copyright (c) 2004-2007 by Lode Vandevenne. All rights reserved.
+版权所有 © 2004-2007 Lode Vandevenne。保留所有权利。
 <script language="javascript" src="colorcode.js"></script>
 </body>
 </html>
